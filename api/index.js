@@ -239,7 +239,7 @@ app.post('/api/inventory-logs', (req, res) => {
     res.json({ success: true, log: newLog });
 });
 
-const SETTINGS_FILE = path.resolve(baseDir, 'system_settings.json');
+const SETTINGS_FILE = path.resolve(baseDir, 'settings.json');
 function readSettings() {
     try {
         if (!fs.existsSync(SETTINGS_FILE)) return {};
