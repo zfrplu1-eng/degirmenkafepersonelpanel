@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değirmen Kafe - Sipariş Arayüzü</title>
+    <script>
+        if (!localStorage.getItem('user')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <!-- Tailwind CSS (for catalog.html compatibility) -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide İkon Kütüphanesi -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg-dark: #04070d;
+            --panel-bg: rgba(10, 14, 26, 0.75);
+            --accent: #814fff;
+            --accent-glow: rgba(129, 79, 255, 0.35);
+            --text-primary: #ffffff;
+            --text-secondary: #8e95b2;
+            --border-color: rgba(255, 255, 255, 0.07);
+            --card-bg: rgba(10, 14, 26, 0.85);
+            --form-bg: rgba(10, 14, 26, 0.85);
+        }
+
+        :root[data-theme="light"] {
+            --bg-dark: #f3f4f6;
+            --panel-bg: rgba(255, 255, 255, 0.85);
+            --accent: #ff5c35;
+            --accent-glow: rgba(255, 92, 53, 0.25);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --form-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Ambient Glows */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, rgba(129, 79, 255, 0.08) 0%, rgba(0,0,0,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Konteyner */
+        .web-container {
+            width: 100%;
+            max-width: 1340px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            gap: 30px;
+        }
+
+        /* Sol Alan: Ürünler ve Kategoriler */
+        .main-content {
+            flex: 1;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            padding: 40px;
+            box-sizing: border-box;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s;
+        }
+
+        /* Başlık ve Butonlar Barı */
+        .store-header-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 35px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .store-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 28px;
+            font-weight: 900;
+            color: var(--text-primary) !important;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        /* 🔄 Görseldeki Yuvarlak Geri Dönüş Butonu */
+        .round-back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--form-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .round-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 22px var(--accent-glow) !important;
+            transform: scale(1.05);
+        }
+
+        /* 🚀 Premium Modül Başlık ve Alt Başlık Stilleri */
+        .module-main-title {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 2.6rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.15 !important;
+            color: var(--text-primary) !important;
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .module-main-subtitle {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1rem !important;
+            color: var(--text-secondary) !important;
+            opacity: 0.8 !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.015em !important;
+            line-height: 1.5 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+
+        /* Kategori Büyük Kartlar Izgarası */
+        .categories-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        .category-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 35px 24px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            backdrop-filter: blur(10px);
+            height: 180px;
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .category-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .category-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(129, 79, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(129, 79, 255, 0.05);
+        }
+
+        .category-card img {
+            width: 58px;
+            height: 58px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+
+        .category-card span {
+            font-family: 'Outfit', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--text-primary) !important;
+            text-align: center;
+            line-height: 1.3;
+        }
+
+        /* Ürün Kartları Izgarası */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 30px 24px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            box-sizing: border-box;
+            min-height: 220px;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(129, 79, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(129, 79, 255, 0.05);
+        }
+
+        .product-card.has-items {
+            background-color: rgba(129, 79, 255, 0.06) !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 0 15px rgba(129, 79, 255, 0.1);
+        }
+
+        .product-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 26px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .product-card:hover .product-icon {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(129, 79, 255, 0.4);
+        }
+
+        .product-icon img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+        }
+
+        .product-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            line-height: 1.3;
+        }
+
+        .product-card-qty-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: auto;
+            border-top: 1px solid var(--border-color);
+            padding-top: 12px;
+        }
+
+        .product-card-qty-badge {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-secondary);
+        }
+
+        .product-add-btn {
+            background: var(--accent) !important;
+            color: #ffffff;
+            border: none;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 900;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .product-add-btn:hover {
+            transform: scale(1.1);
+        }
+
+        /* Sağ Alışveriş Sepeti Paneli: Daha Göz Alıcı Tasarım */
+        .right-cart-pane {
+            width: 380px;
+            background-color: var(--card-bg) !important;
+            border: 1.5px solid var(--accent);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            padding: 30px 25px;
+            box-sizing: border-box;
+            border-radius: 28px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.4), 0 0 20px rgba(129, 79, 255, 0.1);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            align-self: flex-start;
+            transition: all 0.3s;
+        }
+
+        .cart-header-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 17px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 15px;
+        }
+
+        .cart-items-list {
+            max-height: 380px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-right: 2px;
+        }
+
+        .cart-item {
+            background: rgba(255,255,255,0.02) !important;
+            border: 1px solid rgba(255,255,255,0.05) !important;
+            border-radius: 14px;
+            padding: 12px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+        
+        .cart-item:hover {
+            border-color: rgba(129, 79, 255, 0.25) !important;
+        }
+
+        .cart-item-img {
+            width: 36px;
+            height: 36px;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+
+        .cart-item-details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .cart-item-name {
+            font-size: 11px;
+            font-weight: 800;
+            color: var(--text-primary) !important;
+        }
+
+        .cart-item-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-qty-btn {
+            background: rgba(255,255,255,0.06) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid rgba(255,255,255,0.1) !important;
+            width: 22px;
+            height: 22px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 900;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.2s;
+        }
+
+        .cart-qty-btn:hover {
+            background: rgba(129, 79, 255, 0.2) !important;
+            border-color: var(--accent) !important;
+        }
+
+        .cart-qty-val {
+            font-size: 11px;
+            font-weight: 800;
+        }
+
+        .cart-item-delete {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px;
+            transition: transform 0.2s;
+        }
+        
+        .cart-item-delete:hover {
+            transform: scale(1.15);
+        }
+
+        /* Alt Toplam ve Tamamlama */
+        .cart-summary-section {
+            border-top: 2px solid var(--accent);
+            padding-top: 20px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .summary-label {
+            font-size: 12px;
+            font-weight: 800;
+            color: var(--text-secondary);
+        }
+
+        .summary-val {
+            font-size: 14px;
+            font-weight: 900;
+            color: var(--text-primary);
+        }
+
+        /* Sipariş Tamamlama Butonu */
+        .complete-order-btn {
+            background: var(--accent) !important;
+            color: #ffffff;
+            border: none;
+            width: 100%;
+            padding: 14px;
+            border-radius: 16px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: all 0.2s;
+            box-shadow: 0 4px 15px rgba(129, 79, 255, 0.2);
+        }
+
+        .complete-order-btn:hover {
+            background: #9061ff !important;
+            transform: translateY(-1px);
+        }
+
+        /* Belirgin Birim Seçim Modalı */
+        #unit-selection-modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 7, 13, 0.75);
+            backdrop-filter: blur(20px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-card {
+            background: var(--form-bg) !important;
+            border-radius: 28px;
+            width: 340px;
+            padding: 25px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.4), 0 0 15px rgba(129, 79, 255, 0.15);
+            text-align: center;
+            box-sizing: border-box;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary) !important;
+            animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .modal-card h4 {
+            color: var(--text-primary) !important;
+            font-weight: 900;
+            margin-top: 5px;
+            margin-bottom: 20px;
+        }
+        
+        .modal-card button {
+            background: rgba(255, 255, 255, 0.03) !important;
+            border: 1px solid rgba(255, 255, 255, 0.08) !important;
+            color: var(--text-primary) !important;
+            border-radius: 12px !important;
+            padding: 10px !important;
+            font-weight: 800 !important;
+            transition: all 0.2s !important;
+        }
+        
+        .modal-card button:hover {
+            background: rgba(129, 79, 255, 0.15) !important;
+            border-color: var(--accent) !important;
+        }
+
+        /* Modern Tost Bildirimi Stilleri */
+        #toast-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            pointer-events: none;
+        }
+        .toast {
+            background: rgba(27, 46, 88, 0.95);
+            color: #ffffff;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transform: translateX(120%);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: auto;
+            border-left: 5px solid #2563eb;
+            backdrop-filter: blur(8px);
+        }
+        .toast.success {
+            border-left-color: #10b981;
+        }
+        .toast.error {
+            border-left-color: #ef4444;
+        }
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- Modern Tost Bildirim Alanı -->
+    <div id="toast-container"></div>
+
+    <div class="web-container">
+        
+        <!-- SOL ALAN: Ürün Seçim Ekranı -->
+        <div class="main-content">
+            
+            <!-- 🔄 Görseldeki Premium Layout Düzeni -->
+            <div class="store-header-bar" style="display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; padding-bottom: 30px; border-bottom: 1.5px solid var(--border-color); width: 100%;">
+                
+                <!-- Üst Satır: Sol Köşede Yuvarlak Geri Butonları, Sağ Köşede Switcher ve Etiket -->
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    
+                    <!-- Sol Köşe: Yuvarlak Geri Dön Butonu (Metinsiz, sadece ok) -->
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <button class="round-back-btn" id="btn-back-categories" style="display: none;" aria-label="Kategorilere Dön">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </button>
+                        <a href="dashboard.html" class="round-back-btn" id="lnk-back-dashboard" aria-label="Ana Sayfaya Dön">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                        </a>
+                    </div>
+                    
+                    <!-- Sağ Köşe: Tema Switcher & Kategori Etiketi -->
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <!-- Tema Değiştirme Segmented Switcher (catalog.html uyumlu) -->
+                        <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.07); align-items: center;">
+                            <button id="theme-btn-light" class="theme-btn-segment" style="padding: 6px 12px; border-radius: 99px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                                LIGHT
+                            </button>
+                            <button id="theme-btn-dark" class="theme-btn-segment active" style="padding: 6px 12px; border-radius: 99px; border: none; background: var(--accent); color: #fff; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                                DARK
+                            </button>
+                        </div>
+                        
+                        <!-- Kategori Mor/Lacivert Etiketi -->
+                        <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']" style="font-size: 11px; letter-spacing: 0.1em; color: #a855f7; font-weight: 800;">KATEGORİLER</span>
+                    </div>
+                </div>
+
+                <!-- Alt Satır: Ortalanmış Premium Kalın Başlık & Açıklama -->
+                <div class="text-center" style="margin-top: 10px; width: 100%;">
+                    <h1 class="module-main-title" id="store-title-text" style="margin: 0; font-size: 2.8rem; font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--text-primary);">Ürün Kategorileri</h1>
+                    <p class="module-main-subtitle" style="margin: 10px auto 0 auto; color: var(--text-secondary); font-size: 1rem; max-w: 600px; line-height: 1.5;">Menü içerisinden dilediğiniz hammadde veya içecek grubunu seçerek siparişinizi oluşturun.</p>
+                </div>
+            </div>
+
+            <!-- Kategoriler Listesi (Büyük Kart Izgarası) -->
+            <div class="categories-grid" id="categories-grid-list">
+                <!-- JS ile Doldurulacak -->
+            </div>
+
+            <!-- Ürünler Listesi (Kategori Seçilince Açılacak) -->
+            <div id="products-area-container" style="display: none; height: 100%;">
+                <div class="products-grid" id="products-grid-list">
+                    <!-- JS ile Doldurulacak -->
+                </div>
+            </div>
+
+        </div>
+
+        <!-- SAĞ ALAN: Sepet Paneli -->
+        <div class="right-cart-pane">
+            
+            <div class="cart-header-title">
+                <i data-lucide="shopping-cart" style="width: 16px; height: 16px;"></i>
+                <span>Değirmen Kafe</span>
+                <span style="font-size: 10px; color: #94a3b8; font-weight: 500; margin-left: auto;" id="cart-item-count">0 Ürün</span>
+            </div>
+
+            <!-- Sepet Kalemleri Listesi -->
+            <div class="cart-items-list" id="cart-items-container">
+                <div style="text-align: center; color: rgba(255,255,255,0.4); font-size: 11px; margin-top: 50px;" id="empty-cart-msg">
+                    Sepetiniz henüz boş.
+                </div>
+            </div>
+
+            <!-- Sepet Alt Bölümü -->
+            <div class="cart-summary-section">
+                
+                <div class="summary-row" style="margin-bottom: 8px;">
+                    <span class="summary-label">ŞUBE/BÖLGE:</span>
+                    <input type="text" id="order-branch-select" readonly style="background: rgba(255,255,255,0.05); color: #fff; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; font-size: 10px; font-weight: 800; padding: 4px 8px; width: 140px; text-align: center;">
+                </div>
+
+                <div class="summary-row">
+                    <span class="summary-label">TOPLAM MİKTAR:</span>
+                    <span class="summary-val" id="total-price">0 Ürün</span>
+                </div>
+
+                <button class="complete-order-btn" id="btn-complete-order">
+                    <i data-lucide="send" style="width: 14px; height: 14px;"></i> Siparişi Tamamla
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- BİRİM SEÇİM MODALİ -->
+    <div id="unit-selection-modal">
+        <div class="modal-card">
+            
+            <!-- Ürün Görseli Yerine Emoji/İkon Kutusu -->
+            <div style="width: 75px; height: 75px; border-radius: 50%; background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); display: flex; align-items: center; justify-content: center; margin: 0 auto 12px auto; box-shadow: 0 8px 16px rgba(0,0,0,0.15);">
+                <span id="modal-product-emoji" style="font-size: 32px;">📦</span>
+            </div>
+            
+            <h4 id="modal-product-name" style="margin: 0 0 15px 0; font-size: 13px; font-weight: 800;">Ürün Adı</h4>
+            
+            <!-- Birim Seçenekleri (Adet / Koli) -->
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button id="btn-select-piece" style="flex: 1; padding: 10px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">Adet</button>
+                <button id="btn-select-box" style="flex: 1; padding: 10px; border-radius: 12px; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 11px; font-weight: 800; cursor: pointer; transition: all 0.2s;">Koli</button>
+            </div>
+
+            <!-- Adet Miktar Kontrolleri -->
+            <div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 20px;">
+                <button id="modal-qty-dec" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--text-primary); font-weight: 900; cursor: pointer; display: flex; justify-content: center; align-items: center;">-</button>
+                <span id="modal-qty-val" style="font-size: 18px; font-weight: 900; color: var(--text-primary); width: 35px; display: inline-block;">1</span>
+                <button id="modal-qty-inc" style="width: 32px; height: 32px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.03); color: var(--text-primary); font-weight: 900; cursor: pointer; display: flex; justify-content: center; align-items: center;">+</button>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <button class="button1" id="btn-close-unit-modal" style="flex: 1; margin: 0; padding: 10px 12px; font-size: 11px; font-weight: 800; border-radius: 12px;">Vazgeç</button>
+                <button class="button2" id="btn-save-unit-modal" style="flex: 1; margin: 0; padding: 10px 12px; font-size: 11px; font-weight: 800; border-radius: 12px; background: var(--accent) !important; color:#fff;">Sepete Ekle</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="toast.js"></script>
+    <script src="store.js?v=12"></script>
+    <script src="app.js"></script>
+</body>
+</html>

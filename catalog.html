@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değirmen Kafe - Reçeteler Kataloğu</title>
+    <script>
+        if (!localStorage.getItem('user')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+    <!-- Google Fonts: Plus Jakarta Sans & Outfit -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/lucide@0.263.0/dist/umd/lucide.min.js"></script>
+    
+    <style>
+        :root, :root[data-theme="dark"] {
+            --bg-dark: #04070d;
+            --panel-bg: rgba(10, 14, 26, 0.75);
+            --accent: #814fff;
+            --accent-orange: #ff5c35;
+            --accent-glow: rgba(129, 79, 255, 0.35);
+            --text-primary: #ffffff;
+            --text-secondary: #8e95b2;
+            --border-color: rgba(255, 255, 255, 0.07);
+            --card-bg: rgba(10, 14, 26, 0.85);
+            --form-bg: rgba(10, 14, 26, 0.85);
+        }
+
+        :root[data-theme="light"] {
+            --bg-dark: #f3f4f6;
+            --panel-bg: rgba(255, 255, 255, 0.85);
+            --accent: #ff5c35;
+            --accent-orange: #ff5c35;
+            --accent-glow: rgba(255, 92, 53, 0.25);
+            --text-primary: #0f172a;
+            --text-secondary: #64748b;
+            --border-color: rgba(0, 0, 0, 0.08);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --form-bg: rgba(255, 255, 255, 0.95);
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            overflow-y: auto;
+            position: relative;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Ambient Glows */
+        body::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            top: -200px;
+            left: -200px;
+            background: radial-gradient(circle, rgba(129, 79, 255, 0.08) 0%, rgba(0,0,0,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        body::after {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            bottom: -200px;
+            right: -200px;
+            background: radial-gradient(circle, rgba(255, 92, 53, 0.05) 0%, rgba(0,0,0,0) 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* Konteyner */
+        .web-container {
+            width: 100%;
+            max-width: 1340px;
+            margin: 40px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .menu-page {
+            display: none;
+            width: 100%;
+            position: relative;
+        }
+
+        .menu-page.active {
+            display: block;
+        }
+
+        /* setup-back-btn (Premium sliding text return buttons) */
+        .setup-back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 99px;
+            background: var(--form-bg);
+            border: 1px solid rgba(129, 79, 255, 0.15);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .setup-back-btn .back-icon {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            stroke: var(--text-primary);
+        }
+
+        .setup-back-btn .back-text {
+            max-width: 0;
+            opacity: 0;
+            margin-left: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-block;
+        }
+
+        .setup-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 20px var(--accent-glow) !important;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        .setup-back-btn:hover .back-icon {
+            transform: translateX(-2px);
+            stroke: #ffffff !important;
+        }
+
+        .setup-back-btn:hover .back-text {
+            max-width: 120px;
+            opacity: 1;
+        }
+
+        /* 3D Layered Card Custom CSS Styles */
+        .card-container-3d {
+            position: relative;
+            width: 250px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .main-card-3d {
+            width: 100%;
+            border-radius: 24px;
+            padding: 22px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            background: var(--card-bg) !important;
+            color: var(--text-primary) !important;
+            border: 1.5px solid rgba(129, 79, 255, 0.12);
+            box-shadow: 0 15px 35px rgba(0,0,0,.15);
+            text-decoration: none;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            text-align: left;
+            min-height: 280px;
+        }
+
+        .main-card-3d::before {
+            content: "";
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(129, 79, 255, 0.08), transparent);
+            top: -100px;
+            left: -70px;
+            filter: blur(25px);
+            pointer-events: none;
+        }
+
+        .cta-button-layer-3d {
+            width: 100%;
+            height: 80px;
+            margin-top: -40px;
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 16px;
+            cursor: pointer;
+            z-index: 5;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffffff !important;
+            background: var(--accent) !important;
+            box-shadow: 0 15px 35px rgba(0,0,0,.1);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.45s ease;
+        }
+
+        .card-container-3d:hover .main-card-3d {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 30px 60px rgba(129, 79, 255, 0.15);
+            border-color: var(--accent);
+        }
+
+        .card-container-3d:hover .cta-button-layer-3d {
+            transform: translateY(4px);
+            box-shadow: 0 15px 25px rgba(129, 79, 255, 0.1);
+        }
+
+        .header-3d {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-align: left;
+        }
+
+        .icon-box-3d {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 -3px 0px rgba(0,0,0,0.1), 0 4px 10px rgba(0,0,0,0.05);
+            flex-shrink: 0;
+        }
+
+        .header-text-3d h3 {
+            font-size: 15px;
+            font-weight: 800;
+            margin-bottom: 2px;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .header-text-3d p {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        .features-3d {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            text-align: left;
+            flex-grow: 1;
+        }
+
+        .feature-item-3d {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .feature-item-3d svg {
+            width: 13px;
+            height: 13px;
+            stroke: var(--text-secondary);
+            flex-shrink: 0;
+        }
+
+        .footer-3d {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid var(--border-color);
+            padding-top: 15px;
+            text-align: left;
+        }
+
+        .price-box-3d h4 {
+            font-size: 15px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+        }
+
+        .price-box-3d p {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            line-height: 1.2;
+        }
+
+        .tag-3d {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 10px;
+            border-radius: 99px;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        /* Alt Ürün Sayfaları Arayüzü */
+        .category-view {
+            width: 100%;
+            background: var(--card-bg);
+            border-radius: 28px;
+            border: 1px solid var(--border-color);
+            padding: 40px 60px;
+            box-sizing: border-box;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        .category-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 36px;
+            font-weight: 900;
+            color: var(--text-primary);
+            letter-spacing: -0.02em;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-transform: uppercase;
+        }
+
+        .category-subtitle {
+            font-size: 15px;
+            color: var(--text-secondary);
+            margin-bottom: 35px;
+            font-weight: 500;
+        }
+
+        /* Responsive Grid Yapısı */
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 24px;
+            width: 100%;
+        }
+
+        /* Orbai Premium Kart Tasarımı */
+        .product-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 24px;
+            padding: 30px 24px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            padding: 1px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(129, 79, 255, 0.3);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4),
+                        0 0 30px rgba(129, 79, 255, 0.05);
+        }
+
+        /* Orbai Daire İkon Kutusu */
+        .product-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-primary);
+            font-size: 26px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .product-card:hover .product-icon {
+            background: var(--accent);
+            border-color: var(--accent);
+            transform: scale(1.1);
+            box-shadow: 0 0 20px rgba(129, 79, 255, 0.4);
+        }
+
+        .product-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: 19px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+        }
+
+        .product-gramaj {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Premium Modal Tasarımı */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(4, 7, 13, 0.75);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            padding: 20px;
+        }
+
+        .modal-overlay.open,
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-card {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 0;
+            max-width: 620px;
+            width: 100%;
+            max-height: 88vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+            box-shadow: 0 40px 100px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255,255,255,0.06);
+            transform: scale(0.88) translateY(30px);
+            transition: transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-card::-webkit-scrollbar { width: 4px; }
+        .modal-card::-webkit-scrollbar-track { background: transparent; }
+        .modal-card::-webkit-scrollbar-thumb { background: rgba(129,79,255,0.3); border-radius: 99px; }
+
+        .modal-overlay.open .modal-card,
+        .modal-overlay.active .modal-card {
+            transform: scale(1) translateY(0);
+        }
+
+        /* Modal Header */
+        .modal-header {
+            padding: 30px 36px 24px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            position: relative;
+        }
+
+        .modal-icon-box {
+            width: 52px;
+            height: 52px;
+            border-radius: 16px;
+            background: rgba(129, 79, 255, 0.15);
+            border: 1.5px solid rgba(129, 79, 255, 0.25);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 20px rgba(129,79,255,0.2);
+        }
+
+        .modal-header-text { flex: 1; }
+
+        .modal-header-text h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 22px;
+            font-weight: 800;
+            color: var(--text-primary);
+            line-height: 1.2;
+            margin-bottom: 4px;
+        }
+
+        .modal-header-text p {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+        }
+
+        .modal-close-btn {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 18px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .modal-close-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            border-color: #ef4444;
+            box-shadow: 0 0 18px rgba(239, 68, 68, 0.45);
+            transform: scale(1.1);
+        }
+
+        /* Modal Body */
+        .modal-body {
+            padding: 28px 36px 36px;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+        }
+
+        /* Section Label */
+        .modal-section-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 10px;
+            font-weight: 800;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.12em;
+            margin-bottom: 14px;
+        }
+
+        .modal-section-label svg {
+            width: 14px;
+            height: 14px;
+            stroke: var(--accent);
+        }
+
+        /* Ingredients Grid */
+        .ingredients-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .ingredient-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(129, 79, 255, 0.06);
+            border: 1px solid rgba(129, 79, 255, 0.18);
+            border-radius: 10px;
+            padding: 7px 14px;
+            font-size: 12px;
+            color: var(--text-primary);
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .ingredient-tag:hover {
+            border-color: var(--accent);
+            background: rgba(129, 79, 255, 0.12);
+            transform: translateY(-1px);
+        }
+
+        .ingredient-tag .tag-amount {
+            color: var(--accent);
+            font-weight: 800;
+            font-size: 11px;
+        }
+
+        /* Instructions Steps */
+        .instructions-steps {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .step-item {
+            display: flex;
+            gap: 14px;
+            align-items: flex-start;
+            padding: 12px 16px;
+            background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 12px;
+            transition: all 0.2s;
+        }
+
+        .step-item:hover {
+            background: rgba(129,79,255,0.04);
+            border-color: rgba(129,79,255,0.15);
+        }
+
+        .step-number {
+            width: 26px;
+            height: 26px;
+            border-radius: 8px;
+            background: rgba(129, 79, 255, 0.15);
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .step-text {
+            font-size: 13px;
+            color: var(--text-primary);
+            font-weight: 500;
+            line-height: 1.6;
+            padding-top: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="web-container">
+
+        <!-- Sayfa 1: Katalog Giriş / Overview -->
+        <div class="menu-page active" id="page-overview">
+            <!-- Ana Sayfaya Dönüş Butonu & Tema Değiştirici -->
+            <div class="flex justify-between items-center mb-10">
+                <a href="dashboard.html" class="setup-back-btn">
+                    <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    <span class="back-text">Ana Sayfa</span>
+                </a>
+                <div class="flex items-center gap-4">
+                    <!-- Tema Değiştirme Segmented Switcher -->
+                    <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.07);">
+                        <button id="theme-btn-light" class="theme-btn-segment" style="padding: 6px 12px; border-radius: 99px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                            LIGHT
+                        </button>
+                        <button id="theme-btn-dark" class="theme-btn-segment active" style="padding: 6px 12px; border-radius: 99px; border: none; background: var(--accent); color: #fff; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 800;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                            DARK
+                        </button>
+                    </div>
+                    <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']">Reçeteler Kataloğu</span>
+                </div>
+            </div>
+
+            <div class="text-center mb-12">
+                <h1 class="text-4xl lg:text-5xl font-extrabold font-['Outfit'] tracking-tight mb-3">Reçeteler Kitabı &amp; Tarifler</h1>
+                <p class="text-slate-400 text-sm max-w-xl mx-auto font-medium">Değirmen Kafe baristaları için özel olarak hazırlanmış, adım adım görsel ve gramaj destekli hazırlama rehberi.</p>
+            </div>
+
+            <!-- Kategori Seçimi İçin 3D Layered Kartlar Izgarası -->
+            <div class="flex justify-center gap-10 flex-wrap width-full mt-8" id="overview-categories-grid">
+                <!-- Javascript dinamik olarak dolduracak -->
+            </div>
+        </div>
+
+        <!-- Dinamik Kategori Ürünleri Sayfası -->
+        <div class="menu-page" id="page-dynamic-category">
+            <button class="setup-back-btn mb-6" onclick="showPage('overview')">
+                <svg class="back-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                <span class="back-text">Kataloğa Dön</span>
+            </button>
+            <div class="category-view">
+                <h2 class="category-title" id="dynamic-category-title">Yükleniyor...</h2>
+                <p class="category-subtitle" id="dynamic-category-subtitle">Kategori detayları ve tarifler.</p>
+                <div class="products-grid" id="dynamic-category-grid"></div>
+            </div>
+        </div>
+
+    <!-- Modal: Ürün Detayları (Premium) -->
+    <div class="modal-overlay" id="drink-modal" onclick="closeModal(event)">
+        <div class="modal-card" id="modal-card" onclick="event.stopPropagation()">
+            <!-- Modal Başlık -->
+            <div class="modal-header">
+                <div class="modal-icon-box" id="modal-icon">☕</div>
+                <div class="modal-header-text">
+                    <h2 id="modal-name">Ürün Adı</h2>
+                    <p id="modal-gramaj">Standart Porsiyon</p>
+                </div>
+                <button onclick="closeModalDirect()" class="modal-close-btn">&times;</button>
+            </div>
+
+            <!-- Modal İçerik -->
+            <div class="modal-body">
+
+                <!-- Malzeme Listesi -->
+                <div>
+                    <div class="modal-section-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                        Kullanılan Malzemeler
+                    </div>
+                    <div id="modal-ingredients" class="ingredients-grid"></div>
+                </div>
+
+                <!-- Hazırlanış Adımları -->
+                <div>
+                    <div class="modal-section-label">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zM3.75 12h.007v.008H3.75V12zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm-.375 5.25h.007v.008H3.75v-.008zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
+                        Hazırlanış Adımları
+                    </div>
+                    <div id="modal-prep" class="instructions-steps"></div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- catalog.js Entegrasyonu -->
+    <script src="toast.js"></script>
+    <script src="catalog.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

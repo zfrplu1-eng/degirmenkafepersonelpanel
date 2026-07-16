@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değirmen Kafe - Sipariş Takip Paneli</title>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10.1">
+    
+    <script>
+        // Tema Ayarı (Dark & Light Entegrasyonu)
+        if(!localStorage.getItem("theme_reset_orbai")){localStorage.setItem("theme","dark");localStorage.setItem("theme_reset_orbai","true")}document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");
+    </script>
+
+    <style>
+        /* 🔄 Görseldeki Yuvarlak Geri Dönüş Butonu */
+        .round-back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--form-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .round-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 22px var(--accent-glow) !important;
+            transform: scale(1.05);
+        }
+
+        /* Segmented Theme Switcher Butonları (Görsel Uyumlu) */
+        .theme-btn-segment {
+            padding: 6px 12px;
+            border-radius: 99px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary) !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .theme-btn-segment.active {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        /* 🚀 Premium Modül Başlık ve Alt Başlık Stilleri */
+        .module-main-title {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 2.8rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.15 !important;
+            color: var(--text-primary) !important;
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .module-main-subtitle {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1rem !important;
+            color: var(--text-secondary) !important;
+            opacity: 0.8 !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.015em !important;
+            line-height: 1.5 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+
+        .orders-layout-grid {
+            display: grid;
+            grid-template-columns: 360px 1fr;
+            gap: 25px;
+            height: calc(100vh - 120px);
+            overflow: hidden;
+            margin-top: 20px;
+        }
+
+        .orders-sidebar-glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 22px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        [data-theme="dark"] .orders-sidebar-glass {
+            background: rgba(26, 26, 26, 0.4);
+            border-color: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .orders-content-glass {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 24px;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04);
+            overflow-y: auto;
+        }
+
+        [data-theme="dark"] .orders-content-glass {
+            background: rgba(26, 26, 26, 0.4);
+            border-color: rgba(255, 255, 255, 0.06);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .order-card-premium {
+            background: rgba(255, 255, 255, 0.7);
+            border: 1.5px solid rgba(0, 0, 0, 0.03);
+            border-radius: 16px;
+            padding: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.01);
+        }
+
+        [data-theme="dark"] .order-card-premium {
+            background: rgba(255, 255, 255, 0.02);
+            border-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .order-card-premium::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #eab308; /* pending default */
+            transition: all 0.2s ease;
+        }
+
+        .order-card-premium.status-card-approved::before { background: #22c55e; }
+        .order-card-premium.status-card-shipped::before { background: #3b82f6; }
+
+        .order-card-premium:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] .order-card-premium:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .order-card-premium.active {
+            border-color: var(--accent);
+            background: rgba(201, 168, 76, 0.06);
+        }
+
+        .status-pill-badge {
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            display: inline-block;
+        }
+
+        .status-badge-pending { background: rgba(234, 179, 8, 0.12); color: #eab308; }
+        .status-badge-approved { background: rgba(34, 197, 94, 0.12); color: #22c55e; }
+        .status-badge-shipped { background: rgba(59, 130, 246, 0.12); color: #3b82f6; }
+
+        .order-detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1.5px solid rgba(0, 0, 0, 0.05);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        [data-theme="dark"] .order-detail-header {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .manual-item-row-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr 80px 100px 40px;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body style="padding: 20px 40px; background-color: var(--form-bg); min-height: 100vh;">
+
+    <!-- Üst Başlık Çubuğu (Görsel Birebir Uyumlu Layout) -->
+    <header class="app-header-container" style="display: flex; flex-direction: column; gap: 30px; padding-bottom: 30px; border-bottom: 1.5px solid rgba(0,0,0,0.06); margin-bottom: 25px;">
+        
+        <!-- Üst Satır: Sol Köşede Yuvarlak Geri Butonu, Sağ Köşede Switcher ve Etiket -->
+        <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+            
+            <!-- Sol Köşe: Yuvarlak Geri Dön Butonu -->
+            <a href="dashboard.html" class="round-back-btn" aria-label="Geri Dön">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+            </a>
+            
+            <!-- Sağ Köşe: Tema Switcher & Kategori Etiketi -->
+            <div style="display: flex; align-items: center; gap: 20px;">
+                <!-- Tema Değiştirme Segmented Switcher -->
+                <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.07); align-items: center;">
+                    <button id="theme-btn-light" class="theme-btn-segment" style="padding: 6px 12px; border-radius: 99px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                        LIGHT
+                    </button>
+                    <button id="theme-btn-dark" class="theme-btn-segment active" style="padding: 6px 12px; border-radius: 99px; border: none; background: var(--accent); color: #fff; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                        DARK
+                    </button>
+                </div>
+                
+                <!-- Kategori Mor Etiketi -->
+                <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']" style="font-size: 11px; letter-spacing: 0.1em; color: #a855f7; font-weight: 800;">AKTİF SİPARİŞLER</span>
+            </div>
+        </div>
+
+        <!-- Alt Satır: Ortalanmış Premium Kalın Başlık & Açıklama -->
+        <div class="text-center" style="margin-top: 10px; width: 100%;">
+            <h1 class="module-main-title" id="orders-page-title" style="margin: 0; font-size: 2.8rem; font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--text-primary);">Depo Talepleri &amp; Siparişler</h1>
+            <p class="module-main-subtitle" style="margin: 10px auto 0 auto; color: var(--text-secondary); font-size: 1rem; max-w: 600px; line-height: 1.5;">Şubelerden gelen hammadde sipariş talepleri, depo hazırlık süreçleri ve aktif durum takipleri.</p>
+        </div>
+        
+        <!-- Aksiyon Butonu: Yeni Sipariş Talebi (Ortalanmış) -->
+        <div style="display: flex; justify-content: center; width: 100%; margin-top: 5px;">
+            <button class="button2" id="btn-create-manual-order" style="padding: 12px 24px; font-weight: 750; border-radius: 12px; margin: 0;">+ Yeni Sipariş Talebi</button>
+        </div>
+    </header>
+
+    <!-- Ana Panel İki Sütun Düzeni -->
+    <div class="orders-layout-grid">
+        <!-- Sol Bölüm: Sipariş Listesi -->
+        <div class="orders-sidebar-glass">
+            <div style="margin-bottom: 15px; position: relative;">
+                <input type="text" id="order-search-input" class="setting-input" placeholder="Åube veya ID ara..." style="width: 100%; border-radius: 12px; padding-left: 15px;">
+            </div>
+            
+            <div id="orders-list-wrapper" style="flex: 1; overflow-y: auto; padding-right: 5px;">
+                <!-- Sipariş kartları JS ile yüklenecek -->
+            </div>
+        </div>
+
+        <!-- Sağ Bölüm: Sipariş Detayı -->
+        <div class="orders-content-glass" id="order-detail-wrapper">
+            <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; color: var(--text-secondary);">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 15px; opacity: 0.5;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+                <p style="font-size: 13px; font-weight: 500;">Detaylarını görmek için soldan bir sipariş talebi seçin.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Manuel Sipariş Ekleme Modalı -->
+    <div id="manual-order-modal" class="recipe-detail-modal-overlay hidden" style="z-index: 1000; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+        <div class="recipe-fullscreen-detail" style="max-width: 680px; padding: 30px; border-radius: 28px;">
+            <h3 style="margin-top: 0; margin-bottom: 8px; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800;">Yeni Sipariş Talebi</h3>
+            <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 20px;">Lütfen talep edilen şubeyi ve kategoriler/ürünler bazında adetleri seçin.</p>
+            
+            <div class="setting-item" style="margin-bottom: 12px;">
+                <label style="font-weight: 700; font-size: 11px;">Åube / Bölge</label>
+                <input type="text" id="manual-order-region" class="setting-input" placeholder="Örn: Kadıköy Åubesi" style="width: 100%;">
+            </div>
+            
+            <div class="setting-item" style="margin-bottom: 15px;">
+                <label style="font-weight: 700; font-size: 11px;">Talep Eden Personel</label>
+                <input type="text" id="manual-order-user" class="setting-input" value="Zafer" style="width: 100%;">
+            </div>
+            
+            <div class="setting-item" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; border-bottom: 1.5px solid rgba(0,0,0,0.05); padding-bottom: 8px;">
+                    <label style="margin: 0; font-weight: 800; font-size: 12px;">Talep Edilecek Ürünler</label>
+                    <button class="button2" id="btn-add-manual-item" style="padding: 6px 12px; font-size: 11px; border-radius: 8px;">+ Ürün Ekle</button>
+                </div>
+                
+                <div id="manual-order-items-list" style="max-height: 250px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; padding-right: 5px;">
+                    <!-- Kategoriler ve ürünler içeren dinamik satırlar JS ile eklenecek -->
+                </div>
+            </div>
+            
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button class="button1" id="btn-close-manual-modal" style="flex: 1; border-radius: 12px;">İptal</button>
+                <button class="button2" id="btn-submit-manual-order" style="flex: 2; border-radius: 12px; font-weight: 750;">Sipariş Talebini Gönder</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="toast.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 0. Oturum Açan Kullanıcı Bilgisi ve Tema Entegrasyonu
+            const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
+            const userRegion = loggedInUser.region || "Hepsi";
+
+            const btnLight = document.getElementById("theme-btn-light");
+            const btnDark = document.getElementById("theme-btn-dark");
+            const htmlElement = document.documentElement;
+
+            function applyTheme(theme) {
+                htmlElement.setAttribute("data-theme", theme);
+                localStorage.setItem("theme", theme);
+                if (theme === "dark") {
+                    if (btnDark) btnDark.classList.add("active");
+                    if (btnLight) btnLight.classList.remove("active");
+                } else {
+                    if (btnLight) btnLight.classList.add("active");
+                    if (btnDark) btnDark.classList.remove("active");
+                }
+            }
+
+            applyTheme(localStorage.getItem("theme") || "dark");
+
+            if (btnLight) btnLight.addEventListener("click", () => applyTheme("light"));
+            if (btnDark) btnDark.addEventListener("click", () => applyTheme("dark"));
+
+            window.addEventListener("storage", (e) => {
+                if (e.key === "theme") {
+                    applyTheme(e.newValue || "dark");
+                }
+            });
+
+            // Bölgeye Göre Başlık Güncelleme
+            const pageTitle = document.getElementById("orders-page-title");
+            if (pageTitle && userRegion !== "Hepsi") {
+                pageTitle.textContent = `${userRegion} Talepleri & Siparişleri`;
+            }
+
+            const ordersListWrapper = document.getElementById("orders-list-wrapper");
+            const orderDetailWrapper = document.getElementById("order-detail-wrapper");
+            const searchInput = document.getElementById("order-search-input");
+
+            // Modal Elementleri
+            const manualOrderModal = document.getElementById("manual-order-modal");
+            const btnCreateManualOrder = document.getElementById("btn-create-manual-order");
+            const btnCloseManualModal = document.getElementById("btn-close-manual-modal");
+            const btnSubmitManualOrder = document.getElementById("btn-submit-manual-order");
+            const btnAddManualItem = document.getElementById("btn-add-manual-item");
+            const manualOrderRegion = document.getElementById("manual-order-region");
+            const manualOrderUser = document.getElementById("manual-order-user");
+            const manualOrderItemsList = document.getElementById("manual-order-items-list");
+
+            // Bölge Kısıtlamasına Göre Girişleri Kitleme
+            if (userRegion !== "Hepsi") {
+                if (manualOrderRegion) {
+                    manualOrderRegion.value = userRegion;
+                    manualOrderRegion.readOnly = true;
+                    manualOrderRegion.style.backgroundColor = "rgba(0,0,0,0.05)";
+                    manualOrderRegion.style.color = "var(--text-secondary)";
+                }
+            }
+
+            // Siparişleri Filtreleme (Yetkili sadece kendi bölgesininkini görür)
+            let allOrders = JSON.parse(localStorage.getItem("pending_orders")) || [];
+            if (userRegion !== "Hepsi") {
+                allOrders = allOrders.filter(o => o.region === userRegion);
+            }
+
+            let selectedOrderId = null;
+            let recipesDatabase = []; // Dinamik reçete listesi
+
+            // API'den Reçeteleri ve Ürünleri Çek
+            function fetchRecipesData(callback) {
+                fetch("/api/recipes?t=" + Date.now())
+                    .then(res => res.json())
+                    .then(data => {
+                        recipesDatabase = data;
+                        if (callback) callback();
+                    })
+                    .catch(err => console.error("Reçete verileri yüklenemedi:", err));
+            }
+
+            // Sipariş listesini yerel depolama ile eşzamanlı olarak güncelle ve anında render et
+            function renderOrdersList() {
+                ordersListWrapper.innerHTML = "";
+                const query = searchInput.value.toLowerCase().trim();
+
+                const filtered = allOrders.filter(o => 
+                    o.region.toLowerCase().includes(query) || 
+                    (o.displayId && o.displayId.toLowerCase().includes(query)) ||
+                    o.user.toLowerCase().includes(query)
+                );
+
+                if (filtered.length === 0) {
+                    ordersListWrapper.innerHTML = `<p style="text-align: center; color: var(--text-secondary); font-size: 12px; margin-top: 20px;">Sipariş bulunamadı.</p>`;
+                    return;
+                }
+
+                filtered.forEach(o => {
+                    const card = document.createElement("div");
+                    card.className = `order-card-premium ${selectedOrderId === o.id ? 'active' : ''} status-card-${o.status}`;
+                    card.addEventListener("click", () => {
+                        selectedOrderId = o.id;
+                        renderOrdersList();
+                        renderOrderDetail(o);
+                    });
+
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
+                            <span style="font-weight: 800; font-size: 12px; color: var(--text-primary);">${o.displayId || '#' + o.id.toString().slice(-6)}</span>
+                            <span class="status-pill-badge status-badge-${o.status}">${o.status === 'pending' ? 'Bekliyor' : o.status === 'approved' ? 'Onaylandı' : 'Kargoda'}</span>
+                        </div>
+                        <div style="font-size: 11px; color: var(--text-secondary);">
+                            <p style="margin: 2px 0;"><strong>Åube:</strong> ${o.region}</p>
+                            <p style="margin: 2px 0;"><strong>Zaman:</strong> ${o.date} ${o.time}</p>
+                        </div>
+                    `;
+                    ordersListWrapper.appendChild(card);
+                });
+            }
+
+            function renderOrderDetail(order) {
+                let itemsHTML = order.items.map(item => `
+                    <tr style="border-bottom: 1.5px solid rgba(0,0,0,0.03);">
+                        <td style="padding: 14px 12px;"><strong>${item.name}</strong></td>
+                        <td style="padding: 14px 12px; text-align: center; font-weight: 700; color: var(--text-primary);">${item.quantity} ${item.unit || 'Adet'}</td>
+                    </tr>
+                `).join('');
+
+                orderDetailWrapper.innerHTML = `
+                    <div class="order-detail-header">
+                        <div>
+                            <span class="status-pill-badge status-badge-${order.status}" style="font-size: 11px;">${order.status === 'pending' ? 'Onay Bekliyor' : order.status === 'approved' ? 'Onaylandı' : 'Gönderildi'}</span>
+                            <h3 style="margin: 8px 0 0 0; font-size: 1.5rem; font-family: 'Plus Jakarta Sans', sans-serif;">Talep ID: ${order.displayId || '#' + order.id}</h3>
+                            <p style="margin: 6px 0; font-size: 12px; color: var(--text-secondary);"><strong>Talep Eden:</strong> ${order.user} (${order.region})</p>
+                            <p style="margin: 6px 0; font-size: 12px; color: var(--text-secondary);"><strong>Zaman:</strong> ${order.date} - ${order.time}</p>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <button class="button1" id="btn-print-order" style="padding: 10px 16px; border-radius: 10px;">Yazdır ğŸ–¨</button>
+                            <button class="button2" id="btn-share-whatsapp" style="padding: 10px 16px; border-radius: 10px;">WhatsApp ğŸš€</button>
+                        </div>
+                    </div>
+
+                    <table style="width: 100%; border-collapse: collapse; margin-bottom: 25px;">
+                        <thead>
+                            <tr style="background: rgba(0,0,0,0.01); border-bottom: 2px solid rgba(0,0,0,0.04);">
+                                <th style="padding: 12px; text-align: left; font-size: 11px; font-weight: 800; color: var(--text-secondary);">TALEP EDİLEN ÜRÜN</th>
+                                <th style="padding: 12px; text-align: center; width: 120px; font-size: 11px; font-weight: 800; color: var(--text-secondary);">MİKTAR</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${itemsHTML}
+                        </tbody>
+                    </table>
+
+                    <div style="display: flex; gap: 15px; margin-top: auto; border-top: 1.5px solid rgba(0,0,0,0.05); padding-top: 20px;">
+                        ${order.status === 'pending' ? `<button class="button2" id="btn-approve-order" style="flex: 2; background-color: #22c55e; border-radius:12px;">Siparişi Onayla & Hazırla</button>` : ''}
+                        ${order.status === 'approved' ? `<button class="button2" id="btn-ship-order" style="flex: 2; background-color: #3b82f6; border-radius:12px;">Kargoya Ver / Gönder</button>` : ''}
+                        <button class="button1" id="btn-delete-order" style="flex: 1; color: #ef4444; background: rgba(239,68,68,0.08); border-radius:12px; border-color: rgba(239,68,68,0.15);">Talebi İptal Et</button>
+                    </div>
+                `;
+
+                // Sipariş Onaylama
+                const btnApprove = document.getElementById("btn-approve-order");
+                if (btnApprove) {
+                    btnApprove.addEventListener("click", () => {
+                        order.status = "approved";
+                        saveOrders();
+                        renderOrderDetail(order);
+                        renderOrdersList();
+                    });
+                }
+
+                // Sipariş Gönderme
+                const btnShip = document.getElementById("btn-ship-order");
+                if (btnShip) {
+                    btnShip.addEventListener("click", () => {
+                        order.status = "shipped";
+                        saveOrders();
+                        renderOrderDetail(order);
+                        renderOrdersList();
+                    });
+                }
+
+                // Sipariş Silme
+                document.getElementById("btn-delete-order").addEventListener("click", () => {
+                    if (confirm("Bu siparişi silmek istediğinize emin misiniz?")) {
+                        allOrders = allOrders.filter(o => o.id !== order.id);
+                        saveOrders();
+                        selectedOrderId = null;
+                        renderOrdersList();
+                        orderDetailWrapper.innerHTML = `
+                            <div style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-secondary);">
+                                <p>Detaylarını görmek için soldan bir sipariş seçin.</p>
+                            </div>
+                        `;
+                    }
+                });
+
+                // WhatsApp
+                document.getElementById("btn-share-whatsapp").addEventListener("click", () => {
+                    let msg = `*DEÄİRMEN KAFE SİPARİÅ TALEBİ* ğŸš€\n`;
+                    msg += `*ID:* ${order.displayId || order.id}\n`;
+                    msg += `*Åube:* ${order.region}\n`;
+                    msg += `*Personel:* ${order.user}\n\n`;
+                    msg += `*Talep Listesi:*\n`;
+                    order.items.forEach(item => {
+                        msg += `â€¢ ${item.name} - ${item.quantity} ${item.unit || 'Adet'}\n`;
+                    });
+                    const url = `https://wa.me/905527461908?text=${encodeURIComponent(msg)}`;
+                    window.open(url, "_blank");
+                });
+
+                // Yazdır
+                document.getElementById("btn-print-order").addEventListener("click", () => {
+                    window.print();
+                });
+            }
+
+            function saveOrders() {
+                localStorage.setItem("pending_orders", JSON.stringify(allOrders));
+            }
+
+            searchInput.addEventListener("input", renderOrdersList);
+
+            // Manuel Sipariş Modalı Açma
+            btnCreateManualOrder.addEventListener("click", () => {
+                manualOrderItemsList.innerHTML = "";
+                addManualItemRow();
+                manualOrderModal.classList.remove("hidden");
+            });
+
+            btnCloseManualModal.addEventListener("click", () => {
+                manualOrderModal.classList.add("hidden");
+            });
+
+            // Kategoriler ve Ürünler Seçimli Satır Ekleme
+            function addManualItemRow() {
+                const row = document.createElement("div");
+                row.className = "manual-item-row-grid";
+                
+                // Kategori dropdown seçenekleri
+                let catOptions = `<option value="">Kategori Seç...</option>`;
+                recipesDatabase.forEach((cat, idx) => {
+                    catOptions += `<option value="${idx}">${cat.label}</option>`;
+                });
+
+                row.innerHTML = `
+                    <select class="setting-select item-category-select" style="width: 100%; font-size: 11px;">
+                        ${catOptions}
+                    </select>
+                    <select class="setting-select item-product-select" style="width: 100%; font-size: 11px;" disabled>
+                        <option value="">Önce Kategori Seç...</option>
+                    </select>
+                    <input type="number" class="setting-input item-qty-input" placeholder="Adet" value="1" min="1" style="width: 100%; text-align: center;">
+                    <select class="setting-select item-unit-select" style="width: 100%; font-size: 11px;">
+                        <option value="Adet">Adet</option>
+                        <option value="kg">kg</option>
+                        <option value="Litre">Litre</option>
+                        <option value="Kutu">Kutu</option>
+                    </select>
+                    <button type="button" class="btn-delete-row" style="background:none; border:none; color:#ef4444; font-size:1.4rem; cursor:pointer; text-align: center;">&times;</button>
+                `;
+
+                manualOrderItemsList.appendChild(row);
+
+                const catSelect = row.querySelector(".item-category-select");
+                const prodSelect = row.querySelector(".item-product-select");
+                const deleteBtn = row.querySelector(".btn-delete-row");
+
+                // Kategori değiştiğinde ürün dropdownunu güncelle
+                catSelect.addEventListener("change", () => {
+                    const catIdx = catSelect.value;
+                    if (catIdx === "") {
+                        prodSelect.innerHTML = `<option value="">Önce Kategori Seç...</option>`;
+                        prodSelect.disabled = true;
+                        return;
+                    }
+
+                    prodSelect.disabled = false;
+                    let prodOptions = `<option value="">Ürün Seç...</option>`;
+                    recipesDatabase[catIdx].items.forEach(item => {
+                        prodOptions += `<option value="${item.name}">${item.name}</option>`;
+                    });
+                    prodSelect.innerHTML = prodOptions;
+                });
+
+                deleteBtn.addEventListener("click", () => row.remove());
+            }
+
+            btnAddManualItem.addEventListener("click", addManualItemRow);
+
+            btnSubmitManualOrder.addEventListener("click", () => {
+                const region = manualOrderRegion.value.trim();
+                const user = manualOrderUser.value.trim();
+                if (!region || !user) {
+                    alert("Lütfen şube ve personel adını girin!");
+                    return;
+                }
+
+                const items = [];
+                document.querySelectorAll(".manual-item-row-grid").forEach(row => {
+                    const catSelect = row.querySelector(".item-category-select");
+                    const prodSelect = row.querySelector(".item-product-select");
+                    const qtyInput = row.querySelector(".item-qty-input");
+                    const unitSelect = row.querySelector(".item-unit-select");
+
+                    const productName = prodSelect.value;
+                    const qty = parseFloat(qtyInput.value) || 1;
+                    const unit = unitSelect.value;
+
+                    if (catSelect.value !== "" && productName !== "") {
+                        items.push({ name: productName, quantity: qty, unit });
+                    }
+                });
+
+                if (items.length === 0) {
+                    alert("Lütfen en az bir geçerli ürün seçin!");
+                    return;
+                }
+
+                const d = new Date();
+                const timeStr = d.toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+                const dateStr = d.toLocaleDateString("tr-TR");
+
+                const newOrder = {
+                    id: Date.now(),
+                    displayId: `#SL-${d.getFullYear()}${(d.getMonth()+1).toString().padStart(2,'0')}-${Math.floor(100+Math.random()*900)}`,
+                    date: dateStr,
+                    time: timeStr,
+                    region,
+                    user,
+                    status: "pending",
+                    items
+                };
+
+                allOrders.unshift(newOrder);
+                saveOrders();
+                manualOrderModal.classList.add("hidden");
+                renderOrdersList();
+                alert("Yeni sipariş talebi oluşturuldu!");
+            });
+
+            // Başlat
+            fetchRecipesData(() => {
+                renderOrdersList();
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Layered Pricing Cards</title>
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-page: #f5eedf; /* Warm light-cream background from the image */
+            --gold-gradient: linear-gradient(135deg, #f2e2ca 0%, #d8be96 100%);
+            --dark-gradient: linear-gradient(135deg, #242424 0%, #141414 100%);
+            --charcoal: #1a1a1a;
+            --text-muted-light: rgba(26, 26, 26, 0.6);
+            --text-muted-dark: rgba(255, 255, 255, 0.5);
+            --border-light: rgba(0, 0, 0, 0.04);
+            --border-dark: rgba(255, 255, 255, 0.04);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 40px 20px;
+        }
+
+        .container {
+            display: flex;
+            gap: 60px;
+            max-width: 1000px;
+            width: 100%;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        /* 3D Layered Card Container */
+        .card-container {
+            position: relative;
+            width: 340px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Variant Label (A / B) */
+        .variant-label {
+            font-size: 56px;
+            font-weight: 800;
+            color: rgba(26, 26, 26, 0.1);
+            margin-bottom: 24px;
+            text-align: center;
+            user-select: none;
+        }
+
+        /* Main Upper Card */
+        .main-card {
+            width: 100%;
+            border-radius: 28px;
+            padding: 30px;
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 28px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08), 
+                        0 5px 15px rgba(0, 0, 0, 0.04);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Overlapping Bottom CTA Button */
+        .cta-button-layer {
+            width: 93%;
+            height: 100px;
+            margin-top: -50px; /* Pulls it up behind the main card */
+            border-radius: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 24px;
+            cursor: pointer;
+            z-index: 5;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12),
+                        0 5px 15px rgba(0, 0, 0, 0.06);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.4s ease;
+        }
+
+        /* Interactive Hover Effects */
+        .card-container:hover .main-card {
+            transform: translateY(-8px);
+        }
+
+        .card-container:hover .cta-button-layer {
+            transform: translateY(4px);
+            box-shadow: 0 25px 45px rgba(0, 0, 0, 0.18),
+                        0 10px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Header Style */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* 3D Styled Icons */
+        .icon-box-3d {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 -3px 0px rgba(0,0,0,0.2),
+                        0 4px 10px rgba(0,0,0,0.15);
+        }
+
+        .header-text h3 {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+            margin-bottom: 2px;
+        }
+
+        .header-text p {
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* Feature List Style */
+        .features {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .feature-item svg {
+            width: 16px;
+            height: 16px;
+            stroke-width: 2.2;
+            fill: none;
+        }
+
+        /* Footer / Pricing Section */
+        .footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid;
+            padding-top: 24px;
+        }
+
+        .price-box h4 {
+            font-size: 20px;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+        .price-box p {
+            font-size: 11px;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Small Figma Project Tag */
+        .tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .tag svg {
+            width: 12px;
+            height: 12px;
+            fill: currentColor;
+        }
+
+
+        /* ==========================================
+           VARIANT SPECIFIC CUSTOMIZATIONS
+           ========================================== */
+
+        /* Variant A (Light/Gold) Style rules */
+        .variant-a .main-card {
+            background: var(--gold-gradient);
+            color: var(--charcoal);
+            border: 1px solid var(--border-light);
+        }
+        .variant-a .header-text p {
+            color: var(--text-muted-light);
+        }
+        .variant-a .feature-item svg {
+            stroke: var(--charcoal);
+        }
+        .variant-a .footer {
+            border-color: rgba(26, 26, 26, 0.08);
+        }
+        .variant-a .price-box p {
+            color: var(--text-muted-light);
+        }
+        .variant-a .tag {
+            background-color: var(--charcoal);
+            color: #ffffff;
+        }
+        .variant-a .cta-button-layer {
+            background: var(--dark-gradient);
+            color: #ffffff;
+        }
+        .variant-a .icon-box-3d {
+            background: #2a2a2a;
+            color: #ffb74d;
+        }
+
+        /* Variant B (Dark/Charcoal) Style rules */
+        .variant-b .main-card {
+            background: var(--dark-gradient);
+            color: #ffffff;
+            border: 1px solid var(--border-dark);
+        }
+        .variant-b .header-text p {
+            color: var(--text-muted-dark);
+        }
+        .variant-b .feature-item svg {
+            stroke: #ffffff;
+        }
+        .variant-b .footer {
+            border-color: rgba(255, 255, 255, 0.08);
+        }
+        .variant-b .price-box p {
+            color: var(--text-muted-dark);
+        }
+        .variant-b .tag {
+            background: var(--gold-gradient);
+            color: var(--charcoal);
+        }
+        .variant-b .cta-button-layer {
+            background: var(--gold-gradient);
+            color: var(--charcoal);
+        }
+        .variant-b .icon-box-3d {
+            background: #ffffff;
+            color: var(--charcoal);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <!-- VARIANT A (LIGHT / GOLD) -->
+        <div class="card-container variant-a">
+            <div class="variant-label">A</div>
+            
+            <!-- Main Card -->
+            <div class="main-card">
+                <div class="header">
+                    <div class="icon-box-3d">
+                        <!-- Layers Graphic Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+                    </div>
+                    <div class="header-text">
+                        <h3>One-Off</h3>
+                        <p>Launch your dream site in 7 days</p>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                        <span>Single page</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        <span>Design only</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>
+                        <span>Slack communication</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v8M8 12h8"/></svg>
+                        <span>Custom Graphics / Illustrations</span>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="price-box">
+                        <h4>$1300</h4>
+                        <p>Billed one time</p>
+                    </div>
+                    <div class="tag">
+                        <!-- Figma Icon Representation -->
+                        <svg viewBox="0 0 36 36"><path d="M18 10a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H14v-4a4 4 0 0 1 4-4z"/><path d="M14 22a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4H18a4 4 0 0 0-4 4z"/><circle cx="10" cy="14" r="4"/></svg>
+                        <span>Figma Project</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overlapping Button Underneath -->
+            <div class="cta-button-layer">
+                <span>Choose Design Only</span>
+            </div>
+        </div>
+
+        <!-- VARIANT B (DARK / CHARCOAL) -->
+        <div class="card-container variant-b">
+            <div class="variant-label">B</div>
+            
+            <!-- Main Card -->
+            <div class="main-card">
+                <div class="header">
+                    <div class="icon-box-3d">
+                        <!-- Gear/Settings Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                    </div>
+                    <div class="header-text">
+                        <h3>One-Off</h3>
+                        <p>Launch your dream site in 7 days</p>
+                    </div>
+                </div>
+
+                <div class="features">
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><line x1="9" y1="3" x2="9" y2="21"/></svg>
+                        <span>Single page</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+                        <span>Design only</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/></svg>
+                        <span>Slack communication</span>
+                    </div>
+                    <div class="feature-item">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 8v8M8 12h8"/></svg>
+                        <span>Custom Graphics / Illustrations</span>
+                    </div>
+                </div>
+
+                <div class="footer">
+                    <div class="price-box">
+                        <h4>$1300</h4>
+                        <p>Billed one time</p>
+                    </div>
+                    <div class="tag">
+                        <!-- Figma Icon Representation -->
+                        <svg viewBox="0 0 36 36"><path d="M18 10a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H14v-4a4 4 0 0 1 4-4z"/><path d="M14 22a4 4 0 0 0 4 4 4 4 0 0 0 4-4v-4H18a4 4 0 0 0-4 4z"/><circle cx="10" cy="14" r="4"/></svg>
+                        <span>Figma Project</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Overlapping Button Underneath -->
+            <div class="cta-button-layer">
+                <span>Choose Design Only</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

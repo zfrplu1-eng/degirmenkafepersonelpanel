@@ -1,0 +1,112 @@
+[
+    {
+        "id": "ORD-2174",
+        "branch": "Merkez Şube",
+        "status": "pending",
+        "date": "09.07.2026 15:41:53",
+        "items": [
+            {
+                "name": "HM-KARAMEL AROMALI KOKTEYL ŞURUBU",
+                "qty": 1,
+                "unit": "Adet"
+            },
+            {
+                "name": "HM-NAR AROMALI KOKTEYL ŞURUBU",
+                "qty": 1,
+                "unit": "Adet"
+            },
+            {
+                "name": "HM-ŞEKER AROMALI KOKTEYL ŞURUBU",
+                "qty": 1,
+                "unit": "Koli"
+            }
+        ]
+    },
+    {
+        "id": "ORD-6441",
+        "branch": "Merkez Şube",
+        "status": "pending",
+        "date": "09.07.2026 15:50:13",
+        "items": [
+            {
+                "name": "HM-SAKURA BASE",
+                "qty": 1,
+                "unit": "Adet"
+            },
+            {
+                "name": "HM-ROBIOS SEFTALI BASE",
+                "qty": 1,
+                "unit": "Adet"
+            }
+        ]
+    },
+    {
+        "id": "ORD-1377",
+        "branch": "Merkez x",
+        "status": "pending",
+        "date": "15.07.2026 14:21:53",
+        "items": [
+            {
+                "name": "HM-BİTTER ÇİKOLATALI BAR SOS MONTE CRİSTO",
+                "qty": 1,
+                "unit": "Adet"
+            }
+        ]
+    },
+    {
+        "id": "ORD-3968",
+        "branch": "Merkez Şube",
+        "status": "pending",
+        "date": "15.07.2026 14:32:11",
+        "items": [
+            {
+                "name": "HM-BERRY HIBISCUS AROMALI KOKTEYL ŞURUBU",
+                "qty": 1,
+                "unit": "Adet"
+            },
+            {
+                "name": "HM-BÖĞÜRTLEN AROMALI KOKTEYL ŞURUBU",
+                "qty": 1,
+                "unit": "Adet"
+            }
+        ]
+    },
+    {
+        "id": "ORD-5260",
+        "branch": "Merkez Şube",
+        "username": "zafer",
+        "status": "pending",
+        "date": "15.07.2026 23:53:16",
+        "items": [
+            {
+                "name": "HM-FİLTRE KAHVE",
+                "qty": 1,
+                "unit": "Adet"
+            },
+            {
+                "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)",
+                "qty": 1,
+                "unit": "Koli"
+            }
+        ]
+    },
+    {
+        "id": "ORD-7329",
+        "branch": "Merkez Şube",
+        "username": "zafer",
+        "status": "pending",
+        "date": "15.07.2026 23:55:04",
+        "items": [
+            {
+                "name": "HM-KARAMEL AROMALI BAR SOS MONTE CRİSTO",
+                "qty": 1,
+                "unit": "Adet"
+            },
+            {
+                "name": "HM-BİTTER ÇİKOLATALI BAR SOS MONTE CRİSTO",
+                "qty": 1,
+                "unit": "Koli"
+            }
+        ]
+    }
+]

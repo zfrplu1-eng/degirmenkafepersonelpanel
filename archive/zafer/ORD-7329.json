@@ -1,0 +1,21 @@
+{
+    "id": "ORD-7329",
+    "branch": "Merkez Şube",
+    "username": "zafer",
+    "status": "pending",
+    "date": "15.07.2026 23:55:04",
+    "items": [
+        {
+            "name": "HM-KARAMEL AROMALI BAR SOS MONTE CRİSTO",
+            "qty": 1,
+            "unit": "Adet"
+        },
+        {
+            "name": "HM-BİTTER ÇİKOLATALI BAR SOS MONTE CRİSTO",
+            "qty": 1,
+            "unit": "Koli"
+        }
+    ],
+    "type": "orders",
+    "timestamp": "2026-07-15T20:55:04.064Z"
+}

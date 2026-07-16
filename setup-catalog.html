@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Ayarları - Reçete Kataloğu Editörü</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10.1">
+    <script>
+        if(!localStorage.getItem("theme_reset_orbai")){localStorage.setItem("theme","dark");localStorage.setItem("theme_reset_orbai","true")}
+        document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");
+    </script>
+    <style>
+        .category-tab {
+            width: 100%;
+            text-align: left;
+            padding: 12px 18px;
+            border-radius: 12px;
+            border: 2px solid rgba(129, 79, 255, 0.15);
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            color: var(--text-primary);
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .category-tab:hover {
+            background: rgba(129, 79, 255, 0.08);
+            border-color: var(--accent);
+        }
+        .category-tab.active {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 4px 15px rgba(129, 79, 255, 0.25);
+        }
+        .cat-info {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .cat-actions {
+            display: flex;
+            gap: 4px;
+        }
+        .cat-btn {
+            background: transparent;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            color: inherit;
+            opacity: 0.6;
+            transition: opacity 0.2s;
+        }
+        .cat-btn:hover {
+            opacity: 1;
+        }
+        .recipe-admin-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.3s ease;
+        }
+        .recipe-admin-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent);
+            background: rgba(129, 79, 255, 0.03);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        /* Belirgin Modal Stilleri */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-card-premium {
+            width: 650px;
+            padding: 35px;
+            border-radius: 28px;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 2px solid var(--accent);
+            background: var(--form-bg);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.5), 0 0 20px rgba(129, 79, 255, 0.15);
+            animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        @keyframes modalFadeIn {
+            from { transform: scale(0.95); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+        .ing-row {
+            display: grid;
+            grid-template-columns: 1.5fr 80px 80px 40px;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 8px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .toast-notif {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 12px 24px;
+            border-radius: 12px;
+            color: #fff;
+            font-weight: 700;
+            font-size: 13px;
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .toast-notif.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .toast-success { background: #10b981; }
+        .toast-error { background: #ef4444; }
+        
+        .modal-section-title {
+            font-size: 11px;
+            font-weight: 900;
+            color: var(--accent);
+            margin-bottom: 8px;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+        /* 🚀 Premium Modül Başlık ve Alt Başlık Stilleri */
+        .module-main-title {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 2.8rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.15 !important;
+            color: #ffffff !important;
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .module-main-subtitle {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1rem !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.015em !important;
+            line-height: 1.5 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+
+        /* Aydınlık Modda Yazıları Koyu Renk Yapar */
+        [data-theme="light"] .module-main-title {
+            color: #0f172a !important;
+        }
+        [data-theme="light"] .module-main-subtitle {
+            color: #475569 !important;
+        }
+
+        /* 🔄 Görseldeki Yuvarlak Geri Dönüş Butonu */
+        .round-back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--form-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .round-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 22px var(--accent-glow) !important;
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body class="setup-sub-body">
+
+    <div class="setup-container-box" style="max-width: 1200px; min-height: auto; padding: 25px; margin: 20px auto;">
+        
+        <!-- 🔄 Görseldeki Premium Layout Düzeni -->
+        <header class="setup-subview-header" style="display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; border-bottom: 1.5px solid rgba(0,0,0,0.05); padding-bottom: 30px; width: 100%;">
+            
+            <!-- Üst Satır: Sol Köşede Yuvarlak Geri Butonu, Sağ Köşede Etiket -->
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                
+                <!-- Sol Köşe: Yuvarlak Geri Dön Butonu -->
+                <a href="setup.html" class="round-back-btn" aria-label="Geri Dön">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </a>
+                
+                <!-- Sağ Köşe: Kategori Mor Etiketi -->
+                <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']" style="font-size: 11px; letter-spacing: 0.1em; color: #a855f7; font-weight: 800;">KATALOG YÖNETİMİ</span>
+            </div>
+
+            <!-- Alt Satır: Ortalanmış Premium Kalın Başlık & Açıklama -->
+            <div class="text-center" style="margin-top: 10px; width: 100%;">
+                <h1 class="module-main-title" style="margin: 0; font-size: 2.8rem; font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--text-primary);">Reçete Kataloğu Yönetimi</h1>
+                <p class="module-main-subtitle" style="margin: 10px auto 0 auto; color: var(--text-secondary); font-size: 1rem; max-w: 600px; line-height: 1.5;">Menü kategorilerini tanımlayın, ürün tariflerini, malzemeleri ve yapılış talimatlarını ekleyip düzenleyin.</p>
+            </div>
+            
+            <!-- Aksiyon Butonları (Ortalanmış) -->
+            <div style="display: flex; justify-content: center; gap: 10px; width: 100%; margin-top: 5px;">
+                <button class="button2" onclick="openAddCatModal()" style="margin: 0; font-weight: 800; background: rgba(129, 79, 255, 0.15); color: var(--text-primary); border: 1px solid rgba(129, 79, 255, 0.3); border-radius: 12px; display: flex; align-items: center; gap: 6px; padding: 12px 24px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Yeni Kategori Ekle</span>
+                </button>
+                <button class="button2" id="btn-open-add-product" onclick="openProductModal()" style="margin: 0; font-weight: 800; background: var(--accent); color: #fff; border-radius: 12px; display: flex; align-items: center; gap: 6px; padding: 12px 24px; display: none;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                    <span>Yeni Ürün Ekle</span>
+                </button>
+            </div>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 30px;">
+            <!-- Sol: Kategori Listesi -->
+            <div style="border-right: 1.5px solid rgba(129, 79, 255, 0.1); padding-right: 20px;">
+                <label style="font-size: 11px; font-weight: 900; color: var(--text-secondary); display: block; margin-bottom: 12px; letter-spacing: 0.5px;">KATEGORİLER</label>
+                <div id="setup-categories-list" style="display: flex; flex-direction: column; gap: 6px;">
+                    <!-- Dinamik kategoriler -->
+                </div>
+            </div>
+
+            <!-- Sağ: Ürünler Grid -->
+            <div style="background: var(--card-bg); border: 1px solid rgba(129, 79, 255, 0.1); padding: 25px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03);">
+                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; border-bottom: 1px solid rgba(129, 79, 255, 0.1); padding-bottom: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span id="setup-active-category-icon" style="font-size: 20px;">☕</span>
+                        <h4 style="margin: 0; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 900; color: var(--text-primary); font-size: 15px;" id="setup-active-category-title">Kategori Seçin</h4>
+                    </div>
+                    <span id="setup-category-count" style="font-size: 11px; font-weight: 800; color: var(--text-secondary); background: rgba(129, 79, 255, 0.1); padding: 4px 10px; border-radius: 20px;">0 Ürün</span>
+                </div>
+                
+                <div id="no-category-selected" style="padding: 60px 20px; text-align: center; color: var(--text-secondary);">
+                    <p style="font-size: 14px; font-weight: 700;">Düzenlemek ve yeni ürünler eklemek için sol menüden bir kategori seçin.</p>
+                </div>
+
+                <div id="products-grid-container" style="display: none; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 20px; max-height: 520px; overflow-y: auto; padding: 5px;">
+                    <!-- JS Ürün Kartları -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Belirgin Modal: Ürün Ekle / Düzenle -->
+    <div class="modal-overlay" id="product-modal">
+        <div class="modal-card-premium">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); padding-bottom: 15px; margin-bottom: 25px;">
+                <h3 id="modal-product-title" style="margin:0; font-weight: 900; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35rem; color: var(--text-primary);">Ürün Ekle</h3>
+                <button onclick="closeModal('product-modal')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 20px; color: var(--text-secondary); cursor: pointer; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;">&times;</button>
+            </div>
+            
+            <form id="product-form" onsubmit="event.preventDefault(); saveProduct();" style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label class="modal-section-title">ÜRÜN ADI</label>
+                    <input type="text" id="prod-name" class="setting-input" style="width: 100%; border: 1px solid var(--accent); padding: 12px;" placeholder="Örn: White Chocolate Mocha" required>
+                </div>
+
+                <div>
+                    <label class="modal-section-title">PORSIYON / GRAMAJ</label>
+                    <input type="text" id="prod-gramaj" class="setting-input" style="width: 100%; padding: 12px;" placeholder="Örn: 12 oz, 350 ml">
+                </div>
+
+                <div>
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+                        <label class="modal-section-title" style="margin:0;">KULLANILAN MALZEMELER (ENVANTERDEN)</label>
+                        <button type="button" onclick="addIngredientRow()" class="button2" style="margin: 0; padding: 6px 14px; font-size: 11px; border-radius: 8px; background: var(--accent);">+ Malzeme Ekle</button>
+                    </div>
+                    <div id="ingredients-container" style="max-height: 250px; overflow-y: auto; padding-right: 5px;">
+                        <!-- Malzeme satırları -->
+                    </div>
+                </div>
+
+                <div>
+                    <label class="modal-section-title">HAZIRLANIŞ TARİFİ ADIMLARI (Satır Satır Yazın)</label>
+                    <textarea id="prod-instructions" class="setting-input" style="width: 100%; min-height: 120px; resize: vertical; padding: 12px; line-height: 1.5;" placeholder="Her adımı yeni bir satıra yazınız. Örn:&#10;Espressoyu bardağa çekin.&#10;Sütü köpürtüp üzerine ekleyin."></textarea>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px;">
+                    <button type="button" class="button1" onclick="closeModal('product-modal')" style="margin:0; border-radius: 12px; padding: 12px 24px;">İptal</button>
+                    <button type="submit" class="button2" style="margin:0; font-weight:800; border-radius: 12px; padding: 12px 30px; background: var(--accent);">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Belirgin Modal: Kategori Ekle -->
+    <div class="modal-overlay" id="cat-modal">
+        <div class="modal-card-premium" style="max-width: 440px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; border-bottom: 2px solid var(--accent); padding-bottom: 15px; margin-bottom: 25px;">
+                <h3 id="modal-cat-title" style="margin:0; font-weight: 900; font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.35rem; color: var(--text-primary);">Kategori Ekle</h3>
+                <button onclick="closeModal('cat-modal')" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 20px; color: var(--text-secondary); cursor: pointer; border-radius: 50%; width: 32px; height: 32px; display: flex; justify-content: center; align-items: center;">&times;</button>
+            </div>
+            
+            <form id="cat-form" onsubmit="event.preventDefault(); saveCategory();" style="display: flex; flex-direction: column; gap: 20px;">
+                <div>
+                    <label class="modal-section-title">KATEGORİ ID (Küçük Harf / Alt Çizgi)</label>
+                    <input type="text" id="cat-id" class="setting-input" style="width: 100%; border: 1px solid var(--accent); padding: 12px;" placeholder="Örn: sicak_kahveler" required>
+                </div>
+
+                <div>
+                    <label class="modal-section-title">KATEGORİ ADI (Ekranda Görünen)</label>
+                    <input type="text" id="cat-label" class="setting-input" style="width: 100%; padding: 12px;" placeholder="Örn: Sıcak Kahveler" required>
+                </div>
+
+                <div style="display: flex; justify-content: flex-end; gap: 12px; margin-top: 15px; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 20px;">
+                    <button type="button" class="button1" onclick="closeModal('cat-modal')" style="margin:0; border-radius: 12px; padding: 12px 24px;">İptal</button>
+                    <button type="submit" class="button2" style="margin:0; font-weight:800; border-radius: 12px; padding: 12px 30px; background: var(--accent);">Kaydet</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast-el" class="toast-notif">Başarılı!</div>
+
+    <script>
+        let allData = [];
+        let activeCatId = null;
+        let editingProductName = null;
+        let editingCatId = null;
+        let inventoryList = []; // Envanter listesi
+
+        const CAT_ICONS = {
+            sicak: '☕',
+            cold_coffee: '❄️',
+            frappe: '🍨',
+            frozen: '🍧',
+            fresh_drink: '🍋',
+            milkshake: '🥤',
+            alt_fresh: '🌿'
+        };
+
+        function getIcon(id) {
+            return CAT_ICONS[id] || '🍽️';
+        }
+
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("systemAuth") !== "1908") {
+                window.location.href = "setup.html";
+                return;
+            }
+            loadInventory();
+            loadData();
+        });
+
+        // Envanter listesini çek
+        async function loadInventory() {
+            try {
+                const res = await fetch('/api/products');
+                inventoryList = await res.json();
+                // Ada göre sıralayalım
+                inventoryList.sort((a,b) => a.name.localeCompare(b.name));
+            } catch(e) {
+                console.error("Envanter listesi yüklenemedi", e);
+            }
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch('/api/menu-recipes?t=' + Date.now());
+                allData = await res.json();
+                renderCategories();
+                if (activeCatId) {
+                    selectCategory(activeCatId);
+                }
+            } catch (e) {
+                showToast("Veriler yüklenirken hata oluştu!", "error");
+            }
+        }
+
+        function renderCategories() {
+            const listEl = document.getElementById("setup-categories-list");
+            listEl.innerHTML = "";
+            allData.forEach(cat => {
+                const tab = document.createElement("div");
+                tab.className = "category-tab" + (cat.id === activeCatId ? " active" : "");
+                
+                const icon = getIcon(cat.id);
+                tab.innerHTML = '<div class="cat-info"><span>' + icon + '</span><span>' + cat.label + '</span></div>' +
+                                '<div class="cat-actions">' +
+                                '<button type="button" class="cat-btn" onclick="event.stopPropagation(); openEditCatModal(\'' + cat.id + '\')">✏️</button>' +
+                                '<button type="button" class="cat-btn" onclick="event.stopPropagation(); deleteCategory(\'' + cat.id + '\')">🗑️</button>' +
+                                '</div>';
+                
+                tab.addEventListener("click", () => selectCategory(cat.id));
+                listEl.appendChild(tab);
+            });
+        }
+
+        function selectCategory(id) {
+            activeCatId = id;
+            renderCategories();
+            
+            const cat = allData.find(c => c.id === id);
+            if (!cat) return;
+
+            document.getElementById("no-category-selected").style.display = "none";
+            document.getElementById("products-grid-container").style.display = "grid";
+            document.getElementById("btn-open-add-product").style.display = "flex";
+            
+            document.getElementById("setup-active-category-icon").textContent = getIcon(id);
+            document.getElementById("setup-active-category-title").textContent = cat.label;
+            document.getElementById("setup-category-count").textContent = (cat.items ? cat.items.length : 0) + " Ürün";
+
+            renderProducts(cat.items || []);
+        }
+
+        function renderProducts(items) {
+            const container = document.getElementById("products-grid-container");
+            container.innerHTML = "";
+
+            if (items.length === 0) {
+                container.innerHTML = '<div style="grid-column: 1/-1; padding: 40px; text-align: center; color: var(--text-secondary); font-weight: bold;">Bu kategoride henüz ürün yok.</div>';
+                return;
+            }
+
+            items.forEach(item => {
+                const card = document.createElement("div");
+                card.className = "recipe-admin-card";
+                
+                const ings = item.ingredients || [];
+                let ingBadges = ings.slice(0, 3).map(ing => '<span style="font-size: 9px; padding: 2px 6px; background: rgba(255,255,255,0.05); border-radius: 4px; border: 1px solid rgba(255,255,255,0.05); text-transform: capitalize;">' + (ing.product || ing.name) + '</span>').join('');
+                if (ings.length > 3) {
+                    ingBadges += '<span style="font-size: 9px; padding: 2px 6px; background: rgba(129, 79, 255, 0.1); border-radius: 4px; color: var(--accent);">+' + (ings.length - 3) + ' daha</span>';
+                }
+                
+                const cleanName = item.name.replace(/\'/g, "\'").replace(/'/g, "\'");
+                
+                card.innerHTML = '<div>' +
+                                 '<div style="font-weight: 800; font-size: 14px; color: var(--text-primary); margin-bottom: 4px;">' + item.name + '</div>' +
+                                 '<div style="font-size: 11px; color: var(--text-secondary); margin-bottom: 12px;">' + (item.gramaj || 'Standard') + '</div>' +
+                                 '<div style="display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 15px;">' + ingBadges + '</div>' +
+                                 '</div>' +
+                                 '<div style="display: flex; gap: 8px; justify-content: flex-end; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 12px; margin-top: auto;">' +
+                                 '<button type="button" onclick="openEditProductModal(\'' + cleanName + '\')" class="button2" style="margin: 0; padding: 5px 12px; font-size: 11px; border-radius: 8px; background: rgba(129, 79, 255, 0.15); color: var(--text-primary); border: 1px solid rgba(129, 79, 255, 0.2);">Düzenle</button>' +
+                                 '<button type="button" onclick="deleteProduct(\'' + cleanName + '\')" class="button2" style="margin: 0; padding: 5px 12px; font-size: 11px; border-radius: 8px; background: rgba(239, 68, 68, 0.1); color: #ef4444; border: 1px solid rgba(239,68,68,0.2);">Sil</button>' +
+                                 '</div>';
+                
+                container.appendChild(card);
+            });
+        }
+
+        // --- Ürün Ekle / Düzenleme Metotları ---
+        function openProductModal(item = null) {
+            editingProductName = item ? item.name : null;
+            document.getElementById("modal-product-title").textContent = item ? "Ürünü Düzenle" : "Yeni Ürün Ekle";
+            
+            document.getElementById("prod-name").value = item ? item.name : "";
+            document.getElementById("prod-gramaj").value = item ? (item.gramaj || "") : "";
+            document.getElementById("prod-instructions").value = item ? (item.instructions || "") : "";
+            
+            const ingContainer = document.getElementById("ingredients-container");
+            ingContainer.innerHTML = "";
+            
+            if (item && item.ingredients && item.ingredients.length > 0) {
+                item.ingredients.forEach(ing => addIngredientRow(ing));
+            } else {
+                addIngredientRow();
+            }
+
+            openModal("product-modal");
+        }
+
+        function openEditProductModal(name) {
+            const cat = allData.find(c => c.id === activeCatId);
+            if (!cat) return;
+            const item = cat.items.find(i => i.name === name);
+            if (item) {
+                openProductModal(item);
+            }
+        }
+
+        function addIngredientRow(ing = null) {
+            const container = document.getElementById("ingredients-container");
+            const row = document.createElement("div");
+            row.className = "ing-row";
+            
+            const selectedName = ing ? (ing.product || ing.name || "") : "";
+            const amountVal = ing ? ing.amount : "";
+            const unitVal = ing ? (ing.unit || "gr") : "gr";
+
+            // Envanter select kutusu oluştur
+            let optionsHtml = '<option value="">-- Hammadde Seçin --</option>';
+            let foundInInventory = false;
+            
+            inventoryList.forEach(inv => {
+                const selected = inv.name === selectedName ? 'selected' : '';
+                if (inv.name === selectedName) foundInInventory = true;
+                optionsHtml += '<option value="' + inv.name + '" ' + selected + '>' + inv.name + '</option>';
+            });
+
+            // Eğer veritabanında kayıtlı olan hammadde şu an envanterde yoksa, yine de listede seçili gösterebilmek için ekle
+            if (selectedName && !foundInInventory) {
+                optionsHtml += '<option value="' + selectedName + '" selected>' + selectedName + ' (Envanter Dışı)</option>';
+            }
+            
+            row.innerHTML = '<select class="setting-select ing-name" style="width:100%; padding: 10px; border-radius: 8px;" required>' + optionsHtml + '</select>' +
+                            '<input type="number" step="0.001" class="setting-input ing-amount" style="padding: 10px;" placeholder="Miktar" value="' + amountVal + '" required>' +
+                            '<input type="text" class="setting-input ing-unit" style="padding: 10px;" placeholder="Birim" value="' + unitVal + '" required>' +
+                            '<button type="button" onclick="this.parentElement.remove()" style="background: none; border: none; font-size: 20px; color: #ef4444; cursor: pointer; display: flex; justify-content: center; align-items: center;">&times;</button>';
+            
+            container.appendChild(row);
+        }
+
+        async function saveProduct() {
+            const name = document.getElementById("prod-name").value.trim();
+            const gramaj = document.getElementById("prod-gramaj").value.trim();
+            const instructions = document.getElementById("prod-instructions").value.trim();
+            
+            const ingredients = [];
+            let isValid = true;
+            
+            document.querySelectorAll("#ingredients-container .ing-row").forEach(row => {
+                const pName = row.querySelector(".ing-name").value.trim();
+                const amount = parseFloat(row.querySelector(".ing-amount").value) || 0;
+                const unit = row.querySelector(".ing-unit").value.trim() || "gr";
+                if (!pName) {
+                    isValid = false;
+                } else {
+                    ingredients.push({ product: pName, amount, unit });
+                }
+            });
+
+            if (!isValid) {
+                showToast("Lütfen tüm satırlar için hammadde seçimi yapın!", "error");
+                return;
+            }
+
+            const payload = {
+                item: { name, gramaj, ingredients, instructions },
+                originalName: editingProductName
+            };
+
+            try {
+                const res = await fetch('/api/menu-recipes/' + activeCatId + '/item', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast(editingProductName ? "Ürün güncellendi!" : "Ürün başarıyla eklendi!", "success");
+                    closeModal("product-modal");
+                    loadData();
+                } else {
+                    showToast(data.message || "Hata oluştu!", "error");
+                }
+            } catch(e) {
+                showToast("Sunucuyla bağlantı kurulamadı!", "error");
+            }
+        }
+
+        async function deleteProduct(name) {
+            if (!confirm('"' + name + '" ürününü silmek istediğinize emin misiniz?')) return;
+            try {
+                const res = await fetch('/api/menu-recipes/' + activeCatId + '/item/' + encodeURIComponent(name), {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast("Ürün silindi.", "success");
+                    loadData();
+                } else {
+                    showToast("Silinemedi!", "error");
+                }
+            } catch (e) {
+                showToast("Bağlantı hatası!", "error");
+            }
+        }
+
+        // --- Kategori Ekle / Düzenleme ---
+        function openAddCatModal() {
+            editingCatId = null;
+            document.getElementById("modal-cat-title").textContent = "Kategori Ekle";
+            document.getElementById("cat-id").value = "";
+            document.getElementById("cat-id").disabled = false;
+            document.getElementById("cat-label").value = "";
+            openModal("cat-modal");
+        }
+
+        function openEditCatModal(id) {
+            const cat = allData.find(c => c.id === id);
+            if (!cat) return;
+            editingCatId = id;
+            document.getElementById("modal-cat-title").textContent = "Kategoriyi Düzenle";
+            document.getElementById("cat-id").value = id;
+            document.getElementById("cat-id").disabled = true;
+            document.getElementById("cat-label").value = cat.label;
+            openModal("cat-modal");
+        }
+
+        async function saveCategory() {
+            const id = document.getElementById("cat-id").value.trim().replace(/\s+/g, '_');
+            const label = document.getElementById("cat-label").value.trim();
+            if (!label) return;
+
+            try {
+                let res;
+                if (editingCatId) {
+                    res = await fetch('/api/menu-recipes/category/' + editingCatId, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ label })
+                    });
+                } else {
+                    if (!id) return;
+                    res = await fetch('/api/menu-recipes/category/add', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ id, label })
+                    });
+                }
+                const data = await res.json();
+                if (data.success) {
+                    showToast("Kategori kaydedildi!", "success");
+                    closeModal("cat-modal");
+                    loadData();
+                } else {
+                    showToast(data.message || "Hata oluştu!", "error");
+                }
+            } catch(e) {
+                showToast("Bağlantı hatası!", "error");
+            }
+        }
+
+        async function deleteCategory(id) {
+            if (!confirm("Bu kategoriyi ve içindeki tüm ürünleri silmek istediğinize emin misiniz?")) return;
+            try {
+                const res = await fetch('/api/menu-recipes/category/' + id, {
+                    method: 'DELETE'
+                });
+                const data = await res.json();
+                if (data.success) {
+                    showToast("Kategori silindi.", "success");
+                    if (activeCatId === id) {
+                        activeCatId = null;
+                        document.getElementById("no-category-selected").style.display = "block";
+                        document.getElementById("products-grid-container").style.display = "none";
+                        document.getElementById("btn-open-add-product").style.display = "none";
+                    }
+                    loadData();
+                } else {
+                    showToast("Silme başarısız!", "error");
+                }
+            } catch(e) {
+                showToast("Bağlantı hatası!", "error");
+            }
+        }
+
+        // --- Yardımcı Metotlar ---
+        function openModal(id) {
+            document.getElementById(id).classList.add("active");
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove("active");
+        }
+
+        let toastTimer = null;
+        function showToast(msg, type = "success") {
+            const toast = document.getElementById("toast-el");
+            toast.textContent = msg;
+            toast.className = "toast-notif show " + (type === "success" ? "toast-success" : "toast-error");
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove("show");
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
