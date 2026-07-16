@@ -5,16 +5,7 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Vercel üzerinde dosyalar process.cwd() kök dizininde yer alır
 const baseDir = process.cwd();
-
-const DB_PATH = path.resolve(__dirname, 'users.json');
-const RECIPES_PATH = path.resolve(__dirname, 'recipes.json');
-const MENU_RECIPES_PATH = path.resolve(__dirname, 'menu_recipes.json');
-const SLIDES_PATH = path.resolve(__dirname, 'slides.json');
-const INVENTORY_LOGS_PATH = path.resolve(__dirname, 'inventory_logs.json');
-const RAW_MATERIALS_PATH = path.resolve(__dirname, 'raw_materials.json');
-const ORDERS_PATH = path.resolve(__dirname, 'orders.json');
 const UPLOADS_DIR = path.resolve(baseDir, 'uploads');
 const RECIPES_IMAGES_DIR = path.join(UPLOADS_DIR, 'recipes');
 
@@ -32,25 +23,34 @@ if (!process.env.VERCEL) {
     }
 }
 
-function readRawMaterials() {
-    try {
-        if (!fs.existsSync(RAW_MATERIALS_PATH)) {
-            fs.writeFileSync(RAW_MATERIALS_PATH, JSON.stringify([], null, 4), 'utf8');
-        }
-        let fileContent = fs.readFileSync(RAW_MATERIALS_PATH, 'utf8').trim();
-        return JSON.parse(fileContent || "[]");
-    } catch (err) {
-        console.error("Hammaddeleri okuma hatası:", err);
-        return [];
-    }
-}
+// JSON veritabanlarını statik require ile yükle (Vercel Lambda paketine otomatik dahil olur)
+let usersData = require('./users.json');
+let recipesData = require('./recipes.json');
+let menuRecipesData = require('./menu_recipes.json');
+let slidesData = require('./slides.json');
+let inventoryLogsData = require('./inventory_logs.json');
+let rawMaterialsData = require('./raw_materials.json');
+let settingsData = require('./settings.json');
+let stkConfirmedData = require('./stk_confirmed.json');
+let ordersData = require('./orders.json');
 
+// Dosya yolları (Yazma işlemleri için)
+const DB_PATH = path.resolve(__dirname, 'users.json');
+const RECIPES_PATH = path.resolve(__dirname, 'recipes.json');
+const MENU_RECIPES_PATH = path.resolve(__dirname, 'menu_recipes.json');
+const SLIDES_PATH = path.resolve(__dirname, 'slides.json');
+const INVENTORY_LOGS_PATH = path.resolve(__dirname, 'inventory_logs.json');
+const RAW_MATERIALS_PATH = path.resolve(__dirname, 'raw_materials.json');
+const ORDERS_PATH = path.resolve(__dirname, 'orders.json');
+const SETTINGS_FILE = path.resolve(__dirname, 'settings.json');
+const STK_CONFIRMED_FILE = path.resolve(__dirname, 'stk_confirmed.json');
+
+function readRawMaterials() {
+    return rawMaterialsData;
+}
 function writeRawMaterials(materials) {
-    try {
-        fs.writeFileSync(RAW_MATERIALS_PATH, JSON.stringify(materials, null, 4), 'utf8');
-    } catch (err) {
-        console.error("Hammaddeleri yazma hatası:", err);
-    }
+    rawMaterialsData = materials;
+    try { fs.writeFileSync(RAW_MATERIALS_PATH, JSON.stringify(materials, null, 4), 'utf8'); } catch (err) {}
 }
 
 const storage = multer.diskStorage({
@@ -70,62 +70,48 @@ const storage = multer.diskStorage({
         }
     }
 });
-
 const upload = multer({ storage: storage });
 
-function readUsers() {
-    try {
-        if (!fs.existsSync(DB_PATH)) return [];
-        return JSON.parse(fs.readFileSync(DB_PATH, 'utf8') || "[]");
-    } catch (err) { return []; }
-}
-
+function readUsers() { return usersData; }
 function writeUsers(users) {
+    usersData = users;
     try { fs.writeFileSync(DB_PATH, JSON.stringify(users, null, 2), 'utf8'); } catch (err) {}
 }
 
-function readRecipes() {
-    try {
-        if (!fs.existsSync(RECIPES_PATH)) return [];
-        return JSON.parse(fs.readFileSync(RECIPES_PATH, 'utf8') || "[]");
-    } catch (err) { return []; }
-}
-
+function readRecipes() { return recipesData; }
 function writeRecipes(recipes) {
+    recipesData = recipes;
     try { fs.writeFileSync(RECIPES_PATH, JSON.stringify(recipes, null, 4), 'utf8'); } catch (err) {}
 }
 
-function readMenuRecipes() {
-    try {
-        if (!fs.existsSync(MENU_RECIPES_PATH)) return [];
-        return JSON.parse(fs.readFileSync(MENU_RECIPES_PATH, 'utf8') || "[]");
-    } catch (err) { return []; }
-}
-
+function readMenuRecipes() { return menuRecipesData; }
 function writeMenuRecipes(recipes) {
+    menuRecipesData = recipes;
     try { fs.writeFileSync(MENU_RECIPES_PATH, JSON.stringify(recipes, null, 4), 'utf8'); } catch (err) {}
 }
 
-function readInventoryLogs() {
-    try {
-        if (!fs.existsSync(INVENTORY_LOGS_PATH)) return [];
-        return JSON.parse(fs.readFileSync(INVENTORY_LOGS_PATH, 'utf8') || "[]");
-    } catch (err) { return []; }
-}
-
+function readInventoryLogs() { return inventoryLogsData; }
 function writeInventoryLogs(logs) {
+    inventoryLogsData = logs;
     try { fs.writeFileSync(INVENTORY_LOGS_PATH, JSON.stringify(logs, null, 2), 'utf8'); } catch (err) {}
 }
 
-function readSlides() {
-    try {
-        if (!fs.existsSync(SLIDES_PATH)) return [];
-        return JSON.parse(fs.readFileSync(SLIDES_PATH, 'utf8') || "[]");
-    } catch (err) { return []; }
+function readSlides() { return slidesData; }
+function writeSlides(slides) {
+    slidesData = slides;
+    try { fs.writeFileSync(SLIDES_PATH, JSON.stringify(slides, null, 4), 'utf8'); } catch (err) {}
 }
 
-function writeSlides(slides) {
-    try { fs.writeFileSync(SLIDES_PATH, JSON.stringify(slides, null, 4), 'utf8'); } catch (err) {}
+function readOrders() { return ordersData; }
+function writeOrders(orders) {
+    ordersData = orders;
+    try { fs.writeFileSync(ORDERS_PATH, JSON.stringify(orders, null, 4), 'utf8'); } catch (err) {}
+}
+
+function readSettings() { return settingsData; }
+function writeSettings(s) {
+    settingsData = s;
+    try { fs.writeFileSync(SETTINGS_FILE, JSON.stringify(s, null, 4), 'utf8'); } catch (err) {}
 }
 
 app.use(express.json({ limit: '100mb' }));
@@ -138,7 +124,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// 1. Giriş API'si
+// Giriş API'si
 app.post('/api/login', (req, res) => {
     const { role, username, password } = req.body;
     const users = readUsers();
@@ -157,7 +143,6 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-// 2. Kayıt API'si
 app.post('/api/signup', (req, res) => {
     const { role, username, password } = req.body;
     const users = readUsers();
@@ -170,7 +155,6 @@ app.post('/api/signup', (req, res) => {
 });
 
 app.get('/api/users', (req, res) => { res.json(readUsers()); });
-
 app.put('/api/users/:username', (req, res) => {
     const { username } = req.params;
     const { password, role, region, menus } = req.body;
@@ -187,7 +171,6 @@ app.put('/api/users/:username', (req, res) => {
         res.status(404).json({ success: false });
     }
 });
-
 app.delete('/api/users/:username', (req, res) => {
     const { username } = req.params;
     let users = readUsers();
@@ -197,7 +180,6 @@ app.delete('/api/users/:username', (req, res) => {
 });
 
 app.get('/api/raw-materials', (req, res) => { res.json(readRawMaterials()); });
-
 app.post('/api/raw-materials', (req, res) => {
     const { id, label, items } = req.body;
     let materials = readRawMaterials();
@@ -240,28 +222,7 @@ app.post('/api/inventory-logs', (req, res) => {
     res.json({ success: true, log: newLog });
 });
 
-const SETTINGS_FILE = path.resolve(__dirname, 'settings.json');
-const STK_CONFIRMED_FILE = path.resolve(__dirname, 'stk_confirmed.json');
-
-function readSettings() {
-    try {
-        if (!fs.existsSync(SETTINGS_FILE)) return {};
-        return JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
-    } catch (e) { return {}; }
-}
-function writeSettings(s) { fs.writeFileSync(SETTINGS_FILE, JSON.stringify(s, null, 4)); }
-
-app.get('/api/stk/confirmed', (req, res) => {
-    try {
-        if (!fs.existsSync(STK_CONFIRMED_FILE)) {
-            return res.json({});
-        }
-        res.json(JSON.parse(fs.readFileSync(STK_CONFIRMED_FILE, 'utf8') || "{}"));
-    } catch (e) {
-        res.json({});
-    }
-});
-
+app.get('/api/stk/confirmed', (req, res) => { res.json(stkConfirmedData); });
 app.get('/api/settings', (req, res) => { res.json(readSettings()); });
 app.post('/api/settings', (req, res) => {
     const current = readSettings();
@@ -273,32 +234,13 @@ app.get('/api/settings/music', (req, res) => {
     res.json({ youtubePlaylist: readSettings().youtubePlaylist || "" });
 });
 
-const NOTES_FILE = path.resolve(baseDir, 'user_notes.json');
-function readNotes() {
-    try {
-        if (!fs.existsSync(NOTES_FILE)) return [];
-        return JSON.parse(fs.readFileSync(NOTES_FILE, 'utf8') || "[]");
-    } catch (e) { return []; }
+const NOTES_FILE = path.resolve(__dirname, 'notes.json');
+let notesData = require('./notes.json');
+function readNotes() { return notesData; }
+function writeNotes(n) {
+    notesData = n;
+    try { fs.writeFileSync(NOTES_FILE, JSON.stringify(n, null, 4), 'utf8'); } catch (err) {}
 }
-function writeNotes(n) { fs.writeFileSync(NOTES_FILE, JSON.stringify(n, null, 4)); }
-
-function readOrders() {
-    try {
-        if (!fs.existsSync(ORDERS_PATH)) return [];
-        return JSON.parse(fs.readFileSync(ORDERS_PATH, 'utf8') || "[]");
-    } catch (e) { return []; }
-}
-function writeOrders(orders) {
-    try { fs.writeFileSync(ORDERS_PATH, JSON.stringify(orders, null, 4), 'utf8'); } catch (e) {}
-}
-
-app.get('/api/orders', (req, res) => { res.json(readOrders()); });
-app.post('/api/orders', (req, res) => {
-    const orders = readOrders();
-    orders.push(req.body);
-    writeOrders(orders);
-    res.json({ success: true });
-});
 
 app.get('/api/notes', (req, res) => { res.json(readNotes()); });
 app.post('/api/notes', (req, res) => {
@@ -313,6 +255,14 @@ app.post('/api/notes', (req, res) => {
     notes.push(newNote);
     writeNotes(notes);
     res.status(201).json({ success: true, note: newNote });
+});
+
+app.get('/api/orders', (req, res) => { res.json(readOrders()); });
+app.post('/api/orders', (req, res) => {
+    const orders = readOrders();
+    orders.push(req.body);
+    writeOrders(orders);
+    res.json({ success: true });
 });
 
 module.exports = app;
