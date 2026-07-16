@@ -14,43 +14,15 @@
           "api/raw_materials.json",
           "api/settings.json",
           "api/stk_confirmed.json",
-          "uploads/**"
+          "api/orders.json"
         ]
       }
-    },
-    {
-      "src": "**/*.html",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.css",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.js",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.json",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "**/*.mp4",
-      "use": "@vercel/static"
-    },
-    {
-      "src": "uploads/**/*",
-      "use": "@vercel/static"
     }
   ],
   "routes": [
     {
       "src": "/api/(.*)",
       "dest": "api/index.js"
-    },
-    {
-      "src": "/uploads/(.*)",
-      "dest": "/uploads/$1"
     },
     {
       "handle": "filesystem"

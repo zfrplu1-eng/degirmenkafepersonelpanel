@@ -938,6 +938,24 @@ app.get('/api/stk/confirmed', (req, res) => {
     }
 });
 
+const ORDERS_FILE = path.resolve(baseDir, 'orders.json');
+function readLocalOrders() {
+    try {
+        if (!fs.existsSync(ORDERS_FILE)) return [];
+        return JSON.parse(fs.readFileSync(ORDERS_FILE, 'utf8') || "[]");
+    } catch (e) { return []; }
+}
+function writeLocalOrders(o) {
+    try { fs.writeFileSync(ORDERS_FILE, JSON.stringify(o, null, 4), 'utf8'); } catch (e) {}
+}
+app.get('/api/orders', (req, res) => { res.json(readLocalOrders()); });
+app.post('/api/orders', (req, res) => {
+    const o = readLocalOrders();
+    o.push(req.body);
+    writeLocalOrders(o);
+    res.json({ success: true });
+});
+
 // Root ve Dinamik HTML Sayfa Yönlendirmeleri (Sadece yerelde aktif, Vercel'de CDN sunar)
 if (!process.env.VERCEL) {
     app.get('/', (req, res) => {

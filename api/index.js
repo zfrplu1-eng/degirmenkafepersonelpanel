@@ -14,6 +14,7 @@ const MENU_RECIPES_PATH = path.resolve(__dirname, 'menu_recipes.json');
 const SLIDES_PATH = path.resolve(__dirname, 'slides.json');
 const INVENTORY_LOGS_PATH = path.resolve(__dirname, 'inventory_logs.json');
 const RAW_MATERIALS_PATH = path.resolve(__dirname, 'raw_materials.json');
+const ORDERS_PATH = path.resolve(__dirname, 'orders.json');
 const UPLOADS_DIR = path.resolve(baseDir, 'uploads');
 const RECIPES_IMAGES_DIR = path.join(UPLOADS_DIR, 'recipes');
 
@@ -280,6 +281,24 @@ function readNotes() {
     } catch (e) { return []; }
 }
 function writeNotes(n) { fs.writeFileSync(NOTES_FILE, JSON.stringify(n, null, 4)); }
+
+function readOrders() {
+    try {
+        if (!fs.existsSync(ORDERS_PATH)) return [];
+        return JSON.parse(fs.readFileSync(ORDERS_PATH, 'utf8') || "[]");
+    } catch (e) { return []; }
+}
+function writeOrders(orders) {
+    try { fs.writeFileSync(ORDERS_PATH, JSON.stringify(orders, null, 4), 'utf8'); } catch (e) {}
+}
+
+app.get('/api/orders', (req, res) => { res.json(readOrders()); });
+app.post('/api/orders', (req, res) => {
+    const orders = readOrders();
+    orders.push(req.body);
+    writeOrders(orders);
+    res.json({ success: true });
+});
 
 app.get('/api/notes', (req, res) => { res.json(readNotes()); });
 app.post('/api/notes', (req, res) => {
