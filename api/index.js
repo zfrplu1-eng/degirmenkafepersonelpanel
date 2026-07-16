@@ -17,12 +17,18 @@ const RAW_MATERIALS_PATH = path.resolve(baseDir, 'raw_materials.json');
 const UPLOADS_DIR = path.resolve(baseDir, 'uploads');
 const RECIPES_IMAGES_DIR = path.join(UPLOADS_DIR, 'recipes');
 
-// Gerekli klasörleri oluştur
-if (!fs.existsSync(UPLOADS_DIR)) {
-    fs.mkdirSync(UPLOADS_DIR, { recursive: true });
-}
-if (!fs.existsSync(RECIPES_IMAGES_DIR)) {
-    fs.mkdirSync(RECIPES_IMAGES_DIR, { recursive: true });
+// Gerekli klasörleri oluştur (Sadece yerelde veya yazılabilir ortamlarda çalışır)
+if (!process.env.VERCEL) {
+    try {
+        if (!fs.existsSync(UPLOADS_DIR)) {
+            fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+        }
+        if (!fs.existsSync(RECIPES_IMAGES_DIR)) {
+            fs.mkdirSync(RECIPES_IMAGES_DIR, { recursive: true });
+        }
+    } catch (e) {
+        console.warn("Dosya sistemi salt okunur, klasör oluşturma atlandı.");
+    }
 }
 
 function readRawMaterials() {
