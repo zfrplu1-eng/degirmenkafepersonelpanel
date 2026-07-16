@@ -8,12 +8,12 @@ const PORT = process.env.PORT || 3000;
 // Vercel üzerinde dosyalar process.cwd() kök dizininde yer alır
 const baseDir = process.cwd();
 
-const DB_PATH = path.resolve(baseDir, 'users.json');
-const RECIPES_PATH = path.resolve(baseDir, 'recipes.json');
-const MENU_RECIPES_PATH = path.resolve(baseDir, 'menu_recipes.json');
-const SLIDES_PATH = path.resolve(baseDir, 'slides.json');
-const INVENTORY_LOGS_PATH = path.resolve(baseDir, 'inventory_logs.json');
-const RAW_MATERIALS_PATH = path.resolve(baseDir, 'raw_materials.json');
+const DB_PATH = path.resolve(__dirname, 'users.json');
+const RECIPES_PATH = path.resolve(__dirname, 'recipes.json');
+const MENU_RECIPES_PATH = path.resolve(__dirname, 'menu_recipes.json');
+const SLIDES_PATH = path.resolve(__dirname, 'slides.json');
+const INVENTORY_LOGS_PATH = path.resolve(__dirname, 'inventory_logs.json');
+const RAW_MATERIALS_PATH = path.resolve(__dirname, 'raw_materials.json');
 const UPLOADS_DIR = path.resolve(baseDir, 'uploads');
 const RECIPES_IMAGES_DIR = path.join(UPLOADS_DIR, 'recipes');
 
@@ -239,7 +239,7 @@ app.post('/api/inventory-logs', (req, res) => {
     res.json({ success: true, log: newLog });
 });
 
-const SETTINGS_FILE = path.resolve(baseDir, 'settings.json');
+const SETTINGS_FILE = path.resolve(__dirname, 'settings.json');
 function readSettings() {
     try {
         if (!fs.existsSync(SETTINGS_FILE)) return {};
