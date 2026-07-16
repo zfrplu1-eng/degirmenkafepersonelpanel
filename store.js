@@ -111,46 +111,90 @@ document.addEventListener("DOMContentLoaded", () => {
     const btnBackCategories = document.getElementById("btn-back-categories");
     const storeTitleText = document.getElementById("store-title-text");
 
+    const OFFLINE_MATERIALS = [
+      {
+        "id": "suruplar",
+        "label": "ŞURUPLAR",
+        "items": [
+          { "name": "HM-BAHÇE NANE AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-BERRY HIBISCUS AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-BÖĞÜRTLEN AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-COOKİE AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-COOL LIME AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-ÇARKIFELEK (PASSION FRUIT) AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-ÇİLEK AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-FINDIK AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-KARAMEL AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-KAVRULMUŞ BADEM AROMALI KOKTEYL ŞURUP", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-MUZ AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-NAR AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-ORANGE & MANGO AROMALI KOKTEYL ŞURUP", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-PECAN CEVİZİ AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-ŞEKER AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-TOFFEE NUT AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-TURUNÇ AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-VANİLYA AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} }
+        ]
+      },
+      {
+        "id": "kahveler",
+        "label": "KAHVELER",
+        "items": [
+          { "name": "HM-DAMLA SAKIZLI TÜRK KAHVESİ", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-FİLTRE KAHVE", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+          { "name": "HM-TÜRK KAHVESİ (ORTA KAVRULMUŞ)", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} }
+        ]
+      }
+    ];
+
     // Sunucudan Hammaddeleri (raw_materials.json) Çek
     function loadRawMaterialsData() {
         fetch("/api/raw-materials?t=" + Date.now())
             .then(res => res.json())
             .then(data => {
-                // Eğer gelen veri kategorize edilmiş yapıdaysa düz array'e dönüştür
-                let flatMaterials = [];
-                let categories = [];
-                
-                if (Array.isArray(data)) {
-                    data.forEach(cat => {
-                        if (cat.items && Array.isArray(cat.items)) {
-                            cat.items.forEach(item => {
-                                flatMaterials.push({
-                                    ...item,
-                                    category: cat.label || "DİĞER ÜRÜNLER"
-                                });
-                            });
-                            categories.push({
-                                id: cat.label || cat.id,
-                                label: cat.label || cat.id,
-                                emoji: getCategoryEmoji(cat.label || cat.id)
-                            });
-                        } else {
-                            flatMaterials.push(cat);
-                        }
-                    });
-                }
-                
-                rawMaterials = flatMaterials;
-                categoriesList = categories.length > 0 ? categories : [{
-                    id: "DİĞER ÜRÜNLER",
-                    label: "DİĞER ÜRÜNLER",
-                    emoji: "📦"
-                }];
-
-                console.log("Hammadde Sipariş Veritabanı yüklendi:", rawMaterials, categoriesList);
-                showCategoriesMenu(); // Kategorileri listele
+                processRawMaterials(data);
             })
-            .catch(err => console.error("Hammaddeler yüklenirken hata:", err));
+            .catch(err => {
+                console.warn("Sunucu hatası, çevrimdışı hammaddeler yükleniyor...");
+                processRawMaterials(OFFLINE_MATERIALS);
+            });
+    }
+
+    function processRawMaterials(data) {
+        // Eğer gelen veri kategorize edilmiş yapıdaysa düz array'e dönüştür
+        let flatMaterials = [];
+        let categories = [];
+        
+        if (Array.isArray(data)) {
+            data.forEach(cat => {
+                if (cat.items && Array.isArray(cat.items)) {
+                    cat.items.forEach(item => {
+                        flatMaterials.push({
+                            ...item,
+                            category: cat.label || "DİĞER ÜRÜNLER"
+                        });
+                    });
+                    categories.push({
+                        id: cat.label || cat.id,
+                        label: cat.label || cat.id,
+                        emoji: getCategoryEmoji(cat.label || cat.id)
+                    });
+                } else {
+                    flatMaterials.push(cat);
+                }
+            });
+        }
+        
+        rawMaterials = flatMaterials;
+        categoriesList = categories.length > 0 ? categories : [{
+            id: "DİĞER ÜRÜNLER",
+            label: "DİĞER ÜRÜNLER",
+            emoji: "📦"
+        }];
+
+        console.log("Hammadde Sipariş Veritabanı yüklendi:", rawMaterials, categoriesList);
+        showCategoriesMenu(); // Kategorileri listele
     }
 
     loadRawMaterialsData();
