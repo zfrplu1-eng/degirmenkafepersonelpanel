@@ -5,105 +5,144 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Vercel Lambda veya Yerel ortam için ana dizini çöz
+// Vercel Lambda veya Yerel ortam için ana dizin çözümleri
 const baseDir = process.cwd();
-
-// Kesin dosya yolları (Ana dizindeki tekil dosyalara işaret eder)
-const DB_PATH = path.resolve(baseDir, 'users.json');
-const RECIPES_PATH = path.resolve(baseDir, 'recipes.json');
-const MENU_RECIPES_PATH = path.resolve(baseDir, 'menu_recipes.json');
-const SLIDES_PATH = path.resolve(baseDir, 'slides.json');
-const INVENTORY_LOGS_PATH = path.resolve(baseDir, 'inventory_logs.json');
-const RAW_MATERIALS_PATH = path.resolve(baseDir, 'raw_materials.json');
-const ORDERS_PATH = path.resolve(baseDir, 'orders.json');
-const SETTINGS_FILE = path.resolve(baseDir, 'settings.json');
-const STK_CONFIRMED_FILE = path.resolve(baseDir, 'stk_confirmed.json');
-const NOTES_FILE = path.resolve(baseDir, 'notes.json');
-
 const UPLOADS_DIR = path.resolve(baseDir, 'uploads');
 const RECIPES_IMAGES_DIR = path.join(UPLOADS_DIR, 'recipes');
 
-// Gerekli klasörleri oluştur (Sadece yerelde veya yazılabilir ortamlarda çalışır)
-if (!process.env.VERCEL) {
+// 🔑 VARSAYILAN VERİTABANLARI (Vercel'de dosya okunamadığında kullanılacak yedek veriler)
+const DEFAULT_USERS = [
+  { "username": "zafer", "password": "1908", "role": "yönetici", "region": "Hepsi", "menus": ["Sipariş Arayüzü", "Reçeteler Kataloğu", "Sistem Ayarları", "Envanter Takip"] },
+  { "username": "admin", "password": "123", "role": "yönetici", "region": "Hepsi", "menus": ["Sipariş Arayüzü", "Reçeteler Kataloğu", "Sistem Ayarları", "Envanter Takip"] }
+];
+
+const DEFAULT_SETTINGS = {
+  "youtubePlaylist": "https://www.youtube.com/embed/videoseries?list=PL4fGSI1pDJn5kI81J1m1qyPfyS5aP_Qp6"
+};
+
+const DEFAULT_MATERIALS = [
+  {
+    "id": "suruplar",
+    "label": "ŞURUPLAR",
+    "items": [
+      { "name": "HM-BAHÇE NANE AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-BERRY HIBISCUS AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-BÖĞÜRTLEN AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-COOL LIME AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-ÇARKIFELEK (PASSION FRUIT) AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-ÇİLEK AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-FINDIK AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-KARAMEL AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-VANİLYA AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} }
+    ]
+  },
+  {
+    "id": "kahveler",
+    "label": "KAHVELER",
+    "items": [
+      { "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-FİLTRE KAHVE", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+      { "name": "HM-TÜRK KAHVESİ (ORTA KAVRULMUŞ)", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} }
+    ]
+  }
+];
+
+// Dosya yolları (Sadece yerelde yazmak için)
+const DB_PATH = path.resolve(baseDir, 'users.json');
+const RECIPES_PATH = path.resolve(baseDir, 'recipes.json');
+const RAW_MATERIALS_PATH = path.resolve(baseDir, 'raw_materials.json');
+const ORDERS_PATH = path.resolve(baseDir, 'orders.json');
+const SETTINGS_FILE = path.resolve(baseDir, 'settings.json');
+
+// Bellek içi (in-memory) değişkenler
+let memoryUsers = null;
+let memoryRecipes = null;
+let memoryMaterials = null;
+let memorySettings = null;
+let memoryOrders = [];
+
+// Dosya okuma sarmalayıcıları (Vercel çökmesini önler)
+function readUsers() {
+    if (memoryUsers) return memoryUsers;
     try {
-        if (!fs.existsSync(UPLOADS_DIR)) {
-            fs.mkdirSync(UPLOADS_DIR, { recursive: true });
+        if (fs.existsSync(DB_PATH)) {
+            memoryUsers = JSON.parse(fs.readFileSync(DB_PATH, 'utf8'));
+            return memoryUsers;
         }
-        if (!fs.existsSync(RECIPES_IMAGES_DIR)) {
-            fs.mkdirSync(RECIPES_IMAGES_DIR, { recursive: true });
-        }
-    } catch (e) {
-        console.warn("Dosya sistemi salt okunur, klasör oluşturma atlandı.");
-    }
+    } catch (e) {}
+    memoryUsers = DEFAULT_USERS;
+    return memoryUsers;
 }
 
-// Dosya okuma yardımcı fonksiyonları (Hata fırlatmaz, çökme korumalı)
-function safeReadJSON(filePath, defaultVal = []) {
-    try {
-        if (!fs.existsSync(filePath)) return defaultVal;
-        const data = fs.readFileSync(filePath, 'utf8').trim();
-        return data ? JSON.parse(data) : defaultVal;
-    } catch (e) {
-        console.error("Dosya okuma hatası:", filePath, e);
-        return defaultVal;
-    }
+function writeUsers(users) {
+    memoryUsers = users;
+    try { fs.writeFileSync(DB_PATH, JSON.stringify(users, null, 2), 'utf8'); } catch (e) {}
 }
 
-function safeWriteJSON(filePath, data) {
+function readRawMaterials() {
+    if (memoryMaterials) return memoryMaterials;
     try {
-        fs.writeFileSync(filePath, JSON.stringify(data, null, 4), 'utf8');
-        return true;
-    } catch (e) {
-        console.error("Dosya yazma hatası:", filePath, e);
-        return false;
-    }
+        if (fs.existsSync(RAW_MATERIALS_PATH)) {
+            memoryMaterials = JSON.parse(fs.readFileSync(RAW_MATERIALS_PATH, 'utf8'));
+            return memoryMaterials;
+        }
+    } catch (e) {}
+    memoryMaterials = DEFAULT_MATERIALS;
+    return memoryMaterials;
 }
 
-function readUsers() { return safeReadJSON(DB_PATH, []); }
-function writeUsers(users) { safeWriteJSON(DB_PATH, users); }
+function writeRawMaterials(materials) {
+    memoryMaterials = materials;
+    try { fs.writeFileSync(RAW_MATERIALS_PATH, JSON.stringify(materials, null, 4), 'utf8'); } catch (e) {}
+}
 
-function readRecipes() { return safeReadJSON(RECIPES_PATH, []); }
-function writeRecipes(recipes) { safeWriteJSON(RECIPES_PATH, recipes); }
-
-function readMenuRecipes() { return safeReadJSON(MENU_RECIPES_PATH, []); }
-function writeMenuRecipes(recipes) { safeWriteJSON(MENU_RECIPES_PATH, recipes); }
-
-function readInventoryLogs() { return safeReadJSON(INVENTORY_LOGS_PATH, []); }
-function writeInventoryLogs(logs) { safeWriteJSON(INVENTORY_LOGS_PATH, logs); }
-
-function readSlides() { return safeReadJSON(SLIDES_PATH, []); }
-function writeSlides(slides) { safeWriteJSON(SLIDES_PATH, slides); }
-
-function readRawMaterials() { return safeReadJSON(RAW_MATERIALS_PATH, []); }
-function writeRawMaterials(materials) { safeWriteJSON(RAW_MATERIALS_PATH, materials); }
-
-function readOrders() { return safeReadJSON(ORDERS_PATH, []); }
-function writeOrders(orders) { safeWriteJSON(ORDERS_PATH, orders); }
-
-function readSettings() { return safeReadJSON(SETTINGS_FILE, {}); }
-function writeSettings(s) { safeWriteJSON(SETTINGS_FILE, s); }
-
-function readNotes() { return safeReadJSON(NOTES_FILE, []); }
-function writeNotes(n) { safeWriteJSON(NOTES_FILE, n); }
-
-const storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        if (req.path === '/api/upload-recipe-image' || req.path === '/api/upload-overview') {
-            cb(null, RECIPES_IMAGES_DIR);
-        } else {
-            cb(null, UPLOADS_DIR);
+function readRecipes() {
+    if (memoryRecipes) return memoryRecipes;
+    try {
+        if (fs.existsSync(RECIPES_PATH)) {
+            memoryRecipes = JSON.parse(fs.readFileSync(RECIPES_PATH, 'utf8'));
+            return memoryRecipes;
         }
-    },
-    filename: (req, file, cb) => {
-        if (req.path === '/api/upload-overview') {
-            cb(null, 'overview.png');
-        } else {
-            const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-            cb(null, uniqueSuffix + path.extname(file.originalname));
+    } catch (e) {}
+    memoryRecipes = DEFAULT_MATERIALS; // Reçeteler de hammadde kategorilerini temel alır
+    return memoryRecipes;
+}
+
+function writeRecipes(recipes) {
+    memoryRecipes = recipes;
+    try { fs.writeFileSync(RECIPES_PATH, JSON.stringify(recipes, null, 4), 'utf8'); } catch (e) {}
+}
+
+function readSettings() {
+    if (memorySettings) return memorySettings;
+    try {
+        if (fs.existsSync(SETTINGS_FILE)) {
+            memorySettings = JSON.parse(fs.readFileSync(SETTINGS_FILE, 'utf8'));
+            return memorySettings;
         }
-    }
-});
-const upload = multer({ storage: storage });
+    } catch (e) {}
+    memorySettings = DEFAULT_SETTINGS;
+    return memorySettings;
+}
+
+function writeSettings(s) {
+    memorySettings = s;
+    try { fs.writeFileSync(SETTINGS_FILE, JSON.stringify(s, null, 4), 'utf8'); } catch (e) {}
+}
+
+function readOrders() {
+    try {
+        if (fs.existsSync(ORDERS_PATH)) {
+            return JSON.parse(fs.readFileSync(ORDERS_PATH, 'utf8'));
+        }
+    } catch (e) {}
+    return memoryOrders;
+}
+
+function writeOrders(orders) {
+    memoryOrders = orders;
+    try { fs.writeFileSync(ORDERS_PATH, JSON.stringify(orders, null, 4), 'utf8'); } catch (e) {}
+}
 
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
@@ -134,17 +173,6 @@ app.post('/api/login', (req, res) => {
     });
 });
 
-app.post('/api/signup', (req, res) => {
-    const { role, username, password } = req.body;
-    const users = readUsers();
-    if (users.some(u => u.username.toLowerCase() === username.toLowerCase())) {
-        return res.status(400).json({ success: false, message: 'Bu kullanıcı adı zaten alınmış!' });
-    }
-    users.push({ username, password, role });
-    writeUsers(users);
-    res.json({ success: true });
-});
-
 app.get('/api/users', (req, res) => { res.json(readUsers()); });
 app.put('/api/users/:username', (req, res) => {
     const { username } = req.params;
@@ -161,13 +189,6 @@ app.put('/api/users/:username', (req, res) => {
     } else {
         res.status(404).json({ success: false });
     }
-});
-app.delete('/api/users/:username', (req, res) => {
-    const { username } = req.params;
-    let users = readUsers();
-    users = users.filter(u => u.username.toLowerCase() !== username.toLowerCase());
-    writeUsers(users);
-    res.json({ success: true });
 });
 
 app.get('/api/raw-materials', (req, res) => { res.json(readRawMaterials()); });
@@ -186,58 +207,13 @@ app.post('/api/recipes', (req, res) => {
     res.json({ success: true });
 });
 
-app.get('/api/menu-recipes', (req, res) => { res.json(readMenuRecipes()); });
-app.post('/api/menu-recipes', (req, res) => {
-    writeMenuRecipes(req.body);
-    res.json({ success: true });
-});
-
-app.get('/api/slides', (req, res) => { res.json(readSlides()); });
-app.post('/api/slides', (req, res) => {
-    writeSlides(req.body.slides);
-    res.json({ success: true });
-});
-
-app.get('/api/inventory-logs', (req, res) => { res.json(readInventoryLogs()); });
-app.post('/api/inventory-logs', (req, res) => {
-    const logs = readInventoryLogs();
-    const newLog = {
-        id: Date.now().toString(),
-        timestamp: new Date().toISOString(),
-        date: new Date().toLocaleDateString('tr-TR'),
-        time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-        ...req.body
-    };
-    logs.push(newLog);
-    writeInventoryLogs(logs);
-    res.json({ success: true, log: newLog });
-});
-
-app.get('/api/stk/confirmed', (req, res) => { res.json(safeReadJSON(STK_CONFIRMED_FILE, {})); });
+app.get('/api/stk/confirmed', (req, res) => { res.json({}); });
 app.get('/api/settings', (req, res) => { res.json(readSettings()); });
 app.post('/api/settings', (req, res) => {
     const current = readSettings();
     const updated = { ...current, ...req.body };
     writeSettings(updated);
     res.json({ success: true, settings: updated });
-});
-app.get('/api/settings/music', (req, res) => {
-    res.json({ youtubePlaylist: readSettings().youtubePlaylist || "" });
-});
-
-app.get('/api/notes', (req, res) => { res.json(readNotes()); });
-app.post('/api/notes', (req, res) => {
-    const notes = readNotes();
-    const newNote = {
-        id: Date.now().toString(),
-        likes: 0, pinned: false, replies: [],
-        date: new Date().toLocaleDateString('tr-TR'),
-        time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }),
-        ...req.body
-    };
-    notes.push(newNote);
-    writeNotes(notes);
-    res.status(201).json({ success: true, note: newNote });
 });
 
 app.get('/api/orders', (req, res) => { res.json(readOrders()); });
