@@ -5,7 +5,21 @@ const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+// Vercel Lambda veya Yerel ortam için ana dizini çöz
 const baseDir = process.cwd();
+
+// Kesin dosya yolları (Ana dizindeki tekil dosyalara işaret eder)
+const DB_PATH = path.resolve(baseDir, 'users.json');
+const RECIPES_PATH = path.resolve(baseDir, 'recipes.json');
+const MENU_RECIPES_PATH = path.resolve(baseDir, 'menu_recipes.json');
+const SLIDES_PATH = path.resolve(baseDir, 'slides.json');
+const INVENTORY_LOGS_PATH = path.resolve(baseDir, 'inventory_logs.json');
+const RAW_MATERIALS_PATH = path.resolve(baseDir, 'raw_materials.json');
+const ORDERS_PATH = path.resolve(baseDir, 'orders.json');
+const SETTINGS_FILE = path.resolve(baseDir, 'settings.json');
+const STK_CONFIRMED_FILE = path.resolve(baseDir, 'stk_confirmed.json');
+const NOTES_FILE = path.resolve(baseDir, 'notes.json');
+
 const UPLOADS_DIR = path.resolve(baseDir, 'uploads');
 const RECIPES_IMAGES_DIR = path.join(UPLOADS_DIR, 'recipes');
 
@@ -23,35 +37,54 @@ if (!process.env.VERCEL) {
     }
 }
 
-// JSON veritabanlarını statik require ile yükle (Vercel Lambda paketine otomatik dahil olur)
-let usersData = require('./users.json');
-let recipesData = require('./recipes.json');
-let menuRecipesData = require('./menu_recipes.json');
-let slidesData = require('./slides.json');
-let inventoryLogsData = require('./inventory_logs.json');
-let rawMaterialsData = require('./raw_materials.json');
-let settingsData = require('./settings.json');
-let stkConfirmedData = require('./stk_confirmed.json');
-let ordersData = require('./orders.json');
-
-// Dosya yolları (Yazma işlemleri için)
-const DB_PATH = path.resolve(__dirname, 'users.json');
-const RECIPES_PATH = path.resolve(__dirname, 'recipes.json');
-const MENU_RECIPES_PATH = path.resolve(__dirname, 'menu_recipes.json');
-const SLIDES_PATH = path.resolve(__dirname, 'slides.json');
-const INVENTORY_LOGS_PATH = path.resolve(__dirname, 'inventory_logs.json');
-const RAW_MATERIALS_PATH = path.resolve(__dirname, 'raw_materials.json');
-const ORDERS_PATH = path.resolve(__dirname, 'orders.json');
-const SETTINGS_FILE = path.resolve(__dirname, 'settings.json');
-const STK_CONFIRMED_FILE = path.resolve(__dirname, 'stk_confirmed.json');
-
-function readRawMaterials() {
-    return rawMaterialsData;
+// Dosya okuma yardımcı fonksiyonları (Hata fırlatmaz, çökme korumalı)
+function safeReadJSON(filePath, defaultVal = []) {
+    try {
+        if (!fs.existsSync(filePath)) return defaultVal;
+        const data = fs.readFileSync(filePath, 'utf8').trim();
+        return data ? JSON.parse(data) : defaultVal;
+    } catch (e) {
+        console.error("Dosya okuma hatası:", filePath, e);
+        return defaultVal;
+    }
 }
-function writeRawMaterials(materials) {
-    rawMaterialsData = materials;
-    try { fs.writeFileSync(RAW_MATERIALS_PATH, JSON.stringify(materials, null, 4), 'utf8'); } catch (err) {}
+
+function safeWriteJSON(filePath, data) {
+    try {
+        fs.writeFileSync(filePath, JSON.stringify(data, null, 4), 'utf8');
+        return true;
+    } catch (e) {
+        console.error("Dosya yazma hatası:", filePath, e);
+        return false;
+    }
 }
+
+function readUsers() { return safeReadJSON(DB_PATH, []); }
+function writeUsers(users) { safeWriteJSON(DB_PATH, users); }
+
+function readRecipes() { return safeReadJSON(RECIPES_PATH, []); }
+function writeRecipes(recipes) { safeWriteJSON(RECIPES_PATH, recipes); }
+
+function readMenuRecipes() { return safeReadJSON(MENU_RECIPES_PATH, []); }
+function writeMenuRecipes(recipes) { safeWriteJSON(MENU_RECIPES_PATH, recipes); }
+
+function readInventoryLogs() { return safeReadJSON(INVENTORY_LOGS_PATH, []); }
+function writeInventoryLogs(logs) { safeWriteJSON(INVENTORY_LOGS_PATH, logs); }
+
+function readSlides() { return safeReadJSON(SLIDES_PATH, []); }
+function writeSlides(slides) { safeWriteJSON(SLIDES_PATH, slides); }
+
+function readRawMaterials() { return safeReadJSON(RAW_MATERIALS_PATH, []); }
+function writeRawMaterials(materials) { safeWriteJSON(RAW_MATERIALS_PATH, materials); }
+
+function readOrders() { return safeReadJSON(ORDERS_PATH, []); }
+function writeOrders(orders) { safeWriteJSON(ORDERS_PATH, orders); }
+
+function readSettings() { return safeReadJSON(SETTINGS_FILE, {}); }
+function writeSettings(s) { safeWriteJSON(SETTINGS_FILE, s); }
+
+function readNotes() { return safeReadJSON(NOTES_FILE, []); }
+function writeNotes(n) { safeWriteJSON(NOTES_FILE, n); }
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
@@ -71,48 +104,6 @@ const storage = multer.diskStorage({
     }
 });
 const upload = multer({ storage: storage });
-
-function readUsers() { return usersData; }
-function writeUsers(users) {
-    usersData = users;
-    try { fs.writeFileSync(DB_PATH, JSON.stringify(users, null, 2), 'utf8'); } catch (err) {}
-}
-
-function readRecipes() { return recipesData; }
-function writeRecipes(recipes) {
-    recipesData = recipes;
-    try { fs.writeFileSync(RECIPES_PATH, JSON.stringify(recipes, null, 4), 'utf8'); } catch (err) {}
-}
-
-function readMenuRecipes() { return menuRecipesData; }
-function writeMenuRecipes(recipes) {
-    menuRecipesData = recipes;
-    try { fs.writeFileSync(MENU_RECIPES_PATH, JSON.stringify(recipes, null, 4), 'utf8'); } catch (err) {}
-}
-
-function readInventoryLogs() { return inventoryLogsData; }
-function writeInventoryLogs(logs) {
-    inventoryLogsData = logs;
-    try { fs.writeFileSync(INVENTORY_LOGS_PATH, JSON.stringify(logs, null, 2), 'utf8'); } catch (err) {}
-}
-
-function readSlides() { return slidesData; }
-function writeSlides(slides) {
-    slidesData = slides;
-    try { fs.writeFileSync(SLIDES_PATH, JSON.stringify(slides, null, 4), 'utf8'); } catch (err) {}
-}
-
-function readOrders() { return ordersData; }
-function writeOrders(orders) {
-    ordersData = orders;
-    try { fs.writeFileSync(ORDERS_PATH, JSON.stringify(orders, null, 4), 'utf8'); } catch (err) {}
-}
-
-function readSettings() { return settingsData; }
-function writeSettings(s) {
-    settingsData = s;
-    try { fs.writeFileSync(SETTINGS_FILE, JSON.stringify(s, null, 4), 'utf8'); } catch (err) {}
-}
 
 app.use(express.json({ limit: '100mb' }));
 app.use(express.urlencoded({ extended: true, limit: '100mb' }));
@@ -222,7 +213,7 @@ app.post('/api/inventory-logs', (req, res) => {
     res.json({ success: true, log: newLog });
 });
 
-app.get('/api/stk/confirmed', (req, res) => { res.json(stkConfirmedData); });
+app.get('/api/stk/confirmed', (req, res) => { res.json(safeReadJSON(STK_CONFIRMED_FILE, {})); });
 app.get('/api/settings', (req, res) => { res.json(readSettings()); });
 app.post('/api/settings', (req, res) => {
     const current = readSettings();
@@ -233,14 +224,6 @@ app.post('/api/settings', (req, res) => {
 app.get('/api/settings/music', (req, res) => {
     res.json({ youtubePlaylist: readSettings().youtubePlaylist || "" });
 });
-
-const NOTES_FILE = path.resolve(__dirname, 'notes.json');
-let notesData = require('./notes.json');
-function readNotes() { return notesData; }
-function writeNotes(n) {
-    notesData = n;
-    try { fs.writeFileSync(NOTES_FILE, JSON.stringify(n, null, 4), 'utf8'); } catch (err) {}
-}
 
 app.get('/api/notes', (req, res) => { res.json(readNotes()); });
 app.post('/api/notes', (req, res) => {
