@@ -6,12 +6,13 @@
       "use": "@vercel/node",
       "config": {
         "includeFiles": [
-          "users.json",
-          "recipes.json",
-          "menu_recipes.json",
-          "slides.json",
-          "inventory_logs.json",
-          "raw_materials.json",
+          "api/users.json",
+          "api/recipes.json",
+          "api/menu_recipes.json",
+          "api/slides.json",
+          "api/inventory_logs.json",
+          "api/raw_materials.json",
+          "api/settings.json",
           "uploads/**"
         ]
       }
@@ -30,6 +31,10 @@
     },
     {
       "src": "*.json",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "*.mp4",
       "use": "@vercel/static"
     }
   ],
