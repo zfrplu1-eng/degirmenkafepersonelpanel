@@ -13,6 +13,7 @@
           "api/inventory_logs.json",
           "api/raw_materials.json",
           "api/settings.json",
+          "api/stk_confirmed.json",
           "uploads/**"
         ]
       }

@@ -240,6 +240,8 @@ app.post('/api/inventory-logs', (req, res) => {
 });
 
 const SETTINGS_FILE = path.resolve(__dirname, 'settings.json');
+const STK_CONFIRMED_FILE = path.resolve(__dirname, 'stk_confirmed.json');
+
 function readSettings() {
     try {
         if (!fs.existsSync(SETTINGS_FILE)) return {};
@@ -247,6 +249,17 @@ function readSettings() {
     } catch (e) { return {}; }
 }
 function writeSettings(s) { fs.writeFileSync(SETTINGS_FILE, JSON.stringify(s, null, 4)); }
+
+app.get('/api/stk/confirmed', (req, res) => {
+    try {
+        if (!fs.existsSync(STK_CONFIRMED_FILE)) {
+            return res.json({});
+        }
+        res.json(JSON.parse(fs.readFileSync(STK_CONFIRMED_FILE, 'utf8') || "{}"));
+    } catch (e) {
+        res.json({});
+    }
+});
 
 app.get('/api/settings', (req, res) => { res.json(readSettings()); });
 app.post('/api/settings', (req, res) => {

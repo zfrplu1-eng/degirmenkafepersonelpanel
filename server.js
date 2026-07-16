@@ -926,6 +926,18 @@ app.delete('/api/notes/:id', (req, res) => {
     res.json({ success: true, message: 'Not silindi.' });
 });
 
+const STK_CONFIRMED_FILE = path.resolve(baseDir, 'stk_confirmed.json');
+app.get('/api/stk/confirmed', (req, res) => {
+    try {
+        if (!fs.existsSync(STK_CONFIRMED_FILE)) {
+            return res.json({});
+        }
+        res.json(JSON.parse(fs.readFileSync(STK_CONFIRMED_FILE, 'utf8') || "{}"));
+    } catch (e) {
+        res.json({});
+    }
+});
+
 // Root ve Dinamik HTML Sayfa Yönlendirmeleri (Sadece yerelde aktif, Vercel'de CDN sunar)
 if (!process.env.VERCEL) {
     app.get('/', (req, res) => {
