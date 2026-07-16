@@ -3,7 +3,21 @@
   "builds": [
     {
       "src": "api/index.js",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "includeFiles": [
+          "users.json",
+          "recipes.json",
+          "menu_recipes.json",
+          "slides.json",
+          "inventory_logs.json",
+          "raw_materials.json",
+          "settings.json",
+          "stk_confirmed.json",
+          "orders.json",
+          "notes.json"
+        ]
+      }
     }
   ],
   "routes": [
