@@ -993,7 +993,7 @@
 
                         if (oldStock !== newStock) {
                             logPromises.push(
-                                fetch("/api/inventory/log", {
+                                fetch("/api/inventory-logs", {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify({
@@ -1012,10 +1012,10 @@
 
                 Promise.all(logPromises)
                     .then(() => {
-                        return fetch("/api/recipes/save", {
+                        return fetch("/api/recipes", {
                             method: "POST",
                             headers: { "Content-Type": "application/json" },
-                            body: JSON.stringify(database)
+                            body: JSON.stringify({ recipes: database })
                         });
                     })
                     .then(res => res.json())

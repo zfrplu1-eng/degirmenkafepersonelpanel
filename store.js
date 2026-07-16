@@ -113,18 +113,39 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Sunucudan Hammaddeleri (raw_materials.json) Çek
     function loadRawMaterialsData() {
-        fetch("/api/products?t=" + Date.now())
+        fetch("/api/raw-materials?t=" + Date.now())
             .then(res => res.json())
             .then(data => {
-                rawMaterials = data;
+                // Eğer gelen veri kategorize edilmiş yapıdaysa düz array'e dönüştür
+                let flatMaterials = [];
+                let categories = [];
                 
-                // Benzersiz kategorileri topla
-                const uniqueCategories = [...new Set(data.map(item => item.category || "DİĞER ÜRÜNLER"))];
-                categoriesList = uniqueCategories.map(catName => ({
-                    id: catName,
-                    label: catName,
-                    emoji: getCategoryEmoji(catName)
-                }));
+                if (Array.isArray(data)) {
+                    data.forEach(cat => {
+                        if (cat.items && Array.isArray(cat.items)) {
+                            cat.items.forEach(item => {
+                                flatMaterials.push({
+                                    ...item,
+                                    category: cat.label || "DİĞER ÜRÜNLER"
+                                });
+                            });
+                            categories.push({
+                                id: cat.label || cat.id,
+                                label: cat.label || cat.id,
+                                emoji: getCategoryEmoji(cat.label || cat.id)
+                            });
+                        } else {
+                            flatMaterials.push(cat);
+                        }
+                    });
+                }
+                
+                rawMaterials = flatMaterials;
+                categoriesList = categories.length > 0 ? categories : [{
+                    id: "DİĞER ÜRÜNLER",
+                    label: "DİĞER ÜRÜNLER",
+                    emoji: "📦"
+                }];
 
                 console.log("Hammadde Sipariş Veritabanı yüklendi:", rawMaterials, categoriesList);
                 showCategoriesMenu(); // Kategorileri listele
@@ -198,7 +219,11 @@ document.addEventListener("DOMContentLoaded", () => {
         grid.innerHTML = "";
 
         // Kategoriye ait hammaddeleri filtrele
-        const filteredItems = rawMaterials.filter(item => item.category === catId);
+        const filteredItems = rawMaterials.filter(item => {
+            const itemCat = (item.category || "").trim().toLowerCase();
+            const searchCat = (catId || "").trim().toLowerCase();
+            return itemCat === searchCat || itemCat.replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c') === searchCat.replace(/ı/g, 'i').replace(/ş/g, 's').replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ö/g, 'o').replace(/ç/g, 'c');
+        });
 
         filteredItems.forEach(item => {
             // Sepetteki adedi kontrol et

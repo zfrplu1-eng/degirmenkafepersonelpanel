@@ -19,23 +19,27 @@
       }
     },
     {
-      "src": "*.html",
+      "src": "**/*.html",
       "use": "@vercel/static"
     },
     {
-      "src": "*.css",
+      "src": "**/*.css",
       "use": "@vercel/static"
     },
     {
-      "src": "*.js",
+      "src": "**/*.js",
       "use": "@vercel/static"
     },
     {
-      "src": "*.json",
+      "src": "**/*.json",
       "use": "@vercel/static"
     },
     {
-      "src": "*.mp4",
+      "src": "**/*.mp4",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "uploads/**/*",
       "use": "@vercel/static"
     }
   ],
@@ -46,7 +50,7 @@
     },
     {
       "src": "/uploads/(.*)",
-      "dest": "api/index.js"
+      "dest": "/uploads/$1"
     },
     {
       "handle": "filesystem"
