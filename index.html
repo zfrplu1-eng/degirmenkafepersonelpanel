@@ -234,35 +234,47 @@
             }
         });
 
+        const DEFAULT_PLAYLIST = "https://www.youtube.com/embed/videoseries?list=PL4fGSI1pDJn5kI81J1m1qyPfyS5aP_Qp6";
+
         function loadGlobalMusic() {
             fetch('/api/settings/music')
-                .then(res => res.json())
-                .then(data => {
-                    const embedPlaceholder = document.getElementById("global-youtube-placeholder");
-                    if (data.youtubePlaylist) {
-                        const playlistVal = data.youtubePlaylist.trim();
-                        let embedUrl = playlistVal;
-
-                        if (!playlistVal.startsWith("<iframe")) {
-                            let playlistId = "";
-                            const reg = /[&?]list=([^&]+)/;
-                            const match = playlistVal.match(reg);
-                            if (match && match[1]) {
-                                playlistId = match[1];
-                            } else if (!playlistVal.includes("/") && playlistVal.length > 10) {
-                                playlistId = playlistVal;
-                            }
-
-                            if (playlistId) {
-                                embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=0&enablejsapi=1`;
-                            }
-                            embedPlaceholder.innerHTML = `<iframe width="100%" height="200" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border: none;"></iframe>`;
-                        } else {
-                            embedPlaceholder.innerHTML = playlistVal;
-                        }
-                    }
+                .then(res => {
+                    if (!res.ok) throw new Error("HTTP " + res.status);
+                    return res.json();
                 })
-                .catch(err => console.error("Müzik yükleme hatası:", err));
+                .then(data => {
+                    renderPlaylist(data.youtubePlaylist || DEFAULT_PLAYLIST);
+                })
+                .catch(err => {
+                    console.warn("Sunucu müzik ayarlarına erişilemedi, varsayılan çalma listesi yükleniyor...");
+                    renderPlaylist(DEFAULT_PLAYLIST);
+                });
+        }
+
+        function renderPlaylist(playlistVal) {
+            const embedPlaceholder = document.getElementById("global-youtube-placeholder");
+            if (!embedPlaceholder) return;
+            
+            const trimmedVal = (playlistVal || "").trim();
+            let embedUrl = trimmedVal;
+
+            if (trimmedVal && !trimmedVal.startsWith("<iframe")) {
+                let playlistId = "";
+                const reg = /[&?]list=([^&]+)/;
+                const match = trimmedVal.match(reg);
+                if (match && match[1]) {
+                    playlistId = match[1];
+                } else if (!trimmedVal.includes("/") && trimmedVal.length > 10) {
+                    playlistId = trimmedVal;
+                }
+
+                if (playlistId) {
+                    embedUrl = `https://www.youtube.com/embed/videoseries?list=${playlistId}&autoplay=0&enablejsapi=1`;
+                }
+                embedPlaceholder.innerHTML = `<iframe width="100%" height="200" src="${embedUrl}" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen style="border: none;"></iframe>`;
+            } else if (trimmedVal) {
+                embedPlaceholder.innerHTML = trimmedVal;
+            }
         }
 
         // Oturum kontrolü

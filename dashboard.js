@@ -800,6 +800,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     note.pinned = !note.pinned;
                     localStorage.setItem("local_notes", JSON.stringify(localNotes));
                     loadNotes();
+                }
             });
     };
 
