@@ -514,6 +514,56 @@ document.addEventListener("DOMContentLoaded", () => {
             }))
         };
 
+        const processOfflineOrder = () => {
+            // Çevrimdışı yerel sipariş arşivine yaz
+            const localOrders = JSON.parse(localStorage.getItem("local_orders")) || [];
+            localOrders.push(orderData);
+            localStorage.setItem("local_orders", JSON.stringify(localOrders));
+
+            // Stokları yerel envanter tablosundan düş
+            let localRecipes = JSON.parse(localStorage.getItem("raw_materials_local")) || [];
+            basket.forEach(item => {
+                localRecipes.forEach(cat => {
+                    const found = cat.items.find(ri => ri.name === item.name);
+                    if (found) {
+                        if (!found.region_stocks) found.region_stocks = {};
+                        const currentRegion = loggedInUser.region || "Tüm Bölgeler";
+                        const oldStock = found.region_stocks[currentRegion] !== undefined ? found.region_stocks[currentRegion] : (found.stock || 10);
+                        found.region_stocks[currentRegion] = Math.max(0, oldStock - item.quantity);
+                        found.stock = found.region_stocks[currentRegion];
+                    }
+                });
+            });
+            localStorage.setItem("raw_materials_local", JSON.stringify(localRecipes));
+
+            showToast("Sipariş başarıyla yerel arşive kaydedildi, WhatsApp'a yönlendiriliyorsunuz...", "success");
+
+            // WhatsApp Mesaj Şablonu:
+            let message = `*Değirmen Kafe - Yeni Sipariş Talebi*\n`;
+            message += `*Şube:* ${branchName}\n`;
+            message += `*Sipariş Kodu:* ${orderId}\n`;
+            message += `*Tarih:* ${orderDateStr}\n`;
+            message += `*ÜRÜNLER:*\n`;
+            
+            basket.forEach(item => {
+                message += `- ${item.name} : *${item.quantity} ${item.unit}*\n`;
+            });
+
+            const totalText = document.getElementById("total-price").textContent;
+            message += `*Toplam Miktar:* ${totalText}`;
+
+            const encodedMsg = encodeURIComponent(message);
+            const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
+            
+            basket = [];
+            updateBasketUI();
+            showCategoriesMenu();
+
+            setTimeout(() => {
+                window.open(waUrl, "_blank");
+            }, 800);
+        };
+
         fetch("/api/orders", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
@@ -522,43 +572,14 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(res => res.json())
         .then(result => {
             if (result.success) {
-                showToast("Sipariş başarıyla kaydedildi, WhatsApp'a yönlendiriliyorsunuz...", "success");
-
-                // WhatsApp Mesaj Şablonu:
-                let message = `*Değirmen Kafe - Yeni Sipariş Talebi*\n`;
-                message += `*Şube:* ${branchName}\n`;
-                message += `*Sipariş Kodu:* ${orderId}\n`;
-                message += `*Tarih:* ${orderDateStr}\n`;
-                message += `*ÜRÜNLER:*\n`;
-                
-                basket.forEach(item => {
-                    message += `- ${item.name} : *${item.quantity} ${item.unit}*\n`;
-                });
-
-                const totalText = document.getElementById("total-price").textContent;
-                message += `*Toplam Miktar:* ${totalText}`;
-
-                const encodedMsg = encodeURIComponent(message);
-                
-                // Telefon tanımlı olmasa bile genel gönderme API'sini yeni sekmede tetikler
-                const waUrl = `https://api.whatsapp.com/send?text=${encodedMsg}`;
-                
-                // Sepeti temizle
-                basket = [];
-                updateBasketUI();
-                showCategoriesMenu();
-
-                setTimeout(() => {
-                    // Iframe sandbox'ından kaçmak için yeni sekmede temizce açar
-                    window.open(waUrl, "_blank");
-                }, 800);
+                processOfflineOrder();
             } else {
                 showToast("Hata: " + (result.message || "Sipariş kaydedilemedi."), "error");
             }
         })
         .catch(err => {
-            console.error("Sipariş hatası:", err);
-            showToast("Sistem Hatası: " + err.message, "error");
+            console.warn("Sunucu bulunamadı, sipariş yerel depo üzerinden tamamlanıyor...");
+            processOfflineOrder();
         });
     });
 });
