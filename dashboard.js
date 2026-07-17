@@ -721,9 +721,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     `;
                     container.appendChild(bubble);
                 });
-            })
-            .catch(err => console.error("Notlar yüklenirken hata oluştu:", err));
-    };
+    }
 
     window.addNewNote = function() {
         const textEl = document.getElementById("new-note-textarea");
