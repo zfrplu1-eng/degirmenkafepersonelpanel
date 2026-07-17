@@ -80,11 +80,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ role, username, password })
             });
-            data = await response.json();
-            responseOk = response.ok;
+            if (response.ok) {
+                data = await response.json();
+                responseOk = true;
+            }
         } catch (netErr) {
-            console.warn("Sunucu erişilemez durumda, yerel doğrulama yapılıyor...");
-            // Kalıcı Çevrimdışı (Offline) Yedek Giriş Sistemi
+            console.warn("Sunucu hatası veya bağlantı yok. Çevrimdışı moda geçiliyor.");
+        }
+
+        // Eğer sunucudan onay alınamadıysa yerel yedek doğrulamayı çalıştır (Kesintisiz Çalışma)
+        if (!responseOk || !data.success) {
             const lowerUser = username.toLowerCase();
             if ((lowerUser === 'zafer' && password === '1908') || (lowerUser === 'admin' && password === '123')) {
                 data = {
