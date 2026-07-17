@@ -24,14 +24,82 @@ document.addEventListener("DOMContentLoaded", () => {
 
     applyTheme(localStorage.getItem("theme") || "dark");
 
+    const OFFLINE_MENU_RECIPES = [
+        {
+            "id": "sicak",
+            "label": "SICAK İÇECEKLER",
+            "items": [
+                {
+                    "name": "FİLTRE KAHVE (BREWED COFFEE)",
+                    "gramaj": "Standart Kupa (240ml)",
+                    "icon": "☕",
+                    "ingredients": [
+                        { "name": "HM-FİLTRE KAHVE", "amount": "15 gr" },
+                        { "name": "Sıcak Su (92 Derece)", "amount": "220 ml" }
+                    ],
+                    "prep": [
+                        "Filtre kağıdını sıcak su ile ıslatın ve hazneyi temizleyin.",
+                        "15 gram taze öğütülmüş filtre kahveyi kağıt filtreye ekleyin.",
+                        "92 derece sıcak suyu dairesel hareketlerle kahvenin üzerine yavaşça dökerek demleyin."
+                    ]
+                },
+                {
+                    "name": "TÜRK KAHVESİ (TURKISH COFFEE)",
+                    "gramaj": "Fincan (70ml)",
+                    "icon": "☕",
+                    "ingredients": [
+                        { "name": "HM-TÜRK KAHVESİ (ORTA KAVRULMUŞ)", "amount": "7 gr" },
+                        { "name": "İçme Suyu", "amount": "65 ml" }
+                    ],
+                    "prep": [
+                        "Cezveye 7 gram taze Türk kahvesini ve 65 ml oda sıcaklığındaki suyu ekleyin.",
+                        "Kahveyi ve suyu cezvede yavaşça karıştırın.",
+                        "Kısık ateşte köpüklenene kadar pişirin ve köpüğünü fincana aldıktan sonra servis edin."
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "cold_coffee",
+            "label": "SOĞUK KAHVELER",
+            "items": [
+                {
+                    "name": "ICE LATTE",
+                    "gramaj": "Büyük Boy Bardak (350ml)",
+                    "icon": "🥤",
+                    "ingredients": [
+                        { "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)", "amount": "2 Shot (60ml)" },
+                        { "name": "Soğuk Süt", "amount": "200 ml" },
+                        { "name": "Buz Küpü", "amount": "6 Adet" }
+                    ],
+                    "prep": [
+                        "Bardağa 6 adet buz küpünü ekleyin.",
+                        "Buzların üzerine 200 ml soğuk sütü doldurun.",
+                        "En son taze çekilmiş 2 shot espressoyu bardağın üzerinden yavaşça dökerek katmanlı servis yapın."
+                    ]
+                }
+            ]
+        }
+    ];
+
     // 1. Verileri Çek
     fetch("/api/menu-recipes?t=" + Date.now())
         .then(r => r.json())
         .then(data => {
             allData = data;
+            localStorage.setItem("menu_recipes_local", JSON.stringify(data));
             renderCategoryOverviewCards();
         })
-        .catch(err => console.error("Reçeteler yüklenirken hata oluştu:", err));
+        .catch(err => {
+            console.warn("Sunucu bulunamadı, yerel reçeteler yükleniyor...");
+            let localRecipes = JSON.parse(localStorage.getItem("menu_recipes_local"));
+            if (!localRecipes) {
+                localRecipes = OFFLINE_MENU_RECIPES;
+                localStorage.setItem("menu_recipes_local", JSON.stringify(localRecipes));
+            }
+            allData = localRecipes;
+            renderCategoryOverviewCards();
+        });
 
     // Sayfa Yönetimi
     window.showPage = function(pageId) {
