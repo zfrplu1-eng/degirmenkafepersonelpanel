@@ -450,9 +450,9 @@ document.addEventListener("DOMContentLoaded", () => {
             promoVideoPlayer.autoplay = true;
             promoVideoPlayer.loop = true;
             
-            // Video kaynağı artık statik olarak HTML'den yükleniyor, JS'in üzerine yazmasını engelliyoruz.
-            if (!promoVideoPlayer.src || promoVideoPlayer.src === "") {
-                promoVideoPlayer.src = "/uploads/intro_video_primary.mp4";
+            // Video kaynağı statik remote olarak kalsın, üzerine yazmayı engelliyoruz.
+            if (!promoVideoPlayer.src || promoVideoPlayer.src.includes("intro_video_primary.mp4")) {
+                promoVideoPlayer.src = "https://assets.mixkit.co/videos/preview/mixkit-coffee-beans-falling-in-a-glass-jar-40545-large.mp4";
             }
             
             // Doğrudan oynatmayı dene
