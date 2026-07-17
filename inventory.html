@@ -772,15 +772,64 @@
                     });
             }
 
+            const OFFLINE_RECIPES = [
+              {
+                "id": "suruplar",
+                "label": "ŞURUPLAR",
+                "items": [
+                  { "name": "HM-BAHÇE NANE AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-BERRY HIBISCUS AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-BÖĞÜRTLEN AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-COOKİE AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-COOL LIME AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-ÇARKIFELEK (PASSION FRUIT) AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-ÇİLEK AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-FINDIK AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-KARAMEL AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-KAVRULMUŞ BADEM AROMALI KOKTEYL ŞURUP", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-MUZ AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-NAR AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-ORANGE & MANGO AROMALI KOKTEYL ŞURUP", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-PECAN CEVİZİ AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-ŞEKER AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-TOFFEE NUT AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-TURUNÇ AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-VANİLYA AROMALI KOKTEYL ŞURUBU", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} }
+                ]
+              },
+              {
+                "id": "kahveler",
+                "label": "KAHVELER",
+                "items": [
+                  { "name": "HM-DAMLA SAKIZLI TÜRK KAHVESİ", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-FİLTRE KAHVE", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} },
+                  { "name": "HM-TÜRK KAHVESİ (ORTA KAVRULMUŞ)", "cal": "Hammadde", "image": "menu.jpg", "weight": 0.9, "limit": 5, "stock": 10, "expiry": "Belirtilmedi", "region_stocks": {} }
+                ]
+              }
+            ];
+
             function loadInventory() {
                 Promise.all([
-                    fetch("/api/recipes?t=" + Date.now()).then(r => r.json()),
-                    fetch("/api/stk/confirmed").then(r => r.json())
+                    fetch("/api/recipes?t=" + Date.now()).then(r => r.json()).catch(() => null),
+                    fetch("/api/stk/confirmed").then(r => r.json()).catch(() => ({}))
                 ])
                 .then(([recipes, stkConfirmed]) => {
-                    database = recipes;
-                    originalDatabase = JSON.parse(JSON.stringify(recipes));
-                    stkConfirmedList = stkConfirmed;
+                    let finalRecipes = recipes;
+                    if (!finalRecipes) {
+                        console.warn("Sunucu bulunamadı, yerel envanter verileri yükleniyor...");
+                        finalRecipes = JSON.parse(localStorage.getItem("raw_materials_local"));
+                        if (!finalRecipes) {
+                            finalRecipes = OFFLINE_RECIPES;
+                            localStorage.setItem("raw_materials_local", JSON.stringify(finalRecipes));
+                        }
+                    } else {
+                        localStorage.setItem("raw_materials_local", JSON.stringify(finalRecipes));
+                    }
+
+                    database = finalRecipes;
+                    originalDatabase = JSON.parse(JSON.stringify(finalRecipes));
+                    stkConfirmedList = Array.isArray(stkConfirmed) ? stkConfirmed : [];
                     renderCategories();
                     renderInventoryTable();
                     checkCriticalAndExpiryWarnings();
@@ -1021,6 +1070,7 @@
                     .then(res => res.json())
                     .then(data => {
                         if (data.success) {
+                            localStorage.setItem("raw_materials_local", JSON.stringify(database));
                             alert("Envanter stok seviyeleri ve işlem geçmişi başarıyla kaydedildi!");
                             loadInventory();
                         } else {
@@ -1028,8 +1078,10 @@
                         }
                     })
                     .catch(err => {
-                        console.error(err);
-                        alert("Veritabanı bağlantı hatası!");
+                        console.warn("Sunucu bağlantısı yok, stoklar yerel tarayıcı hafızasına kaydedildi.");
+                        localStorage.setItem("raw_materials_local", JSON.stringify(database));
+                        alert("Envanter stok seviyeleri yerel tarayıcı hafızasına başarıyla kaydedildi!");
+                        loadInventory();
                     })
                     .finally(() => {
                         btnSave.disabled = false;
