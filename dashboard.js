@@ -291,25 +291,44 @@ document.addEventListener("DOMContentLoaded", () => {
     const promoVideoPlayer = document.getElementById("promo-video-player");
     const promoIndicator = document.getElementById("promo-indicator");
 
+    const DEFAULT_SLIDES = [
+        {
+            "title": "Değirmen Kafe Portalı",
+            "desc": "Personel ve hammadde yönetim paneline hoş geldiniz.",
+            "desc2": "Menülerden yapmak istediğiniz işlemleri seçebilirsiniz.",
+            "titleFontFamily": "Outfit",
+            "titleFontSize": 38,
+            "titleFontWeight": "800",
+            "titleColor": "#ffffff",
+            "titleAlign": "left"
+        }
+    ];
+
     function fetchAndRenderPromoBanner() {
         fetch("/api/slides?t=" + Date.now())
             .then(res => res.json())
             .then(slides => {
-                promoSlides = slides;
-                if (promoSlides.length === 0) {
-                    if(promoTitle) promoTitle.textContent = "Değirmen Kafe Portalı";
-                    if(promoDesc) promoDesc.textContent = "Sistem ayarlarından tanıtım videoları ve slaytları ekleyin.";
-                    if (promoDesc2) promoDesc2.textContent = "";
-                    // promoVideoPlayer her zaman acik kalsin
-                    return;
-                }
-                if (promoVideoPlayer) promoVideoPlayer.style.display = "block";
-                
-                renderIndicators();
-                showSlide(0);
-                startSlideTimer();
+                processSlides(slides);
             })
-            .catch(err => console.error("Tanıtım slaytları yüklenemedi:", err));
+            .catch(err => {
+                console.warn("Sunucu bulunamadı, varsayılan slayt yükleniyor...");
+                processSlides(DEFAULT_SLIDES);
+            });
+    }
+
+    function processSlides(slides) {
+        promoSlides = slides;
+        if (promoSlides.length === 0) {
+            if(promoTitle) promoTitle.textContent = "Değirmen Kafe Portalı";
+            if(promoDesc) promoDesc.textContent = "Personel ve hammadde yönetim paneline hoş geldiniz.";
+            if (promoDesc2) promoDesc2.textContent = "";
+            return;
+        }
+        if (promoVideoPlayer) promoVideoPlayer.style.display = "block";
+        
+        renderIndicators();
+        showSlide(0);
+        startSlideTimer();
     }
 
     function renderIndicators() {
@@ -509,12 +528,25 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 9. Dinamik STK (Son Kullanma Tarihi) & Kritik Limit Uyarı Sistemi
+    // 9. Dinamik STK (Son Kullanma Tarihi) & Kritik Limit Uyarı Sistemi
     fetch("/api/recipes?t=" + Date.now())
         .then(res => res.json())
         .then(data => {
-            let alerts = [];
-            const today = new Date();
-            data.forEach(cat => {
+            processSTKAlerts(data);
+        })
+        .catch(err => {
+            console.warn("STK kontrolü yerel hammadde veritabanı üzerinden yapılıyor...");
+            // Yerel çevrimdışı hammadde veritabanı yedeği
+            const localMaterials = JSON.parse(localStorage.getItem("raw_materials_local")) || [];
+            processSTKAlerts(localMaterials);
+        });
+
+    function processSTKAlerts(data) {
+        if (!Array.isArray(data)) return;
+        let alerts = [];
+        const today = new Date();
+        data.forEach(cat => {
+            if (cat.items && Array.isArray(cat.items)) {
                 cat.items.forEach(item => {
                     if (item.stk) {
                         const stkDate = new Date(item.stk);
@@ -529,33 +561,33 @@ document.addEventListener("DOMContentLoaded", () => {
                         }
                     }
                 });
-            });
-
-            if (alerts.length > 0) {
-                const alertCard = document.createElement("div");
-                alertCard.style.cssText = "background: rgba(239, 68, 68, 0.1); border: 1.5px solid #ef4444; border-radius: 20px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.05);";
-                
-                let html = `<h4 style="color: #ef4444; margin: 0 0 10px 0; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
-                                ⚠️ KRİTİK STK UYARISI: SON KULLANMA TARİHİ YAKLAŞAN HAMMADDELER VAR!
-                            </h4>`;
-                html += `<ul style="margin: 0; padding-left: 20px; color: var(--text-primary); font-size: 13px; line-height: 1.6; list-style-type: square;">`;
-                alerts.forEach(a => {
-                    if (a.days < 0) {
-                        html += `<li><strong style="color: #ef4444;">${a.name}</strong> - Son Kullanım Tarihi GEÇTİ! (STK: ${a.date})</li>`;
-                    } else {
-                        html += `<li><strong style="color: #f59e0b;">${a.name}</strong> - Son Kullanım Tarihine <strong style="text-decoration: underline;">${a.days} gün</strong> kaldı! (STK: ${a.date})</li>`;
-                    }
-                });
-                html += `</ul>`;
-                alertCard.innerHTML = html;
-                
-                const welcomeHeader = document.querySelector(".welcome-header-box");
-                if (welcomeHeader) {
-                    welcomeHeader.after(alertCard);
-                }
             }
-        })
-        .catch(err => console.error("STK Kontrol Hatası:", err));
+        });
+
+        if (alerts.length > 0) {
+            const alertCard = document.createElement("div");
+            alertCard.style.cssText = "background: rgba(239, 68, 68, 0.1); border: 1.5px solid #ef4444; border-radius: 20px; padding: 20px; margin-bottom: 25px; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.05);";
+            
+            let html = `<h4 style="color: #ef4444; margin: 0 0 10px 0; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; font-size: 0.95rem; display: flex; align-items: center; gap: 8px;">
+                            ⚠️ KRİTİK STK UYARISI: SON KULLANMA TARİHİ YAKLAŞAN HAMMADDELER VAR!
+                        </h4>`;
+            html += `<ul style="margin: 0; padding-left: 20px; color: var(--text-primary); font-size: 13px; line-height: 1.6; list-style-type: square;">`;
+            alerts.forEach(a => {
+                if (a.days < 0) {
+                    html += `<li><strong style="color: #ef4444;">${a.name}</strong> - Son Kullanım Tarihi GEÇTİ! (STK: ${a.date})</li>`;
+                } else {
+                    html += `<li><strong style="color: #f59e0b;">${a.name}</strong> - Son Kullanım Tarihine <strong style="text-decoration: underline;">${a.days} gün</strong> kaldı! (STK: ${a.date})</li>`;
+                }
+            });
+            html += `</ul>`;
+            alertCard.innerHTML = html;
+            
+            const welcomeHeader = document.querySelector(".welcome-header-box");
+            if (welcomeHeader) {
+                welcomeHeader.after(alertCard);
+            }
+        }
+    }
 
     // Müzik kontrolü artık üst parent layout (index.html) üzerinden global yönetilmektedir.
 
@@ -566,17 +598,27 @@ document.addEventListener("DOMContentLoaded", () => {
         fetch('/api/notes')
             .then(res => res.json())
             .then(notes => {
-                const container = document.getElementById("notes-speech-bubbles-container");
-                if (!container) return;
-                container.innerHTML = "";
+                renderNotesBubbles(notes);
+            })
+            .catch(err => {
+                console.warn("Ortak notlar yerel hafızadan (localStorage) yükleniyor...");
+                const localNotes = JSON.parse(localStorage.getItem("local_notes")) || [];
+                renderNotesBubbles(localNotes);
+            });
+    };
 
-                if (notes.length === 0) {
-                    container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary); font-style: italic; font-weight: 500; width: 100%;">Henüz panoya asılmış bir kullanıcı notu bulunmuyor.</p>`;
-                    return;
-                }
+    function renderNotesBubbles(notes) {
+        const container = document.getElementById("notes-speech-bubbles-container");
+        if (!container) return;
+        container.innerHTML = "";
 
-                // Sabitlenen notları en üste alacak şekilde sırala
-                notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
+        if (!Array.isArray(notes) || notes.length === 0) {
+            container.innerHTML = `<p style="font-size: 13px; color: var(--text-secondary); font-style: italic; font-weight: 500; width: 100%;">Henüz panoya asılmış bir kullanıcı notu bulunmuyor.</p>`;
+            return;
+        }
+
+        // Sabitlenen notları en üste alacak şekilde sırala
+        notes.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
 
                 notes.forEach(note => {
                     const bubble = document.createElement("div");
@@ -692,14 +734,22 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        const newNoteObj = {
+            id: Date.now().toString(),
+            username: loggedInUser.username,
+            role: loggedInUser.role,
+            content: val,
+            likes: 0,
+            pinned: false,
+            replies: [],
+            date: new Date().toLocaleDateString('tr-TR'),
+            time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+        };
+
         fetch('/api/notes', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: loggedInUser.username,
-                role: loggedInUser.role,
-                content: val
-            })
+            body: JSON.stringify(newNoteObj)
         })
         .then(res => res.json())
         .then(data => {
@@ -708,6 +758,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast("Not başarıyla eklendi!", "success");
                 loadNotes();
             }
+        })
+        .catch(err => {
+            // Çevrimdışı/Statik Modda Yerel Hafızaya Notu Ekle
+            const localNotes = JSON.parse(localStorage.getItem("local_notes")) || [];
+            localNotes.push(newNoteObj);
+            localStorage.setItem("local_notes", JSON.stringify(localNotes));
+            textEl.value = "";
+            showToast("Not başarıyla yerel panoya asıldı!", "success");
+            loadNotes();
         });
     };
 
@@ -716,6 +775,15 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) loadNotes();
+            })
+            .catch(err => {
+                const localNotes = JSON.parse(localStorage.getItem("local_notes")) || [];
+                const note = localNotes.find(n => n.id === id);
+                if (note) {
+                    note.likes = (note.likes || 0) + 1;
+                    localStorage.setItem("local_notes", JSON.stringify(localNotes));
+                    loadNotes();
+                }
             });
     };
 
@@ -724,6 +792,14 @@ document.addEventListener("DOMContentLoaded", () => {
             .then(res => res.json())
             .then(data => {
                 if (data.success) loadNotes();
+            })
+            .catch(err => {
+                const localNotes = JSON.parse(localStorage.getItem("local_notes")) || [];
+                const note = localNotes.find(n => n.id === id);
+                if (note) {
+                    note.pinned = !note.pinned;
+                    localStorage.setItem("local_notes", JSON.stringify(localNotes));
+                    loadNotes();
             });
     };
 
@@ -731,19 +807,34 @@ document.addEventListener("DOMContentLoaded", () => {
         const replyText = prompt("Bu nota cevap yazın:");
         if (!replyText || !replyText.trim()) return;
 
+        const replyObj = {
+            username: loggedInUser.username,
+            role: loggedInUser.role,
+            content: replyText.trim(),
+            date: new Date().toLocaleDateString('tr-TR'),
+            time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' })
+        };
+
         fetch(`/api/notes/${id}/reply`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                username: loggedInUser.username,
-                role: loggedInUser.role,
-                content: replyText.trim()
-            })
+            body: JSON.stringify(replyObj)
         })
         .then(res => res.json())
         .then(data => {
             if (data.success) {
                 showToast("Cevabınız eklendi.", "success");
+                loadNotes();
+            }
+        })
+        .catch(err => {
+            const localNotes = JSON.parse(localStorage.getItem("local_notes")) || [];
+            const note = localNotes.find(n => n.id === id);
+            if (note) {
+                if (!note.replies) note.replies = [];
+                note.replies.push(replyObj);
+                localStorage.setItem("local_notes", JSON.stringify(localNotes));
+                showToast("Cevabınız yerel olarak eklendi.", "success");
                 loadNotes();
             }
         });
@@ -758,6 +849,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     showToast("Not silindi.", "success");
                     loadNotes();
                 }
+            })
+            .catch(err => {
+                let localNotes = JSON.parse(localStorage.getItem("local_notes")) || [];
+                localNotes = localNotes.filter(n => n.id !== id);
+                localStorage.setItem("local_notes", JSON.stringify(localNotes));
+                showToast("Not yerel panodan silindi.", "success");
+                loadNotes();
             });
     };
 
