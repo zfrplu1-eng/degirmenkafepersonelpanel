@@ -240,7 +240,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Kartların click olaylarını yakala
-    document.querySelectorAll(".module-card").forEach(card => {
+    document.querySelectorAll(".main-card-3d").forEach(card => {
         const href = card.getAttribute("href");
         if (href && href.startsWith("setup")) {
             card.addEventListener("click", (e) => {
