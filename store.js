@@ -433,49 +433,55 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("cart-item-count").textContent = `${totalItems} Birim`;
         document.getElementById("total-price").textContent = summaryParts.join(", ");
 
-        // Sepet içi kontrolleri bağla
-        container.querySelectorAll(".dec-qty").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const idx = parseInt(btn.getAttribute("data-index"));
-                const item = basket[idx];
-                if (item.quantity > 1) {
-                    item.quantity--;
-                } else {
-                    basket.splice(idx, 1);
+        // Olay delegasyonu (Event Delegation) ile sepet butonlarını kararlı şekilde bağla
+        if (!container.dataset.listenerAttached) {
+            container.dataset.listenerAttached = "true";
+            container.addEventListener("click", (e) => {
+                const btnDec = e.target.closest(".dec-qty");
+                const btnInc = e.target.closest(".inc-qty");
+                const btnRemove = e.target.closest(".remove-item");
+
+                if (btnDec) {
+                    e.stopPropagation();
+                    const idx = parseInt(btnDec.getAttribute("data-index"));
+                    const item = basket[idx];
+                    if (item) {
+                        if (item.quantity > 1) {
+                            item.quantity--;
+                        } else {
+                            basket.splice(idx, 1);
+                        }
+                        updateBasketUI();
+                        const matched = rawMaterials.find(m => m.name === item.name);
+                        if (matched) renderProducts(matched.category);
+                    }
                 }
-                updateBasketUI();
-                
-                const matched = rawMaterials.find(m => m.name === item.name);
-                if (matched) renderProducts(matched.category);
-            });
-        });
 
-        container.querySelectorAll(".inc-qty").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const idx = parseInt(btn.getAttribute("data-index"));
-                const item = basket[idx];
-                item.quantity++;
-                updateBasketUI();
-                
-                const matched = rawMaterials.find(m => m.name === item.name);
-                if (matched) renderProducts(matched.category);
-            });
-        });
+                if (btnInc) {
+                    e.stopPropagation();
+                    const idx = parseInt(btnInc.getAttribute("data-index"));
+                    const item = basket[idx];
+                    if (item) {
+                        item.quantity++;
+                        updateBasketUI();
+                        const matched = rawMaterials.find(m => m.name === item.name);
+                        if (matched) renderProducts(matched.category);
+                    }
+                }
 
-        container.querySelectorAll(".remove-item").forEach(btn => {
-            btn.addEventListener("click", (e) => {
-                e.stopPropagation();
-                const idx = parseInt(btn.getAttribute("data-index"));
-                const item = basket[idx];
-                basket.splice(idx, 1);
-                updateBasketUI();
-                
-                const matched = rawMaterials.find(m => m.name === item.name);
-                if (matched) renderProducts(matched.category);
+                if (btnRemove) {
+                    e.stopPropagation();
+                    const idx = parseInt(btnRemove.getAttribute("data-index"));
+                    const item = basket[idx];
+                    if (item) {
+                        basket.splice(idx, 1);
+                        updateBasketUI();
+                        const matched = rawMaterials.find(m => m.name === item.name);
+                        if (matched) renderProducts(matched.category);
+                    }
+                }
             });
-        });
+        }
     }
 
     // Sipariş Gönderimi (WhatsApp & API)
