@@ -107,35 +107,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (responseOk && data.success) {
             localStorage.setItem("user", JSON.stringify(data.user));
+            
+            const frame = document.getElementById("content-frame");
+            const loginBox = document.getElementById("login-container-box");
+            
+            if (frame && loginBox) {
+                // index.html sarmalayıcısındayız
+                loginBox.style.display = "none";
+                document.body.className = "";
+                frame.style.display = "block";
+                frame.src = "dashboard.html";
                 
-                const frame = document.getElementById("content-frame");
-                const loginBox = document.getElementById("login-container-box");
+                const musicBar = document.getElementById("global-music-player-bar");
+                if (musicBar) musicBar.style.display = "block";
                 
-                if (frame && loginBox) {
-                    // index.html sarmalayıcısındayız
-                    loginBox.style.display = "none";
-                    document.body.className = "";
-                    frame.style.display = "block";
-                    frame.src = "dashboard.html";
-                    
-                    const musicBar = document.getElementById("global-music-player-bar");
-                    if (musicBar) musicBar.style.display = "block";
-                    
-                    if (typeof loadGlobalMusic === "function") {
-                        loadGlobalMusic();
-                    } else {
-                        window.location.reload(); // Fallback
-                    }
-                } else {
-                    window.location.href = "index.html"; // Her halükarda anasayfaya at
+                if (typeof loadGlobalMusic === "function") {
+                    loadGlobalMusic();
                 }
             } else {
-                alert(`Giriş Başarısız!\nHata: ${data.message}`);
+                window.location.reload();
             }
-        } catch (error) {
-            console.error(error);
-            alert("Sunucuya bağlanırken bir hata oluştu.");
-        } finally {
+            setBtnLoading(btnLogin, false, "Giriş Yap");
+        } else {
+            alert(`Giriş Başarısız!\nKullanıcı adı veya şifre hatalı.`);
             setBtnLoading(btnLogin, false, "Giriş Yap");
         }
     });
