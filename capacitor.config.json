@@ -1,0 +1,6 @@
+{
+  "appId": "com.degirmencafe.yonetim",
+  "appName": "Değirmen Kafe Yönetim",
+  "webDir": ".",
+  "bundledWebRuntime": false
+}

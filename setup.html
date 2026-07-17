@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değirmen Kafe - Sistem Kurulum & Ayarları</title>
+    <script>
+        if (window === window.parent) {
+            window.location.href = "index.html";
+        }
+    </script>
+    <!-- Google Fonts: Plus Jakarta Sans & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10.1">
+    <style>
+        /* 🌗 Tema Moduna Duyarlı Arka Plan Rengi */
+        body.setup-portal-body {
+            background-color: var(--bg-color) !important;
+            background-image: none !important;
+            transition: background-color 0.3s ease !important;
+        }
+        [data-theme="light"] body.setup-portal-body {
+            background-color: #f3f4f6 !important;
+        }
+
+        /* 🔄 Görseldeki Yuvarlak Geri Dönüş Butonu */
+        .round-back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--form-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .round-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 22px var(--accent-glow) !important;
+            transform: scale(1.05);
+        }
+
+        /* 🚀 Premium Modül Başlık ve Alt Başlık Stilleri */
+        .module-main-title {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 2.8rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.15 !important;
+            color: #ffffff !important; /* Saf Beyaz */
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .module-main-subtitle {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1rem !important;
+            color: rgba(255, 255, 255, 0.8) !important; /* Soft Açık Beyaz */
+            font-weight: 500 !important;
+            letter-spacing: -0.015em !important;
+            line-height: 1.5 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+
+        /* Aydınlık Modda Yazıları Koyu Renk Yapar */
+        [data-theme="light"] .module-main-title {
+            color: #0f172a !important;
+        }
+        [data-theme="light"] .module-main-subtitle {
+            color: #475569 !important;
+        }
+    </style>
+</head>
+<body class="setup-portal-body">
+
+    <div class="orbai-page-wrapper">
+        <div class="setup-portal-container">
+            <!-- Başlık Bölümü -->
+            <!-- 🔄 Görseldeki Premium Layout Düzeni -->
+            <header class="setup-portal-header" id="setup-header" style="display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; border-bottom: 1.5px solid var(--border-color); padding-bottom: 30px; width: 100%;">
+                
+                <!-- Üst Satır: Sol Köşede Yuvarlak Geri Butonu, Sağ Köşede Etiket -->
+                <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                    
+                    <!-- Sol Köşe: Yuvarlak Geri Dön Butonu -->
+                    <a href="dashboard.html" class="round-back-btn" aria-label="Geri Dön">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                    </a>
+                    
+                    <!-- Sağ Köşe: Kategori Mor Etiketi -->
+                    <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']" style="font-size: 11px; letter-spacing: 0.1em; color: #a855f7; font-weight: 800;">SİSTEM AYARLARI</span>
+                </div>
+
+                <!-- Alt Satır: Ortalanmış Premium Kalın Başlık & Açıklama -->
+                <div class="text-center" style="margin-top: 10px; width: 100%;">
+                    <h1 class="module-main-title" style="margin: 0; font-size: 2.8rem; font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--text-primary);">Sistem Kurulum Portalı</h1>
+                    <p class="module-main-subtitle" style="margin: 10px auto 0 auto; color: var(--text-secondary); font-size: 1rem; max-w: 600px; line-height: 1.5;">Yönetmek istediğiniz veri tabanını, tanıtım videolarını, müzik listelerini veya arayüz parametrelerini seçin.</p>
+                </div>
+            </header>
+
+            <!-- Seçenek Kartları Gridi -->
+            <div id="setup-options-grid" class="system-setup-menu-grid" style="grid-template-columns: repeat(3, 1fr); margin-top: 20px; gap: 20px;">
+                <!-- Kart 1: Kullanıcı Yönetimi -->
+                <a href="setup-users.html" class="setup-option-card" style="text-decoration: none;">
+                    <div class="setup-option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                    </div>
+                    <div class="setup-option-info">
+                        <h4>Kullanıcı Kurulumu</h4>
+                        <p>Yeni personel hesapları oluşturun, şifre ve rolleri yönetin.</p>
+                    </div>
+                </a>
+
+                <!-- Kart 3: Ana Menü Video Ayarları -->
+                <a href="setup-video.html" class="setup-option-card" style="text-decoration: none;">
+                    <div class="setup-option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                    </div>
+                    <div class="setup-option-info">
+                        <h4>Ana Menü Video Ayarları</h4>
+                        <p>Tanıtım banner'ındaki videoları değiştirin, yeni MP4'ler yükleyin.</p>
+                    </div>
+                </a>
+
+                <!-- Kart 4: Arayüz Tasarım Ayarları -->
+                <a href="setup-design.html" class="setup-option-card" style="text-decoration: none;">
+                    <div class="setup-option-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>
+                    </div>
+                    <div class="setup-option-info">
+                        <h4>Arayüz Tasarımı</h4>
+                        <p>Dashboard başlık boyutu, kalınlığı ve üst boşluk ayarlarını özelleştirin.</p>
+                    </div>
+                </a>
+
+                <!-- Kart 6: Hammadde & STK Yönetimi -->
+                <a href="setup-raw-materials.html" class="setup-option-card" style="text-decoration: none; border-color: var(--accent);">
+                    <div class="setup-option-icon" style="color: var(--accent);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                    </div>
+                    <div class="setup-option-info">
+                        <h4 style="color: var(--accent);">Hammadde & STK</h4>
+                        <p>Hammadde ekleyin/silin, kritik limitleri ve Son Kullanma Tarihini yönetin.</p>
+                    </div>
+                </a>
+
+                <!-- Kart 7: Reçete Kataloğu Yönetimi -->
+                <a href="setup-catalog.html" class="setup-option-card" style="text-decoration: none; border-color: #10b981;">
+                    <div class="setup-option-icon" style="color: #10b981;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                    </div>
+                    <div class="setup-option-info">
+                        <h4 style="color: #10b981;">Reçete Kataloğu</h4>
+                        <p>Kategoriler ve ürün tariflerini yönetin, malzeme ve talimat ekleyip düzenleyin.</p>
+                    </div>
+                </a>
+
+                <!-- Kart 8: Müzik Sistemi Çalma Listesi Ayarları -->
+                <a href="setup-music.html" class="setup-option-card" style="text-decoration: none; border-color: #e11d48;">
+                    <div class="setup-option-icon" style="color: #e11d48;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+                    </div>
+                    <div class="setup-option-info">
+                        <h4 style="color: #e11d48;">Müzik &amp; Çalma Listesi</h4>
+                        <p>Dashboard çalma listesi YouTube iframe veya oynatma linkini güncelleyin.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Å�ifre doğrulaması yapılmamışsa dashboard'a atıp şifre modalını tetikleriz
+            if (localStorage.getItem("systemAuth") !== "1908") {
+                window.location.href = "dashboard.html?promptAuth=1";
+                return;
+            }
+        });
+    </script>
+</body>
+</html>

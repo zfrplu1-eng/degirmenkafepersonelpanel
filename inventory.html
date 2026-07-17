@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değirmen Kafe - Envanter Takip Paneli</title>
+    <script>
+        if (!localStorage.getItem('user')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10.1">
+    <style>
+        /* 🔄 Görseldeki Yuvarlak Geri Dönüş Butonu */
+        .round-back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--form-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .round-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 22px var(--accent-glow) !important;
+            transform: scale(1.05);
+        }
+
+        /* 🚀 Premium Modül Başlık ve Alt Başlık Stilleri */
+        .module-main-title {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 2.8rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.15 !important;
+            color: var(--text-primary) !important;
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .module-main-subtitle {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1rem !important;
+            color: var(--text-secondary) !important;
+            opacity: 0.8 !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.015em !important;
+            line-height: 1.5 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+
+        .elegant-back-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0px;
+            height: 38px;
+            padding: 0 12px;
+            border-radius: 99px;
+            background: var(--form-bg);
+            border: 1px solid rgba(129, 79, 255, 0.15);
+            color: var(--text-primary);
+            text-decoration: none;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            white-space: nowrap;
+            cursor: pointer;
+        }
+
+        .elegant-back-btn .back-icon {
+            width: 14px;
+            height: 14px;
+            transition: transform 0.3s ease;
+            flex-shrink: 0;
+            stroke: var(--text-primary);
+        }
+
+        .elegant-back-btn .back-text {
+            max-width: 0;
+            opacity: 0;
+            margin-left: 0;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: inline-block;
+        }
+
+        /* Hover olunca metin açılır, ikon hafif sola kayar */
+        .elegant-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 20px var(--accent-glow) !important;
+            padding: 0 16px;
+            gap: 8px;
+        }
+
+        .elegant-back-btn:hover .back-icon {
+            transform: translateX(-2px);
+            stroke: #ffffff !important;
+        }
+
+        .elegant-back-btn:hover .back-text {
+            max-width: 80px;
+            opacity: 1;
+        }
+
+        /* 3D Kabartmalı Kaydet Butonu */
+        .embossed-3d-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 20px;
+            border-radius: 14px;
+            background: linear-gradient(135deg, var(--accent) 0%, #6366f1 100%) !important;
+            border-top: 1.5px solid rgba(255, 255, 255, 0.4) !important;
+            border-left: 1.5px solid rgba(255, 255, 255, 0.2) !important;
+            border-right: 1px solid rgba(0, 0, 0, 0.15) !important;
+            border-bottom: 3.5px solid rgba(9, 1, 38, 0.55) !important;
+            color: #ffffff !important;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 15px var(--accent-glow), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+        }
+
+        .embossed-3d-btn:hover {
+            background: linear-gradient(135deg, #7c4dff 0%, #4f46e5 100%) !important;
+            box-shadow: 0 6px 20px rgba(129, 79, 255, 0.45), 
+                        inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+            transform: translateY(-1px);
+        }
+
+        .embossed-3d-btn:active {
+            transform: translateY(2.5px) scale(0.97) !important;
+            border-bottom: 1px solid rgba(9, 1, 38, 0.55) !important;
+            border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 5px rgba(129, 79, 255, 0.35) !important;
+        }
+
+        /* Segmented Theme Switcher Butonları (Görsel Uyumlu) */
+        .theme-btn-segment {
+            padding: 6px 12px;
+            border-radius: 99px;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary) !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 10px;
+            font-weight: 800;
+            text-transform: uppercase;
+        }
+
+        .theme-btn-segment.active {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            box-shadow: 0 4px 12px var(--accent-glow);
+        }
+
+        /* İstatistik (KPI) Kartları */
+        .kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .kpi-card {
+            background: var(--form-bg);
+            border: 1.5px solid rgba(129, 79, 255, 0.08);
+            border-radius: 16px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.02);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(129, 79, 255, 0.05);
+            border-color: rgba(129, 79, 255, 0.18);
+        }
+
+        .kpi-icon-wrapper {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(129, 79, 255, 0.06);
+            color: var(--accent);
+        }
+
+        .kpi-info h5 {
+            margin: 0;
+            font-size: 11px;
+            font-weight: 850;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .kpi-info h3 {
+            margin: 4px 0 0 0;
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: var(--text-primary);
+        }
+
+        /* Kategori Tab Butonları */
+        .category-tab-btn {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: left;
+            padding: 12px 16px;
+            font-weight: 700;
+            width: 100%;
+            border-radius: 12px;
+            border: 1px solid transparent;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .category-tab-btn:hover {
+            background: rgba(129, 79, 255, 0.04);
+            color: var(--accent);
+        }
+
+        .category-tab-btn.active {
+            background: rgba(129, 79, 255, 0.08) !important;
+            border-color: rgba(129, 79, 255, 0.18) !important;
+            color: var(--accent) !important;
+            font-weight: 800;
+        }
+
+        /* Modern Stepper */
+        .modern-stepper {
+            display: inline-flex;
+            align-items: center;
+            background: var(--form-bg);
+            border: 1px solid rgba(129, 79, 255, 0.18);
+            border-radius: 12px;
+            overflow: hidden;
+            padding: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .modern-stepper:focus-within {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+        }
+
+        .stepper-btn {
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: transparent;
+            border: none;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .stepper-btn:hover {
+            background: rgba(129, 79, 255, 0.08);
+            color: var(--accent);
+        }
+
+        .stepper-input {
+            width: 48px;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 800;
+            color: var(--text-primary);
+            outline: none;
+            -moz-appearance: textfield;
+        }
+
+        .stepper-input::-webkit-outer-spin-button,
+        .stepper-input::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Progress Bar (Stok Yüzdesi) */
+        .stock-progress-container {
+            width: 100%;
+            height: 5px;
+            background: rgba(0, 0, 0, 0.04);
+            border-radius: 99px;
+            overflow: hidden;
+            margin-top: 5px;
+        }
+
+        [data-theme="dark"] .stock-progress-container {
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .stock-progress-bar {
+            height: 100%;
+            border-radius: 99px;
+            transition: width 0.4s ease;
+        }
+
+        .progress-success { background: #10b981; }
+        .progress-warning { background: #ef4444; }
+
+        /* Arama Girişi */
+        .search-container {
+            position: relative;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 16px 12px 42px;
+            border-radius: 14px;
+            background: var(--form-bg);
+            border: 1.5px solid rgba(129, 79, 255, 0.1);
+            color: var(--text-primary);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-glow);
+            outline: none;
+        }
+
+        .search-icon-wrapper {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            pointer-events: none;
+        }
+    </style>
+    <script>
+        if(!localStorage.getItem("theme_reset_orbai")){localStorage.setItem("theme","dark");localStorage.setItem("theme_reset_orbai","true")}document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");
+    </script>
+</head>
+<body class="setup-sub-body">
+
+    <div class="setup-container-box" style="max-width: 1440px; min-height: auto; padding: 25px; margin: 20px auto;">
+        
+        <!-- 🔄 Görseldeki Birebir Layout Düzeni -->
+        <header class="setup-subview-header" style="display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; border-bottom: 1.5px solid rgba(0,0,0,0.05); padding-bottom: 30px;">
+            
+            <!-- Üst Satır: Sol Köşede Yuvarlak Geri Butonu, Sağ Köşede Switcher ve Etiket -->
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                
+                <!-- Sol Köşe: Yuvarlak Geri Dön Butonu -->
+                <a href="dashboard.html" class="round-back-btn" aria-label="Geri Dön">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </a>
+                
+                <!-- Sağ Köşe: Tema Switcher & Kategori Etiketi -->
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <!-- Tema Değiştirme Segmented Switcher -->
+                    <div style="display: flex; gap: 4px; background: rgba(255,255,255,0.05); padding: 4px; border-radius: 99px; border: 1.5px solid rgba(255,255,255,0.07); align-items: center;">
+                        <button id="theme-btn-light" class="theme-btn-segment" style="padding: 6px 12px; border-radius: 99px; border: none; background: transparent; color: var(--text-secondary); cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="M4.93 4.93l1.41 1.41"/><path d="M17.66 17.66l1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="M6.34 17.66l-1.41 1.41"/><path d="M19.07 4.93l-1.41 1.41"/></svg>
+                            LIGHT
+                        </button>
+                        <button id="theme-btn-dark" class="theme-btn-segment active" style="padding: 6px 12px; border-radius: 99px; border: none; background: var(--accent); color: #fff; cursor: pointer; transition: all 0.3s; display: flex; align-items: center; gap: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase;">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+                            DARK
+                        </button>
+                    </div>
+                    
+                    <!-- Kategori Mor Etiketi -->
+                    <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']" style="font-size: 11px; letter-spacing: 0.1em; color: #a855f7; font-weight: 800;">HAMMADDE ENVANTERİ</span>
+                </div>
+            </div>
+
+            <!-- Alt Satır: Ortalanmış Premium Kalın Başlık & Açıklama -->
+            <div class="text-center" style="margin-top: 10px; width: 100%;">
+                <h1 class="module-main-title" id="inventory-page-title" style="margin: 0; font-size: 2.8rem; font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--text-primary);">Hammadde Envanter Takip Sistemi</h1>
+                <p class="module-main-subtitle" style="margin: 10px auto 0 auto; color: var(--text-secondary); font-size: 1rem; max-w: 600px; line-height: 1.5;">Değirmen Kafe şubeleri için anlık, kritik stok limitli ve kontrol listeli hammadde yönetim paneli.</p>
+            </div>
+            
+            <!-- Rapor Butonu (Eğer admine açık ise alt hizaya yerleşecek) -->
+            <div style="display: flex; justify-content: center; width: 100%; margin-top: 5px;">
+                <button class="button2" id="btn-download-report" style="font-weight: 850; padding: 10px 20px; border-radius: 12px; display: none; align-items: center; gap: 8px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"></line><line x1="12" y1="20" x2="12" y2="4"></line><line x1="6" y1="20" x2="6" y2="14"></line></svg>
+                    <span>Ay Sonu Raporu İndir</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- İstatistik (KPI) Kart Grubu -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-icon-wrapper">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <div class="kpi-info">
+                    <h5>TOPLAM ÜRÜN</h5>
+                    <h3 id="kpi-total-items">-</h3>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrapper" style="background: rgba(239, 68, 68, 0.08); color: #ef4444;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                </div>
+                <div class="kpi-info">
+                    <h5>KRİTİK HAMMADDELER</h5>
+                    <h3 id="kpi-critical-items" style="color: #ef4444;">-</h3>
+                </div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-icon-wrapper" style="background: rgba(59, 130, 246, 0.08); color: #3b82f6;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div class="kpi-info">
+                    <h5>AKTİF BÖLGE</h5>
+                    <h3 id="kpi-active-region">-</h3>
+                </div>
+            </div>
+        </div>
+ 
+        <!-- Kritik Stok Uyarı Kutusu -->
+        <div id="stok-warning-box" class="hidden" style="background: rgba(239, 68, 68, 0.08); border: 1.5px solid #ef4444; border-radius: 16px; padding: 15px 20px; margin-bottom: 25px; width: 100%;">
+            <h4 style="color: #ef4444; margin: 0 0 8px 0; font-weight: 800; display: flex; align-items: center; gap: 8px; font-size: 0.95rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path><line x1="12" y1="9" x2="12" y2="13"></line><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
+                <span>KRİTİK SEVİYENİN ALTINDAKİ HAMMADDELER</span>
+            </h4>
+            <ul id="stok-warnings-list" style="margin: 0; padding-left: 20px; color: var(--text-primary); font-size: 13px; line-height: 1.6;">
+                <!-- JS ile doldurulacak -->
+            </ul>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 30px;">
+            <!-- Sol: Kategori Listesi & Arama Çubuğu -->
+            <div style="border-right: 1.5px solid rgba(0,0,0,0.05); padding-right: 20px;">
+                <!-- Arama Kutusu -->
+                <div class="search-container">
+                    <div class="search-icon-wrapper">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <input type="text" id="inventory-search-input" class="search-input" placeholder="Hammadde ara...">
+                </div>
+
+                <label style="font-size: 11px; font-weight: 900; color: var(--text-secondary); display: block; margin-bottom: 12px; letter-spacing: 0.05em;">KATEGORİ FİLTRESİ</label>
+                <div id="inventory-categories-list" style="display: flex; flex-direction: column; gap: 6px;">
+                    <!-- JS ile dinamik kategoriler yüklenecek -->
+                </div>
+            </div>
+
+            <!-- Sağ: Envanter Tablosu -->
+            <div>
+                <h4 style="margin: 0 0 15px 0; font-family: 'Plus Jakarta Sans', sans-serif; font-weight: 800; color: var(--text-primary);" id="active-inv-category-title">Hammaddeler</h4>
+                <div style="max-height: 580px; overflow-y: auto; padding-right: 10px;">
+                    <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                        <thead>
+                            <tr style="border-bottom: 2px solid rgba(0,0,0,0.06); font-size: 11px; font-weight: 900; color: var(--text-secondary);">
+                                <th style="padding: 12px 16px;">HAMMADDE ADI</th>
+                                <th style="padding: 12px 8px; width: 110px; text-align: center;">BİRİM/AĞIRLIK</th>
+                                <th style="padding: 12px 8px; width: 110px; text-align: center;">KRİTİK LİMİT</th>
+                                <th style="padding: 12px 8px; width: 130px; text-align: center;">STK TARİHİ</th>
+                                <th style="padding: 12px 8px; width: 160px; text-align: center;">MEVCUT STOK</th>
+                                <th style="padding: 12px 8px; width: 110px; text-align: center;">DURUM</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table-body">
+                            <!-- JS ile doldurulacak -->
+                        </tbody>
+                    </table>
+                </div>
+                <div style="display: flex; justify-content: flex-end; margin-top: 20px;">
+                    <button class="embossed-3d-btn" id="btn-save-inventory">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg>
+                        <span>Envanter Stoklarını Kaydet</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+      <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // 0. Oturum Açan Kullanıcı Bilgisi ve Tema Entegrasyonu
+            const loggedInUser = JSON.parse(localStorage.getItem("user")) || {};
+            const userRegion = loggedInUser.region || "Hepsi";
+
+            const btnLight = document.getElementById("theme-btn-light");
+            const btnDark = document.getElementById("theme-btn-dark");
+            const htmlElement = document.documentElement;
+
+            function applyTheme(theme) {
+                htmlElement.setAttribute("data-theme", theme);
+                localStorage.setItem("theme", theme);
+                if (theme === "dark") {
+                    if (btnDark) btnDark.classList.add("active");
+                    if (btnLight) btnLight.classList.remove("active");
+                } else {
+                    if (btnLight) btnLight.classList.add("active");
+                    if (btnDark) btnDark.classList.remove("active");
+                }
+            }
+
+            applyTheme(localStorage.getItem("theme") || "dark");
+
+            if (btnLight) btnLight.addEventListener("click", () => applyTheme("light"));
+            if (btnDark) btnDark.addEventListener("click", () => applyTheme("dark"));
+
+            window.addEventListener("storage", (e) => {
+                if (e.key === "theme") {
+                    applyTheme(e.newValue || "dark");
+                }
+            });
+
+            const pageTitle = document.getElementById("inventory-page-title");
+            if (pageTitle && userRegion !== "Hepsi") {
+                pageTitle.textContent = `${userRegion} Envanter Takip Sistemi`;
+            }
+
+            let database = [];
+            let originalDatabase = [];
+            let activeCatIdx = 0;
+            let searchQuery = "";
+            let stkConfirmedList = [];
+
+            const categoryListContainer = document.getElementById("inventory-categories-list");
+            const tableBody = document.getElementById("inventory-table-body");
+            const activeTitle = document.getElementById("active-inv-category-title");
+            const btnSave = document.getElementById("btn-save-inventory");
+
+            const warningBox = document.getElementById("stok-warning-box");
+            const warningsList = document.getElementById("stok-warnings-list");
+            const searchInput = document.getElementById("inventory-search-input");
+
+            function getCategoryIcon(label) {
+                const l = label.toLowerCase();
+                if (l.includes("kahve") || l.includes("sıcak")) {
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>`;
+                }
+                if (l.includes("soğuk") || l.includes("ice") || l.includes("frape") || l.includes("milkshake")) {
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"></path><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>`;
+                }
+                if (l.includes("frozen") || l.includes("limonata") || l.includes("fresh")) {
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22a7 7 0 0 0 5-12H7a7 7 0 0 0 5 12Z"></path><path d="M12 10V2"></path><path d="M8 2h8"></path></svg>`;
+                }
+                if (l.includes("tuzlu") || l.includes("tatlı") || l.includes("pasta") || l.includes("kek") || l.includes("gıda")) {
+                    return `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="8" y1="12" x2="16" y2="12"></line><line x1="12" y1="8" x2="12" y2="16"></line></svg>`;
+                }
+                return `<svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"></polyline><rect x="1" y="3" width="22" height="5"></rect><line x1="10" y1="12" x2="14" y2="12"></line></svg>`;
+            }
+
+            function updateKPIs() {
+                let totalItems = 0;
+                let criticalItems = 0;
+
+                database.forEach(cat => {
+                    cat.items.forEach(item => {
+                        totalItems++;
+                        let limitVal = item.critical_limit || item.limit || 5;
+                        if (!item.critical_limit && !item.limit && item.cal && item.cal.includes("Kritik Limit:")) {
+                            const parts = item.cal.split("|");
+                            const limitPart = parts[0].replace("Kritik Limit:", "").trim();
+                            limitVal = parseInt(limitPart) || 5;
+                        }
+
+                        const stockVal = item.region_stocks && item.region_stocks[userRegion] !== undefined
+                            ? parseInt(item.region_stocks[userRegion])
+                            : (item.stock !== undefined ? parseInt(item.stock) : 10);
+
+                        if (stockVal <= limitVal) {
+                            criticalItems++;
+                        }
+                    });
+                });
+
+                const elTotal = document.getElementById("kpi-total-items");
+                const elCritical = document.getElementById("kpi-critical-items");
+                const elRegion = document.getElementById("kpi-active-region");
+
+                if (elTotal) elTotal.textContent = totalItems + " Ürün";
+                if (elCritical) elCritical.textContent = criticalItems + " Ürün";
+                if (elRegion) elRegion.textContent = userRegion === "Hepsi" ? "TÜM BÖLGELER" : userRegion.toUpperCase();
+            }
+
+            function checkCriticalAndExpiryWarnings() {
+                warningsList.innerHTML = "";
+                let warnCount = 0;
+                const today = new Date();
+
+                database.forEach(cat => {
+                    cat.items.forEach(item => {
+                        let limitVal = item.critical_limit || item.limit || 5;
+                        if (!item.critical_limit && !item.limit && item.cal && item.cal.includes("Kritik Limit:")) {
+                            const parts = item.cal.split("|");
+                            const limitPart = parts[0].replace("Kritik Limit:", "").trim();
+                            limitVal = parseInt(limitPart) || 5;
+                        }
+                        const stockVal = item.region_stocks && item.region_stocks[userRegion] !== undefined
+                            ? parseInt(item.region_stocks[userRegion])
+                            : (item.stock !== undefined ? parseInt(item.stock) : 10);
+
+                        if (stockVal <= limitVal) {
+                            warnCount++;
+                            const li = document.createElement("li");
+                            li.style.marginBottom = "8px";
+                            li.style.display = "flex";
+                            li.style.justifyContent = "space-between";
+                            li.style.alignItems = "center";
+                            li.innerHTML = `
+                                <span>⚠️ <strong style="color: #ef4444;">${item.name}</strong> stok kritik seviyede: <strong>${stockVal} Adet</strong> (Limit: ${limitVal})</span>
+                            `;
+                            warningsList.appendChild(li);
+                        }
+
+                        const itemSTK = item.region_expiry && item.region_expiry[userRegion]
+                            ? item.region_expiry[userRegion]
+                            : (item.expiry && item.expiry !== "Belirtilmedi" ? item.expiry : "");
+
+                        if (itemSTK) {
+                            const expiryDate = new Date(itemSTK);
+                            const timeDiff = expiryDate.getTime() - today.getTime();
+                            const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+                            const key = `${item.name}_${userRegion}`;
+
+                            if (daysDiff <= 7 && !stkConfirmedList.includes(key)) {
+                                warnCount++;
+                                const li = document.createElement("li");
+                                li.style.marginBottom = "8px";
+                                li.style.display = "flex";
+                                li.style.justifyContent = "space-between";
+                                li.style.alignItems = "center";
+                                li.style.background = "rgba(239, 68, 68, 0.05)";
+                                li.style.padding = "8px 12px";
+                                li.style.borderRadius = "8px";
+                                li.style.border = "1px solid rgba(239, 68, 68, 0.15)";
+                                
+                                const statusText = daysDiff < 0 
+                                    ? `<span class="text-red-500 font-bold">STK Tarihi Geçti (${Math.abs(daysDiff)} gün önce)</span>` 
+                                    : `<span class="text-amber-500 font-bold">STK Yaklaşıyor (Son ${daysDiff} gün)</span>`;
+
+                                li.innerHTML = `
+                                    <span>⏰ <strong>${item.name}</strong> - ${statusText} [STK: ${itemSTK}]</span>
+                                    <button class="button2 confirm-stk-btn" style="font-size: 10px; padding: 4px 8px; margin: 0; background: var(--accent) !important; color:#fff;" data-name="${item.name}">Kontrolü Sağlandı</button>
+                                `;
+                                warningsList.appendChild(li);
+                            }
+                        }
+                    });
+                });
+
+                document.querySelectorAll(".confirm-stk-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const itemName = btn.getAttribute("data-name");
+                        fetch("/api/stk/confirm", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ itemName, region: userRegion })
+                        })
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res.success) {
+                                stkConfirmedList.push(`${itemName}_${userRegion}`);
+                                checkCriticalAndExpiryWarnings();
+                            }
+                        });
+                    });
+                });
+
+                if (warnCount > 0) {
+                    warningBox.classList.remove("hidden");
+                } else {
+                    warningBox.classList.add("hidden");
+                }
+                updateKPIs();
+            }
+
+            const btnReport = document.getElementById("btn-download-report");
+            if (btnReport && (loggedInUser.role === "admin" || loggedInUser.role === "Bölge Sorumlusu" || loggedInUser.role === "sorumlu")) {
+                btnReport.style.display = "flex";
+                btnReport.addEventListener("click", downloadMonthlyReport);
+            }
+
+            if (searchInput) {
+                searchInput.addEventListener("input", (e) => {
+                    searchQuery = e.target.value.toLowerCase().trim();
+                    renderInventoryTable();
+                });
+            }
+
+            function downloadMonthlyReport() {
+                fetch("/api/inventory/logs?t=" + Date.now())
+                    .then(res => res.json())
+                    .then(logs => {
+                        const now = new Date();
+                        const currentYear = now.getFullYear();
+                        const currentMonth = now.getMonth();
+
+                        const filteredLogs = logs.filter(log => {
+                            const logDate = new Date(log.timestamp);
+                            const isSameMonth = logDate.getFullYear() === currentYear && logDate.getMonth() === currentMonth;
+                            const isSameRegion = userRegion === "Hepsi" || log.region === userRegion;
+                            return isSameMonth && isSameRegion;
+                        });
+
+                        if (filteredLogs.length === 0) {
+                            alert("Bu ay içerisinde kaydedilmiş herhangi bir envanter işlemi bulunmuyor.");
+                            return;
+                        }
+
+                        let csvContent = "data:text/csv;charset=utf-8,\uFEFF";
+                        csvContent += "Tarih,Bölge/Şube,Hammadde,İşlem Yapan,Eski Stok,Yeni Stok,Değişim\n";
+
+                        filteredLogs.forEach(log => {
+                            const d = new Date(log.timestamp).toLocaleString("tr-TR");
+                            const changeSign = log.change > 0 ? "+" + log.change : log.change;
+                            csvContent += `"${d}","${log.region}","${log.itemName}","${log.username}",${log.oldStock},${log.newStock},"${changeSign}"\n`;
+                        });
+
+                        const encodedUri = encodeURI(csvContent);
+                        const link = document.createElement("a");
+                        link.setAttribute("href", encodedUri);
+                        link.setAttribute("download", `Envanter_Ay_Sonu_Raporu_${currentYear}_${currentMonth + 1}.csv`);
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                    });
+            }
+
+            function loadInventory() {
+                Promise.all([
+                    fetch("/api/recipes?t=" + Date.now()).then(r => r.json()),
+                    fetch("/api/stk/confirmed").then(r => r.json())
+                ])
+                .then(([recipes, stkConfirmed]) => {
+                    database = recipes;
+                    originalDatabase = JSON.parse(JSON.stringify(recipes));
+                    stkConfirmedList = stkConfirmed;
+                    renderCategories();
+                    renderInventoryTable();
+                    checkCriticalAndExpiryWarnings();
+                });
+            }
+
+            function renderCategories() {
+                categoryListContainer.innerHTML = "";
+                database.forEach((cat, index) => {
+                    const btn = document.createElement("button");
+                    btn.className = `category-tab-btn ${index === activeCatIdx ? 'active' : ''}`;
+                    
+                    const iconSvg = getCategoryIcon(cat.label);
+                    btn.innerHTML = `${iconSvg} <span>${cat.label}</span>`;
+                    
+                    btn.addEventListener("click", () => {
+                        activeCatIdx = index;
+                        renderCategories();
+                        renderInventoryTable();
+                    });
+                    categoryListContainer.appendChild(btn);
+                });
+            }
+
+            function renderInventoryTable() {
+                tableBody.innerHTML = "";
+                const activeCat = database[activeCatIdx];
+                if (!activeCat) return;
+
+                activeTitle.textContent = `${activeCat.label.toUpperCase()} STOK DURUMU`;
+
+                const filtered = activeCat.items
+                    .map((item, idx) => ({ item, originalIdx: idx }))
+                    .filter(wrap => wrap.item.name.toLowerCase().includes(searchQuery));
+
+                if (filtered.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" style="padding: 30px; text-align: center; color: var(--text-secondary); font-weight: 600;">
+                                Aranan kriterlere uygun hammadde bulunamadı.
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+
+                filtered.forEach(wrap => {
+                    const item = wrap.item;
+                    const index = wrap.originalIdx;
+
+                    let limitVal = item.critical_limit || item.limit || 5;
+                    if (!item.critical_limit && !item.limit && item.cal && item.cal.includes("Kritik Limit:")) {
+                        const parts = item.cal.split("|");
+                        const limitPart = parts[0].replace("Kritik Limit:", "").trim();
+                        limitVal = parseInt(limitPart) || 5;
+                    }
+
+                    const stockVal = item.region_stocks && item.region_stocks[userRegion] !== undefined
+                        ? parseInt(item.region_stocks[userRegion])
+                        : (item.stock !== undefined ? parseInt(item.stock) : 10);
+                    const isKritik = stockVal <= limitVal;
+
+                    const maxRef = Math.max(15, limitVal * 3);
+                    const percent = Math.min(100, Math.round((stockVal / maxRef) * 100));
+                    const progressClass = isKritik ? 'progress-warning' : 'progress-success';
+
+                    const itemExpiry = item.region_expiry && item.region_expiry[userRegion]
+                        ? item.region_expiry[userRegion]
+                        : (item.expiry && item.expiry !== "Belirtilmedi" ? item.expiry : "");
+
+                    const tr = document.createElement("tr");
+                    tr.style.borderBottom = "1px solid rgba(129,79,255,0.04)";
+
+                    tr.innerHTML = `
+                        <td style="padding: 16px; font-weight: 700; font-size: 13.5px; color: var(--text-primary);">
+                            <div>${item.name}</div>
+                            <div class="stock-progress-container">
+                                <div class="stock-progress-bar ${progressClass}" style="width: ${percent}%;"></div>
+                            </div>
+                        </td>
+                        <td style="padding: 16px 8px; text-align: center; font-size: 12.5px; font-weight: 600; color: var(--text-secondary);">${item.gramaj || '1 Adet'}</td>
+                        <td style="padding: 16px 8px; text-align: center; font-weight: 800; font-size: 12.5px; color: var(--text-primary);">${limitVal}</td>
+                        <td style="padding: 16px 8px; text-align: center;">
+                            <input type="date" class="setting-input expiry-date-input" value="${itemExpiry}" data-index="${index}" style="padding: 6px 10px; font-size: 12px; width: 140px; text-align: center;">
+                        </td>
+                        <td style="padding: 16px 8px; text-align: center;">
+                            <div style="display: flex; align-items: center; justify-content: center;">
+                                <div class="modern-stepper">
+                                    <button type="button" class="stepper-btn btn-adjust-down" data-index="${index}">-</button>
+                                    <input type="number" class="stepper-input stock-input-field" value="${stockVal}" data-index="${index}">
+                                    <button type="button" class="stepper-btn btn-adjust-up" data-index="${index}">+</button>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="padding: 16px 8px; text-align: center;">
+                            <span class="status-pill-badge ${isKritik ? 'status-badge-cancelled' : 'status-badge-completed'}" style="font-size: 10px; font-weight: 900; letter-spacing: 0.05em; padding: 4px 10px; border-radius: 99px;">
+                                ${isKritik ? 'KRİTİK' : 'YETERLİ'}
+                            </span>
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+
+                document.querySelectorAll(".stock-input-field").forEach(input => {
+                    input.addEventListener("input", (e) => {
+                        const idx = parseInt(input.getAttribute("data-index"));
+                        const val = Math.max(0, parseInt(e.target.value) || 0);
+                        updateSingleItemStock(idx, val, input);
+                    });
+                });
+
+                document.querySelectorAll(".expiry-date-input").forEach(input => {
+                    input.addEventListener("change", (e) => {
+                        const idx = parseInt(input.getAttribute("data-index"));
+                        const dateVal = e.target.value;
+                        updateSingleItemExpiry(idx, dateVal);
+                    });
+                });
+
+                document.querySelectorAll(".btn-adjust-down").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const idx = parseInt(btn.getAttribute("data-index"));
+                        const input = btn.parentNode.querySelector(".stock-input-field");
+                        const val = Math.max(0, (parseInt(input.value) || 0) - 1);
+                        input.value = val;
+                        updateSingleItemStock(idx, val, input);
+                    });
+                });
+
+                document.querySelectorAll(".btn-adjust-up").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        const idx = parseInt(btn.getAttribute("data-index"));
+                        const input = btn.parentNode.querySelector(".stock-input-field");
+                        const val = (parseInt(input.value) || 0) + 1;
+                        input.value = val;
+                        updateSingleItemStock(idx, val, input);
+                    });
+                });
+            }
+
+            function updateSingleItemExpiry(idx, dateVal) {
+                const activeCat = database[activeCatIdx];
+                if (!activeCat || !activeCat.items[idx]) return;
+
+                const item = activeCat.items[idx];
+                if (!item.region_expiry) item.region_expiry = {};
+                item.region_expiry[userRegion] = dateVal;
+                item.expiry = dateVal;
+
+                checkCriticalAndExpiryWarnings();
+            }
+
+            function updateSingleItemStock(idx, val, inputEl) {
+                const activeCat = database[activeCatIdx];
+                if (!activeCat || !activeCat.items[idx]) return;
+
+                const item = activeCat.items[idx];
+                if (!item.region_stocks) item.region_stocks = {};
+                item.region_stocks[userRegion] = val;
+                item.stock = val;
+
+                let limitVal = item.critical_limit || item.limit || 5;
+                if (!item.critical_limit && !item.limit && item.cal && item.cal.includes("Kritik Limit:")) {
+                    const parts = item.cal.split("|");
+                    const limitPart = parts[0].replace("Kritik Limit:", "").trim();
+                    limitVal = parseInt(limitPart) || 5;
+                }
+
+                const isKritik = val <= limitVal;
+
+                const row = inputEl.closest("tr");
+                if (row) {
+                    const statusPill = row.querySelector(".status-pill-badge");
+                    if (statusPill) {
+                        statusPill.className = `status-pill-badge ${isKritik ? 'status-badge-cancelled' : 'status-badge-completed'}`;
+                        statusPill.textContent = isKritik ? "KRİTİK" : "YETERLİ";
+                    }
+
+                    const progressBar = row.querySelector(".stock-progress-bar");
+                    if (progressBar) {
+                        const maxRef = Math.max(15, limitVal * 3);
+                        const percent = Math.min(100, Math.round((val / maxRef) * 100));
+                        progressBar.style.width = `${percent}%`;
+                        progressBar.className = `stock-progress-bar ${isKritik ? 'progress-warning' : 'progress-success'}`;
+                    }
+                }
+
+                checkCriticalAndExpiryWarnings();
+            }
+
+            btnSave.addEventListener("click", () => {
+                btnSave.disabled = true;
+                btnSave.textContent = "Kaydediliyor...";
+
+                const logPromises = [];
+                database.forEach((cat, cIdx) => {
+                    cat.items.forEach((item, iIdx) => {
+                        const origCat = originalDatabase[cIdx];
+                        if (!origCat) return;
+                        const origItem = origCat.items[iIdx];
+                        if (!origItem) return;
+
+                        const oldStock = origItem.region_stocks && origItem.region_stocks[userRegion] !== undefined
+                            ? parseInt(origItem.region_stocks[userRegion])
+                            : (origItem.stock !== undefined ? parseInt(origItem.stock) : 10);
+                        
+                        const newStock = item.region_stocks && item.region_stocks[userRegion] !== undefined
+                            ? parseInt(item.region_stocks[userRegion])
+                            : (item.stock !== undefined ? parseInt(item.stock) : 10);
+
+                        if (oldStock !== newStock) {
+                            logPromises.push(
+                                fetch("/api/inventory-logs", {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify({
+                                        username: loggedInUser.username || "Bölge Sorumlusu",
+                                        region: userRegion,
+                                        itemName: item.name,
+                                        oldStock: oldStock,
+                                        newStock: newStock,
+                                        change: newStock - oldStock
+                                    })
+                                })
+                            );
+                        }
+                    });
+                });
+
+                Promise.all(logPromises)
+                    .then(() => {
+                        return fetch("/api/recipes", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ recipes: database })
+                        });
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Envanter stok seviyeleri ve işlem geçmişi başarıyla kaydedildi!");
+                            loadInventory();
+                        } else {
+                            alert("Kaydedilemedi!");
+                        }
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        alert("Veritabanı bağlantı hatası!");
+                    })
+                    .finally(() => {
+                        btnSave.disabled = false;
+                        btnSave.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path><polyline points="17 21 17 13 7 13 7 21"></polyline><polyline points="7 3 7 8 15 8"></polyline></svg> <span>Envanter Stoklarını Kaydet</span>';
+                    });
+            });
+
+            loadInventory();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Ayarları - Ana Menü Video & Slayt Ayarları</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10.1">
+    <style>
+        /* 🔄 Görseldeki Yuvarlak Geri Dönüş Butonu */
+        .round-back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 46px;
+            height: 46px;
+            border-radius: 50%;
+            background: var(--form-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .round-back-btn:hover {
+            background: var(--accent) !important;
+            color: #ffffff !important;
+            border-color: var(--accent) !important;
+            box-shadow: 0 8px 22px var(--accent-glow) !important;
+            transform: scale(1.05);
+        }
+
+        /* 🚀 Premium Modül Başlık ve Alt Başlık Stilleri */
+        .module-main-title {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 2.8rem !important;
+            font-weight: 800 !important;
+            letter-spacing: -0.045em !important;
+            line-height: 1.15 !important;
+            color: #ffffff !important;
+            text-align: center !important;
+            margin-bottom: 8px !important;
+        }
+
+        .module-main-subtitle {
+            font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif !important;
+            font-size: 1rem !important;
+            color: rgba(255, 255, 255, 0.8) !important;
+            font-weight: 500 !important;
+            letter-spacing: -0.015em !important;
+            line-height: 1.5 !important;
+            max-width: 600px !important;
+            margin-left: auto !important;
+            margin-right: auto !important;
+            text-align: center !important;
+        }
+
+        /* Aydınlık Modda Yazıları Koyu Renk Yapar */
+        [data-theme="light"] .module-main-title {
+            color: #0f172a !important;
+        }
+        [data-theme="light"] .module-main-subtitle {
+            color: #475569 !important;
+        }
+    </style>
+    <script>
+        if(!localStorage.getItem("theme_reset_orbai")){localStorage.setItem("theme","dark");localStorage.setItem("theme_reset_orbai","true")}document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");
+    </script>
+</head>
+<body class="setup-sub-body">
+
+    <div class="setup-container-box">
+        
+        <!-- 🔄 Görseldeki Premium Layout Düzeni -->
+        <header class="setup-subview-header" style="display: flex; flex-direction: column; gap: 30px; margin-bottom: 40px; border-bottom: 1.5px solid rgba(0,0,0,0.05); padding-bottom: 30px; width: 100%;">
+            
+            <!-- Üst Satır: Sol Köşede Yuvarlak Geri Butonu, Sağ Köşede Etiket -->
+            <div style="display: flex; justify-content: space-between; align-items: center; width: 100%;">
+                
+                <!-- Sol Köşe: Yuvarlak Geri Dön Butonu -->
+                <a href="setup.html" class="round-back-btn" aria-label="Geri Dön">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+                </a>
+                
+                <!-- Sağ Köşe: Kategori Mor Etiketi -->
+                <span class="text-xs uppercase font-extrabold tracking-widest text-purple-400 font-['Outfit']" style="font-size: 11px; letter-spacing: 0.1em; color: #a855f7; font-weight: 800;">VİDEO AYARLARI</span>
+            </div>
+
+            <!-- Alt Satır: Ortalanmış Premium Kalın Başlık & Açıklama -->
+            <div class="text-center" style="margin-top: 10px; width: 100%;">
+                <h1 class="module-main-title" style="margin: 0; font-size: 2.8rem; font-family: 'Outfit', sans-serif; font-weight: 900; color: var(--text-primary);">Ana Menü Video &amp; Slayt Ayarları</h1>
+                <p class="module-main-subtitle" style="margin: 10px auto 0 auto; color: var(--text-secondary); font-size: 1rem; max-w: 600px; line-height: 1.5;">Tanıtım banner'ındaki döngü videolarını güncelleyin, yeni MP4 slaytlar veya YouTube içerikleri yükleyin.</p>
+            </div>
+        </header>
+
+        <div style="display: grid; grid-template-columns: 280px 1fr; gap: 30px;">
+            <!-- Sol: Slayt Seçici -->
+            <div style="border-right: 1.5px solid rgba(129, 79, 255, 0.1); padding-right: 20px; display: flex; flex-direction: column; gap: 15px;">
+                <div style="background: var(--card-bg); padding: 20px; border-radius: 16px; border: 1px solid rgba(129, 79, 255, 0.1); display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <label style="font-size: 11px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 8px; letter-spacing: 0.5px;">DÜZENLENECEK SLAYT</label>
+                        <select id="setup-slide-select" class="setting-select" style="width: 100%;">
+                            <option value="">Düzenlenecek Slayt Seç...</option>
+                        </select>
+                    </div>
+                    <button type="button" class="button2" id="btn-add-new-slide" style="width: 100%; font-weight: 750; border-radius: 10px; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                        <span>Yeni Slayt Ekle</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sağ: Slayt Detay Formu -->
+            <div class="hidden" id="setup-slide-detail-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                
+                <!-- Başlık Ayarları Kartı -->
+                <div class="auth-card" style="margin: 0; padding: 25px; border-radius: 20px; border: 1px solid rgba(129, 79, 255, 0.12); display: flex; flex-direction: column; gap: 15px; background: var(--card-bg);">
+                    <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(129, 79, 255, 0.1); padding-bottom: 10px; margin-bottom: 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/></svg>
+                        <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif;">Başlık ve Hizalama Ayarları</h4>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 2fr 1.2fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">BAŞLIK METNİ</label>
+                            <input type="text" id="setup-slide-title" class="setting-input" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">HİZALAMA (KONUMU)</label>
+                            <select id="setup-slide-text-align" class="setting-select" style="width: 100%;">
+                                <option value="left">Sola Hizalı</option>
+                                <option value="center">Ortalanmış</option>
+                                <option value="right">Sağa Hizalı</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Başlık Font Ayarları -->
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: rgba(0,0,0,0.02); border: 1px solid rgba(129, 79, 255, 0.08); border-radius: 12px; padding: 15px;">
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">YAZI FONTU</label>
+                            <select id="setup-slide-title-font-family" class="setting-select" style="width: 100%;">
+                                <option value="Inter">Inter (Standart)</option>
+                                <option value="Cinzel">Cinzel (Dekoratif)</option>
+                                <option value="Pacifico">Pacifico</option>
+                                <option value="Righteous">Righteous (Modern)</option>
+                                <option value="Sacramento">Sacramento (El Yazısı)</option>
+                                <option value="Cormorant Garamond">Cormorant Garamond</option>
+                                <option value="Makcasa">Makcasa</option>
+                                <option value="Mitshuka">Mitshuka</option>
+                                <option value="Modern Romance">Modern Romance</option>
+                                <option value="Utendo">Utendo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">BOYUT (px)</label>
+                            <input type="number" id="setup-slide-title-font-size" class="setting-input" min="16" max="72" value="38" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">KALINLIK (Weight)</label>
+                            <select id="setup-slide-title-font-weight" class="setting-select" style="width: 100%;">
+                                <option value="300">İnce (300)</option>
+                                <option value="400">Normal (400)</option>
+                                <option value="700">Kalın (700)</option>
+                                <option value="900" selected>Çok Kalın (900)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">YAZI RENGİ</label>
+                            <input type="color" id="setup-slide-title-color" value="#ffffff" style="width: 100%; height: 38px; border: none; border-radius: 8px; padding: 2px; cursor: pointer; background: transparent;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Birinci Açıklama Metni Kartı -->
+                <div class="auth-card" style="margin: 0; padding: 25px; border-radius: 20px; border: 1px solid rgba(129, 79, 255, 0.12); display: flex; flex-direction: column; gap: 15px; background: var(--card-bg);">
+                    <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(129, 79, 255, 0.1); padding-bottom: 10px; margin-bottom: 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif;">Birinci Açıklama Metni</h4>
+                    </div>
+                    <textarea id="setup-slide-desc" class="setting-input" style="width: 100%; height: 50px; resize: none;" placeholder="Açıklama metnini girin..."></textarea>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: rgba(0,0,0,0.02); border: 1px solid rgba(129, 79, 255, 0.08); border-radius: 12px; padding: 15px;">
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">YAZI FONTU</label>
+                            <select id="setup-slide-desc-font-family" class="setting-select" style="width: 100%;">
+                                <option value="Inter">Inter (Standart)</option>
+                                <option value="Cinzel">Cinzel (Dekoratif)</option>
+                                <option value="Pacifico">Pacifico</option>
+                                <option value="Righteous">Righteous (Modern)</option>
+                                <option value="Sacramento">Sacramento (El Yazısı)</option>
+                                <option value="Cormorant Garamond">Cormorant Garamond</option>
+                                <option value="Makcasa">Makcasa</option>
+                                <option value="Mitshuka">Mitshuka</option>
+                                <option value="Modern Romance">Modern Romance</option>
+                                <option value="Utendo">Utendo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">BOYUT (px)</label>
+                            <input type="number" id="setup-slide-desc-font-size" class="setting-input" min="10" max="36" value="13" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">KALINLIK (Weight)</label>
+                            <select id="setup-slide-desc-font-weight" class="setting-select" style="width: 100%;">
+                                <option value="300">İnce (300)</option>
+                                <option value="400" selected>Normal (400)</option>
+                                <option value="700">Kalın (700)</option>
+                                <option value="900">Çok Kalın (900)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">YAZI RENGİ</label>
+                            <input type="color" id="setup-slide-desc-color" value="#ffffff" style="width: 100%; height: 38px; border: none; border-radius: 8px; padding: 2px; cursor: pointer; background: transparent;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- İkinci Açıklama Metni Kartı -->
+                <div class="auth-card" style="margin: 0; padding: 25px; border-radius: 20px; border: 1px solid rgba(129, 79, 255, 0.12); display: flex; flex-direction: column; gap: 15px; background: var(--card-bg);">
+                    <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(129, 79, 255, 0.1); padding-bottom: 10px; margin-bottom: 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif;">İkinci Açıklama Metni</h4>
+                    </div>
+                    <textarea id="setup-slide-desc2" class="setting-input" style="width: 100%; height: 50px; resize: none;" placeholder="İkinci açıklama metnini girin..."></textarea>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: rgba(0,0,0,0.02); border: 1px solid rgba(129, 79, 255, 0.08); border-radius: 12px; padding: 15px;">
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">YAZI FONTU</label>
+                            <select id="setup-slide-desc2-font-family" class="setting-select" style="width: 100%;">
+                                <option value="Inter">Inter (Standart)</option>
+                                <option value="Cinzel">Cinzel (Dekoratif)</option>
+                                <option value="Pacifico">Pacifico</option>
+                                <option value="Righteous">Righteous (Modern)</option>
+                                <option value="Sacramento">Sacramento (El Yazısı)</option>
+                                <option value="Cormorant Garamond">Cormorant Garamond</option>
+                                <option value="Makcasa">Makcasa</option>
+                                <option value="Mitshuka">Mitshuka</option>
+                                <option value="Modern Romance">Modern Romance</option>
+                                <option value="Utendo">Utendo</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">BOYUT (px)</label>
+                            <input type="number" id="setup-slide-desc2-font-size" class="setting-input" min="10" max="36" value="12" style="width: 100%;">
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">KALINLIK (Weight)</label>
+                            <select id="setup-slide-desc2-font-weight" class="setting-select" style="width: 100%;">
+                                <option value="300">İnce (300)</option>
+                                <option value="400" selected>Normal (400)</option>
+                                <option value="700">Kalın (700)</option>
+                                <option value="900">Çok Kalın (900)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">YAZI RENGİ</label>
+                            <input type="color" id="setup-slide-desc2-color" value="#ffffff" style="width: 100%; height: 38px; border: none; border-radius: 8px; padding: 2px; cursor: pointer; background: transparent;">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Video Yükleme Kartı -->
+                <div class="auth-card" style="margin: 0; padding: 25px; border-radius: 20px; border: 1px solid rgba(129, 79, 255, 0.12); display: flex; flex-direction: column; gap: 15px; background: var(--card-bg);">
+                    <div style="display: flex; align-items: center; gap: 10px; border-bottom: 1px solid rgba(129, 79, 255, 0.1); padding-bottom: 10px; margin-bottom: 5px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--accent)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></svg>
+                        <h4 style="margin: 0; font-size: 0.95rem; font-weight: 800; color: var(--text-primary); font-family: 'Plus Jakarta Sans', sans-serif;">Video Dosyası &amp; Konumlandırma</h4>
+                    </div>
+                    
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 8px;">DOSYA SEÇİN (MP4)</label>
+                            <div style="display: flex; gap: 10px; align-items: center;">
+                                <input type="file" id="setup-slide-video-file" accept="video/mp4" style="display: none;">
+                                <button type="button" class="button1" id="btn-trigger-video-upload" style="flex: 1; margin: 0; padding: 8px 12px; border-radius: 10px; font-size: 11px; font-weight: 700;">MP4 Dosyası Seç</button>
+                                <span id="upload-status-text" style="font-size: 11px; color: var(--text-secondary); white-space: nowrap;">Seçilmedi</span>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 8px;">VİDEO URL</label>
+                            <input type="text" id="setup-slide-video-url" class="setting-input" style="width: 100%;">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label style="font-size: 10px; font-weight: 800; color: var(--text-secondary); display: block; margin-bottom: 6px;">VİDEO SIĞDIRMA TİPİ</label>
+                        <select id="setup-slide-video-fit" class="setting-select" style="width: 100%;">
+                            <option value="cover">Kapla (Cover - Boşluksuz Tam Ekran)</option>
+                            <option value="contain">En-Boy Oranını Koru (Contain)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- İşlem Butonları -->
+                <div style="grid-column: span 2; display: flex; justify-content: space-between; gap: 15px; margin-top: 10px;">
+                    <button type="button" class="button1" id="btn-delete-slide" style="color: #ef4444; border-color: rgba(239, 68, 68, 0.2); font-weight: 700; margin: 0; padding: 10px 20px; border-radius: 12px; display: flex; align-items: center; gap: 6px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                        <span>Slaytı Sil</span>
+                    </button>
+                    <button type="button" class="button2" id="btn-save-slide-setup" style="font-weight: 800; padding: 12px 30px; margin: 0; border-radius: 12px; display: flex; align-items: center; gap: 8px;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                        <span>Değişiklikleri Slayta Kaydet</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="toast.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            if (localStorage.getItem("systemAuth") !== "1908") {
+                window.location.href = "setup.html";
+                return;
+            }
+
+            // Tema Değişimi Dinleyicisi
+            window.addEventListener("storage", (e) => {
+                if (e.key === "theme") {
+                    document.documentElement.setAttribute("data-theme", e.newValue || "dark");
+                }
+            });
+
+            const setupSlideSelect = document.getElementById("setup-slide-select");
+            const setupSlideDetailForm = document.getElementById("setup-slide-detail-form");
+            const setupSlideTitleInput = document.getElementById("setup-slide-title");
+            const setupSlideTextAlignSelect = document.getElementById("setup-slide-text-align");
+
+            // Title Font Settings
+            const setupSlideTitleFontFamily = document.getElementById("setup-slide-title-font-family");
+            const setupSlideTitleFontSize = document.getElementById("setup-slide-title-font-size");
+            const setupSlideTitleFontWeight = document.getElementById("setup-slide-title-font-weight");
+            const setupSlideTitleColor = document.getElementById("setup-slide-title-color");
+
+            // Desc 1
+            const setupSlideDescInput = document.getElementById("setup-slide-desc");
+            const setupSlideDescFontFamily = document.getElementById("setup-slide-desc-font-family");
+            const setupSlideDescFontSize = document.getElementById("setup-slide-desc-font-size");
+            const setupSlideDescFontWeight = document.getElementById("setup-slide-desc-font-weight");
+            const setupSlideDescColor = document.getElementById("setup-slide-desc-color");
+
+            // Desc 2
+            const setupSlideDesc2Input = document.getElementById("setup-slide-desc2");
+            const setupSlideDesc2FontFamily = document.getElementById("setup-slide-desc2-font-family");
+            const setupSlideDesc2FontSize = document.getElementById("setup-slide-desc2-font-size");
+            const setupSlideDesc2FontWeight = document.getElementById("setup-slide-desc2-font-weight");
+            const setupSlideDesc2Color = document.getElementById("setup-slide-desc2-color");
+
+            const setupSlideVideoFileInput = document.getElementById("setup-slide-video-file");
+            const btnTriggerVideoUpload = document.getElementById("btn-trigger-video-upload");
+            const uploadStatusText = document.getElementById("upload-status-text");
+            const setupSlideVideoUrlInput = document.getElementById("setup-slide-video-url");
+            const setupSlideVideoFitSelect = document.getElementById("setup-slide-video-fit");
+
+            const btnSaveSlideSetup = document.getElementById("btn-save-slide-setup");
+            const btnAddNewSlide = document.getElementById("btn-add-new-slide");
+            const btnDeleteSlide = document.getElementById("btn-delete-slide");
+
+            let systemSlidesData = [];
+            let selectedSlideIdx = -1;
+
+            function loadSystemSlides() {
+                fetch("/api/slides")
+                    .then(res => res.json())
+                    .then(slides => {
+                        systemSlidesData = slides;
+                        populateSlideDropdown();
+                        setupSlideDetailForm.classList.add("hidden");
+                        selectedSlideIdx = -1;
+                    })
+                    .catch(err => console.error("Slayt yükleme hatası:", err));
+            }
+
+            function populateSlideDropdown() {
+                setupSlideSelect.innerHTML = `<option value="">Düzenlenecek Slayt Seç...</option>`;
+                systemSlidesData.forEach((slide, idx) => {
+                    const opt = document.createElement("option");
+                    opt.value = idx;
+                    opt.textContent = slide.title || `Slayt #${idx + 1}`;
+                    setupSlideSelect.appendChild(opt);
+                });
+            }
+
+            setupSlideSelect.addEventListener("change", (e) => {
+                const val = e.target.value;
+                if (val === "") {
+                    setupSlideDetailForm.classList.add("hidden");
+                    selectedSlideIdx = -1;
+                    return;
+                }
+                selectedSlideIdx = parseInt(val);
+                loadSlideForm(systemSlidesData[selectedSlideIdx]);
+            });
+
+            function loadSlideForm(slide) {
+                setupSlideDetailForm.classList.remove("hidden");
+                setupSlideTitleInput.value = slide.title || "";
+                setupSlideTextAlignSelect.value = slide.titleAlign || "left";
+
+                // Title Fonts
+                setupSlideTitleFontFamily.value = slide.titleFontFamily || "Inter";
+                setupSlideTitleFontSize.value = slide.titleFontSize || 38;
+                setupSlideTitleFontWeight.value = slide.titleFontWeight || "900";
+                setupSlideTitleColor.value = slide.titleColor || "#ffffff";
+                
+                // Desc 1
+                setupSlideDescInput.value = slide.desc || "";
+                setupSlideDescFontFamily.value = slide.descFontFamily || "Inter";
+                setupSlideDescFontSize.value = slide.descFontSize || 13;
+                setupSlideDescFontWeight.value = slide.descFontWeight || "400";
+                setupSlideDescColor.value = slide.descColor || "#ffffff";
+
+                // Desc 2
+                setupSlideDesc2Input.value = slide.desc2 || "";
+                setupSlideDesc2FontFamily.value = slide.desc2FontFamily || "Inter";
+                setupSlideDesc2FontSize.value = slide.desc2FontSize || 12;
+                setupSlideDesc2FontWeight.value = slide.desc2FontWeight || "400";
+                setupSlideDesc2Color.value = slide.desc2Color || "#ffffff";
+
+                setupSlideVideoUrlInput.value = slide.video || "";
+                setupSlideVideoFitSelect.value = slide.videoFit || "cover";
+                uploadStatusText.textContent = "Değiştirilmedi";
+            }
+
+            btnTriggerVideoUpload.addEventListener("click", () => {
+                setupSlideVideoFileInput.click();
+            });
+
+            setupSlideVideoFileInput.addEventListener("change", (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+
+                uploadStatusText.textContent = "Yükleniyor...";
+                const formData = new FormData();
+                formData.append("video", file);
+
+                fetch("/api/upload-video", {
+                    method: "POST",
+                    body: formData
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success) {
+                        setupSlideVideoUrlInput.value = data.fileUrl;
+                        uploadStatusText.textContent = "Yüklendi âœ”â€�";
+                    } else {
+                        alert(data.message);
+                        uploadStatusText.textContent = "Hata âÂ�Å’";
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    uploadStatusText.textContent = "Hata âÂ�Å’";
+                });
+            });
+
+            btnAddNewSlide.addEventListener("click", () => {
+                const newSlide = {
+                    title: "Yeni Slayt",
+                    titleAlign: "left",
+                    titleFontFamily: "Inter",
+                    titleFontSize: 38,
+                    titleFontWeight: "900",
+                    titleColor: "#ffffff",
+                    desc: "Açıklama 1 metni.",
+                    descFontFamily: "Inter",
+                    descFontSize: 13,
+                    descFontWeight: "400",
+                    descColor: "#ffffff",
+                    desc2: "Açıklama 2 metni.",
+                    desc2FontFamily: "Inter",
+                    desc2FontSize: 12,
+                    desc2FontWeight: "400",
+                    desc2Color: "#ffffff",
+                    video: "",
+                    videoFit: "cover"
+                };
+                systemSlidesData.push(newSlide);
+                populateSlideDropdown();
+                setupSlideSelect.value = systemSlidesData.length - 1;
+                selectedSlideIdx = systemSlidesData.length - 1;
+                loadSlideForm(newSlide);
+            });
+
+            btnDeleteSlide.addEventListener("click", () => {
+                if (selectedSlideIdx === -1) return;
+                if (!confirm("Bu slaytı silmek istediğinize emin misiniz?")) return;
+
+                systemSlidesData.splice(selectedSlideIdx, 1);
+                saveSystemSlides(() => {
+                    loadSystemSlides();
+                    alert("Slayt silindi.");
+                });
+            });
+
+            btnSaveSlideSetup.addEventListener("click", () => {
+                if (selectedSlideIdx === -1) return;
+
+                const title = setupSlideTitleInput.value.trim();
+                const titleAlign = setupSlideTextAlignSelect.value;
+                const titleFontFamily = setupSlideTitleFontFamily.value;
+                const titleFontSize = parseInt(setupSlideTitleFontSize.value) || 38;
+                const titleFontWeight = setupSlideTitleFontWeight.value;
+                const titleColor = setupSlideTitleColor.value || "#ffffff";
+
+                const desc = setupSlideDescInput.value.trim();
+                const descFontFamily = setupSlideDescFontFamily.value;
+                const descFontSize = parseInt(setupSlideDescFontSize.value) || 13;
+                const descFontWeight = setupSlideDescFontWeight.value;
+                const descColor = setupSlideDescColor.value || "#ffffff";
+
+                const desc2 = setupSlideDesc2Input.value.trim();
+                const desc2FontFamily = setupSlideDesc2FontFamily.value;
+                const desc2FontSize = parseInt(setupSlideDesc2FontSize.value) || 12;
+                const desc2FontWeight = setupSlideDesc2FontWeight.value;
+                const desc2Color = setupSlideDesc2Color.value || "#ffffff";
+
+                const video = setupSlideVideoUrlInput.value.trim();
+                const videoFit = setupSlideVideoFitSelect.value;
+
+                if (!title) {
+                    alert("Lütfen slayt başlığı girin!");
+                    return;
+                }
+
+                systemSlidesData[selectedSlideIdx] = {
+                    title, titleAlign, titleFontFamily, titleFontSize, titleFontWeight, titleColor,
+                    desc, descFontFamily, descFontSize, descFontWeight, descColor,
+                    desc2, desc2FontFamily, desc2FontSize, desc2FontWeight, desc2Color,
+                    video,
+                    videoFit
+                };
+
+                saveSystemSlides(() => {
+                    populateSlideDropdown();
+                    setupSlideSelect.value = selectedSlideIdx;
+                    alert("Slayt başarıyla kaydedildi!");
+                });
+            });
+
+            function saveSystemSlides(callback) {
+                fetch("/api/slides/save", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(systemSlidesData)
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && callback) {
+                        callback();
+                    }
+                })
+                .catch(err => console.error("Kaydetme hatası:", err));
+            }
+
+            loadSystemSlides();
+        });
+    </script>
+</body>
+</html>

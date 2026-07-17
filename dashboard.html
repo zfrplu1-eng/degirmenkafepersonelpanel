@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="tr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Değirmen Kafe - Panel</title>
+    <script>
+        // Kullanıcı oturumu yoksa giriş sayfasına yönlendir
+        // (Vercel iframe ortamında window.parent kontrolü çalışmadığı için localStorage kullanılıyor)
+        if (!localStorage.getItem('user')) {
+            window.location.href = 'index.html';
+        }
+    </script>
+    <!-- Google Fonts: Outfit -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=10.1">
+    <style>
+        .logout-premium-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 12px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 11px;
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            background: rgba(239, 68, 68, 0.05);
+            color: #ef4444;
+            height: 36px;
+        }
+        .logout-premium-btn:hover {
+            background: #ef4444;
+            color: #ffffff;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+            transform: translateY(-1px);
+        }
+
+        /* 3D Layered Card Custom CSS Styles */
+        .card-container-3d {
+            position: relative;
+            width: 280px; /* Daha kompakt hale getirildi */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 20px auto;
+        }
+
+        .main-card-3d {
+            width: 100%;
+            border-radius: 24px; /* Köşe yuvarlama uyumlu hale getirildi */
+            padding: 22px; /* İç boşluk küçültüldü */
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 18px; /* Öğeler arası mesafe daraltıldı */
+            background: linear-gradient(135deg, #242424 0%, #141414 100%) !important;
+            color: #ffffff !important;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 35px 60px rgba(0,0,0,.35),
+                        0 15px 25px rgba(255,255,255,.05) inset,
+                        0 -5px 10px rgba(0,0,0,.2) inset;
+            text-decoration: none;
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+            overflow: hidden;
+            text-align: left;
+        }
+
+        /* Parlama / Yansıma Efekti */
+        .main-card-3d::before {
+            content: "";
+            position: absolute;
+            width: 200px; /* Parlama alanı da küçültüldü */
+            height: 200px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent);
+            top: -100px;
+            left: -70px;
+            filter: blur(25px);
+            pointer-events: none;
+        }
+
+        /* Alt Siyah/Altın Katman */
+        .cta-button-layer-3d {
+            width: 100%;
+            height: 80px; /* Buton yüksekliği küçültüldü */
+            margin-top: -40px; /* Üst üste binme mesafesi uyarlandı */
+            border-radius: 24px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            padding-bottom: 16px; /* Yazı boşluğu ayarlandı */
+            cursor: pointer;
+            z-index: 5;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 700;
+            color: #1a1a1a !important;
+            background: linear-gradient(135deg, #f2e2ca 0%, #d8be96 100%) !important;
+            box-shadow: 0 40px 70px rgba(0,0,0,.35);
+            transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 0.45s ease;
+        }
+
+        /* Hover Etkileşimleri */
+        .card-container-3d:hover .main-card-3d {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 60px 90px rgba(0,0,0,.5);
+        }
+
+        .card-container-3d:hover .cta-button-layer-3d {
+            transform: translateY(4px);
+            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        /* 🚀 Speech Bubble UI Modern & Premium Tasarım Kuralları */
+        .masonry-grid-notes {
+            column-count: 3;
+            column-gap: 28px;
+            width: 100%;
+        }
+        @media (max-width: 1024px) {
+            .masonry-grid-notes { column-count: 2; }
+        }
+        @media (max-width: 640px) {
+            .masonry-grid-notes { column-count: 1; }
+        }
+
+        .speech-bubble-item {
+            break-inside: avoid;
+            margin-bottom: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: relative;
+            animation: noteFadeIn 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes noteFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .speech-bubble-card {
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 28px;
+            padding: 22px 26px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.03);
+            width: 100%;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+                        box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .speech-bubble-card:hover {
+            transform: translateY(-6px) scale(1.02);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.07);
+            border-color: var(--accent);
+        }
+
+        /* Kuyruk */
+        .speech-bubble-card::after {
+            content: "";
+            position: absolute;
+            bottom: -9px;
+            left: 32px;
+            width: 0;
+            height: 0;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 9px solid var(--border-color);
+            z-index: 5;
+            transition: border-top-color 300ms;
+        }
+
+        .speech-bubble-card::before {
+            content: "";
+            position: absolute;
+            bottom: -7.5px;
+            left: 32px;
+            width: 0;
+            height: 0;
+            border-left: 9px solid transparent;
+            border-right: 9px solid transparent;
+            border-top: 9px solid var(--card-bg);
+            z-index: 6;
+            transition: border-top-color 300ms;
+        }
+
+        .speech-bubble-card:hover::after {
+            border-top-color: var(--accent);
+        }
+
+        .speech-bubble-avatar-box {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            background: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            margin-top: 10px;
+            margin-left: 20px;
+            box-shadow: 0 8px 18px rgba(0,0,0,0.04);
+            color: var(--text-primary);
+            font-size: 16px;
+            font-weight: 800;
+        }
+
+        /* Zengin Mention / Hashtag Renkleri */
+        .note-mention {
+            color: #3b82f6;
+            font-weight: 700;
+        }
+        .note-hashtag {
+            color: #814fff;
+            font-weight: 700;
+        }
+        .note-link {
+            color: #ff5c35;
+            font-weight: 700;
+            text-decoration: underline;
+            word-break: break-all;
+        }
+
+        /* 🚀 Dinamik Transparan Logo CSS Filtreleri */
+        .kafe-logo-img {
+            width: 400px;
+            height: 400px;
+            max-height: 400px;
+            max-width: 400px;
+            object-fit: contain;
+            display: block;
+            transition: filter 0.3s ease;
+        }
+
+        /* Dark Modda logodaki koyu lacivert yazıları beyaza çevir */
+        [data-theme="dark"] .kafe-logo-img {
+            filter: brightness(0) invert(1);
+        }
+
+        /* Detay Stiller */
+        .header-3d {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            text-align: left;
+        }
+
+        .icon-box-3d {
+            width: 42px; /* Küçültüldü */
+            height: 42px; /* Küçültüldü */
+            border-radius: 12px; /* Küçültüldü */
+            background: #ffffff;
+            color: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset 0 -3px 0px rgba(0,0,0,0.2), 0 4px 10px rgba(0,0,0,0.15);
+            flex-shrink: 0;
+        }
+
+        .header-text-3d h3 {
+            font-size: 16px; /* Küçültüldü */
+            font-weight: 800;
+            margin-bottom: 2px;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .header-text-3d p {
+            font-size: 11px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.2;
+        }
+
+        .features-3d {
+            display: flex;
+            flex-direction: column;
+            gap: 10px; /* Boşluk daraltıldı */
+            text-align: left;
+        }
+
+        .feature-item-3d {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px; /* Küçültüldü */
+            font-weight: 600;
+            color: #ffffff;
+        }
+
+        .feature-item-3d svg {
+            width: 14px; /* Küçültüldü */
+            height: 14px; /* Küçültüldü */
+            stroke: #ffffff;
+            flex-shrink: 0;
+        }
+
+        .footer-3d {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px; /* Küçültüldü */
+            text-align: left;
+        }
+
+        .price-box-3d h4 {
+            font-size: 18px; /* Küçültüldü */
+            font-weight: 800;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .price-box-3d p {
+            font-size: 10px; /* Küçültüldü */
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.2;
+        }
+
+        .tag-3d {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            font-size: 11px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #f2e2ca 0%, #d8be96 100%);
+            color: #1a1a1a;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        if(!localStorage.getItem("theme_reset_orbai")){localStorage.setItem("theme","dark");localStorage.setItem("theme_reset_orbai","true")}document.documentElement.setAttribute("data-theme", localStorage.getItem("theme") || "dark");
+    </script>
+
+    <div class="orbai-page-wrapper">
+        <!-- Dashboard Konteyner -->
+        <div class="dashboard-wrapper-horizontal">
+        
+            <!-- 1. ÜST PANEL (HEADER CARD - Tamamen saydam ve çerçevesiz - Üst boşluk sıfırlandı) -->
+            <div class="dashboard-header-card" id="header-card" style="display: flex !important; visibility: visible !important; opacity: 1 !important; border: none !important; background: transparent !important; box-shadow: none !important; padding: 0 !important; margin: 0px 0 20px 0 !important; align-items: center !important;">
+                
+                <!-- Sol Parça: Profil Bilgileri (Üste yapışık hizalama) -->
+                <div class="header-section left-section" style="flex: 1; display: flex; align-items: center; align-self: flex-start !important; height: fit-content !important; margin-top: 15px !important;">
+                    <div class="user-profile-info">
+                        <div class="user-avatar-h">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                        </div>
+                        <div class="profile-text">
+                            <h4 id="user-display">Kullanıcı</h4>
+                            <div style="display: flex; gap: 6px; align-items: center; margin-top: 4px;">
+                                <span id="role-display" class="badge">Rol</span>
+                                <span id="region-display" class="badge">Bölge</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Orta Parça: LOGO YERLEŞİM ALANI (Yüksekliği Sınırlandırılmış ve Yukarı Çekilmiş) -->
+                <div class="header-section middle-section" style="flex: 1; display: flex; justify-content: center; align-items: center; height: 300px !important; margin-top: -55px !important;">
+                    <div id="logo-container" style="display: flex; flex-direction: column; align-items: center; justify-content: center; background: transparent; padding: 0; border: none; box-shadow: none; height: 300px !important; width: 300px !important; margin-top: -55px !important;">
+                        <img src="logo.png" alt="Değirmen Kafe Logo" class="kafe-logo-img" style="margin-top: -45px !important;" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='flex';">
+                        <div id="logo-fallback" style="display: none; height: 50px; padding: 0 20px; border: 1.5px dashed var(--border-color); border-radius: 12px; align-items: center; justify-content: center; color: var(--text-secondary); font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;">
+                            Logo Alanı (logo.png)
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sağ Parça: Ayarlar, Güvenli Çıkış (Üste yapışık hizalama) -->
+                <div class="header-section right-section" style="flex: 1; display: flex; flex-direction: column; align-items: flex-end; gap: 10px; justify-content: center; align-self: flex-start !important; height: fit-content !important; margin-top: 15px !important;">
+                    <div style="display: flex; gap: 12px; align-items: center;">
+                        <button id="btn-settings" class="logout-premium-btn" style="border: 1px solid rgba(129, 79, 255, 0.25); background: rgba(129, 79, 255, 0.05); color: var(--accent); display: none;" aria-label="Sistem Ayarları">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"></circle><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"></path></svg>
+                            <span>Sistem Ayarları</span>
+                        </button>
+                        <button id="btn-logout" class="logout-premium-btn" aria-label="Güvenli Çıkış">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+                            <span>Güvenli Çıkış</span>
+                        </button>
+                    </div>
+                    
+                    <!-- Tema Değiştirme Segmented Switcher (Butonların Tam Altında) -->
+                    <div class="theme-switcher-group" style="position: static; margin: 0; display: flex;">
+                        <button class="theme-btn-segment" id="theme-btn-light" aria-label="Aydınlık Tema">
+                            <svg class="sun-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path></svg>
+                            <span>Aydınlık</span>
+                        </button>
+                        <button class="theme-btn-segment" id="theme-btn-dark" aria-label="Karanlık Tema">
+                            <svg class="moon-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width: 14px; height: 14px;"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path></svg>
+                            <span>Karanlık</span>
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- 2. HOŞ GELDİNİZ KARŞILAMA KUTUSU (Premium modern yazı stili - Logo altı boşluk daraltıldı) -->
+            <div id="welcome-section" class="welcome-header-box" style="margin: -25px 0 15px 0; padding: 0 10px; border-left: 3.5px solid var(--accent); padding-left: 18px;">
+                <h1 class="welcome-title" style="font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; font-size: 2.1rem; font-weight: 800; color: var(--text-primary); margin: 0; letter-spacing: -0.04em; text-shadow: 0 2px 10px rgba(0,0,0,0.02);">Hoş Geldiniz, <span id="welcome-username" style="color: #ff5c35; background: linear-gradient(135deg, #ff5c35 0%, #ff8c00 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Kullanıcı</span></h1>
+                <p class="subtitle" style="font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif; font-size: 1.02rem; color: var(--text-secondary); margin: 4px 0 0 0; font-weight: 400; letter-spacing: -0.01em; opacity: 0.85;">Yönetmek istediğiniz Değirmen Kafe modülünü seçerek hemen içeriye giriş yapın.</p>
+            </div>
+
+            <!-- Alt Kısımdaki Ana İçerik Alanı (Büyük Çerçeve) -->
+            <div class="dashboard-content-horizontal">
+
+                <!-- 3. SAF VİDEO OYNATICI PANEL (Yazısız Tam Genişlik) -->
+                <div class="dashboard-promo-banner" id="promo-banner-container" style="display: flex !important; width: calc(100% + 60px) !important; margin-left: -30px !important; margin-right: -30px !important; height: 16cm !important; margin-bottom: 30px !important;">
+                    <!-- Sol panel gizli -->
+                    <div class="promo-left-panel" style="display: none !important; width: 0% !important;"></div>
+                    <!-- Sağ panel (Video) tam genişlik -->
+                    <div class="promo-right-panel" style="width: 100% !important; height: 100% !important; background: transparent !important; border-radius: 24px !important; overflow: hidden !important;">
+                        <video id="promo-video-player" class="promo-video" src="/uploads/intro_video_primary.mp4" autoplay="autoplay" muted="muted" loop="loop" playsinline="playsinline" style="width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important;"></video>
+                    </div>
+                </div>
+
+                <!-- 4. MODÜLLER IZGARASI (3D Layered Cards) -->
+                <div class="module-container" style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; width: 100%; margin-top: 10px; margin-bottom: 20px;">
+                    
+                    <!-- 3D Layered Card: Envanter Takip -->
+                    <div class="card-container-3d" id="card-inventory">
+                        <!-- Main Card -->
+                        <a href="inventory.html" class="main-card-3d">
+                            <div class="header-3d">
+                                <div class="icon-box-3d">
+                                    <!-- Box/Package Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="21 8 21 21 3 21 3 8"/><rect x="1" y="3" width="22" height="5"/><line x1="10" y1="12" x2="14" y2="12"/></svg>
+                                </div>
+                                <div class="header-text-3d">
+                                    <h3>Envanter Takip</h3>
+                                    <p>Hammaddelerin anlık stok yönetim portalı</p>
+                                </div>
+                            </div>
+
+                            <div class="features-3d">
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Hammaddelerin stok düzeyleri</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Kritik limit altındaki ürün alarmları</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Giriş-Çıkış stok log geçmişi</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Kategori bazlı stok filtreleme</span>
+                                </div>
+                            </div>
+
+                            <div class="footer-3d">
+                                <div class="price-box-3d">
+                                    <h4>M05</h4>
+                                    <p>Sistem Modülü</p>
+                                </div>
+                                <div class="tag-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>
+                                    <span>Envanter Portalı</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Overlapping Button Underneath -->
+                        <a href="inventory.html" class="cta-button-layer-3d">
+                            <span>Stokları Yönet</span>
+                        </a>
+                    </div>
+
+                    <!-- 3D Layered Card: Reçeteler Kataloğu -->
+                    <div class="card-container-3d" id="card-recipes">
+                        <!-- Main Card -->
+                        <a href="catalog.html" class="main-card-3d" style="border: 1px solid rgba(129, 79, 255, 0.2); background: linear-gradient(135deg, rgba(129, 79, 255, 0.08) 0%, rgba(20, 20, 25, 0.95) 100%);">
+                            <div class="header-3d">
+                                <div class="icon-box-3d" style="background: rgba(129, 79, 255, 0.2); color: var(--accent);">
+                                    <!-- Book Open Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                                </div>
+                                <div class="header-text-3d">
+                                    <h3>Reçeteler Kataloğu</h3>
+                                    <p>Ürün reçeteleri ve yapılış tarifleri</p>
+                                </div>
+                            </div>
+
+                            <div class="features-3d">
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Hammadde kullanım miktarları</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Adım adım hazırlama tarifleri</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Ürün kategorileri ve filtreleme</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Görsel destekli sunum rehberi</span>
+                                </div>
+                            </div>
+
+                            <div class="footer-3d">
+                                <div class="price-box-3d">
+                                    <h4>M02</h4>
+                                    <p>Sistem Modülü</p>
+                                </div>
+                                <div class="tag-3d" style="background: rgba(129, 79, 255, 0.15); color: var(--accent);">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+                                    <span>Reçete Portalı</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Overlapping Button Underneath -->
+                        <a href="catalog.html" class="cta-button-layer-3d" style="background: var(--accent); box-shadow: 0 4px 15px var(--accent-glow);">
+                            <span>Tarifleri İncele</span>
+                        </a>
+                    </div>
+
+                    <!-- 3D Layered Card: Sipariş Ekranı -->
+                    <div class="card-container-3d" id="card-store">
+                        <!-- Main Card -->
+                        <a href="store.html" class="main-card-3d" style="border: 1px solid rgba(16, 185, 129, 0.25); background: linear-gradient(135deg, rgba(16, 185, 129, 0.08) 0%, rgba(20, 20, 25, 0.95) 100%);">
+                            <div class="header-3d">
+                                <div class="icon-box-3d" style="background: rgba(16, 185, 129, 0.2); color: #10b981;">
+                                    <!-- Shopping Bag Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                                </div>
+                                <div class="header-text-3d">
+                                    <h3>Sipariş Ekranı</h3>
+                                    <p>Hızlı satış ve sipariş yönetimi</p>
+                                </div>
+                            </div>
+
+                            <div class="features-3d">
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Aktif sipariş ve masa kontrolü</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Anlık mutfak durum senkronizasyonu</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Ürün bazlı ekleme & sepet tutarı</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Kasiyer / Garson hızlı paneli</span>
+                                </div>
+                            </div>
+
+                            <div class="footer-3d">
+                                <div class="price-box-3d">
+                                    <h4>M01</h4>
+                                    <p>Sistem Modülü</p>
+                                </div>
+                                <div class="tag-3d" style="background: rgba(16, 185, 129, 0.15); color: #10b981;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                                    <span>POS Satış</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Overlapping Button Underneath -->
+                        <a href="store.html" class="cta-button-layer-3d" style="background: linear-gradient(135deg, #a7f3d0 0%, #34d399 100%) !important; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+                            <span>Sipariş Al</span>
+                        </a>
+                    </div>
+
+                    <!-- 3D Layered Card: Sistem Arşivi -->
+                    <div class="card-container-3d" id="card-archive">
+                        <!-- Main Card -->
+                        <a href="archive.html" class="main-card-3d" style="border: 1px solid rgba(139, 92, 246, 0.25); background: linear-gradient(135deg, rgba(139, 92, 246, 0.08) 0%, rgba(20, 20, 25, 0.95) 100%);">
+                            <div class="header-3d">
+                                <div class="icon-box-3d" style="background: rgba(139, 92, 246, 0.2); color: #8b5cf6;">
+                                    <!-- Archive Icon -->
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/><path d="M2 10h20"/></svg>
+                                </div>
+                                <div class="header-text-3d">
+                                    <h3>Sistem Arşivi</h3>
+                                    <p>Denetim ve arşiv dosyaları yönetim portalı</p>
+                                </div>
+                            </div>
+
+                            <div class="features-3d">
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>2 Klasörlü arşiv kayıt denetimi</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Hammaddeler envanter değişim klasörü</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Şubelerin verdikleri siparişler klasörü</span>
+                                </div>
+                                <div class="feature-item-3d">
+                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                                    <span>Yönetici şifresi korumalı erişim</span>
+                                </div>
+                            </div>
+
+                            <div class="footer-3d">
+                                <div class="price-box-3d">
+                                    <h4>M06</h4>
+                                    <p>Sistem Modülü</p>
+                                </div>
+                                <div class="tag-3d" style="background: rgba(139, 92, 246, 0.15); color: #8b5cf6;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12z"/></svg>
+                                    <span>Denetim Portalı</span>
+                                </div>
+                            </div>
+                        </a>
+
+                        <!-- Overlapping Button Underneath -->
+                        <a href="archive.html" class="cta-button-layer-3d" style="background: linear-gradient(135deg, #c084fc 0%, #8b5cf6 100%) !important; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.2);">
+                            <span>Arşivi Denetle</span>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <!-- 🚀 Ortak Kullanıcı Notları Panosu (Görseldeki premium tooltip baloncuk stili - Modüllerden 2 cm aşağıda) -->
+        <div class="mt-16 mb-10 w-full" style="max-width: 100%; position: relative; z-index: 20; margin-top: 75px;">
+            <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                <div style="width: 44px; height: 44px; border-radius: 12px; background: rgba(129, 79, 255, 0.08); display: flex; align-items: center; justify-content: center; color: #ff5c35; box-shadow: 0 8px 20px rgba(129, 79, 255, 0.12); border: 1px solid rgba(129, 79, 255, 0.15);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A5 5 0 0 0 8 8c0 1 .3 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>
+                </div>
+                <h3 style="font-family: 'Outfit', sans-serif; font-size: 22px; font-weight: 800; color: var(--text-primary); letter-spacing: -0.01em;">Ortak Kullanıcı Not Panosu</h3>
+            </div>
+
+            <!-- Notlar Listesi Container (Görseldeki Baloncuk Tasarımı) -->
+            <div id="notes-speech-bubbles-container" class="masonry-grid-notes">
+                <!-- JS dinamik notları basacak -->
+            </div>
+
+            <!-- Yeni Not Ekleme Balon Formu -->
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 30px; max-width: 600px;">
+                <textarea id="new-note-textarea" class="setting-input" style="width: 100%; min-height: 90px; padding: 16px; border-radius: 18px; font-size: 14px; border: 1.5px solid var(--border-color); background: rgba(255, 255, 255, 0.01);" placeholder="Diğer kullanıcılara bırakmak istediğiniz notu yazın..."></textarea>
+                <div style="display: flex; justify-content: flex-end;">
+                    <button type="button" onclick="addNewNote()" class="button2" style="margin: 0; padding: 12px 30px; font-size: 13px; font-weight: 800; border-radius: 18px; background: #ff5c35 !important; border: none; color: #fff; cursor: pointer; box-shadow: 0 10px 20px rgba(255, 92, 53, 0.25); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform='translateY(0)'">
+                        Notu Panoya As
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 💬 Sabit Yüzen WhatsApp İletişim Butonu (Müzikle çakışmayacak konumda) -->
+    <a href="https://wa.me/905300000000" target="_blank" id="whatsapp-floating-btn" style="position: fixed; bottom: 96px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: #25d366; display: flex; align-items: center; justify-content: center; box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3); z-index: 9998; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); cursor: pointer;" onmouseover="this.style.transform='scale(1.1) translateY(-3px)'" onmouseout="this.style.transform='scale(1) translateY(0)'">
+        <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" fill="#ffffff" viewBox="0 0 256 256"><path d="M187.58,144.84l-20.35-14.54a16,16,0,0,0-20.37.94l-11.83,9.86a86.68,86.68,0,0,1-30.08-30.08l9.86-11.83a16,16,0,0,0,.94-20.37L91.21,68.47a16.14,16.14,0,0,0-22.36-.57L52.54,83.08c-12,10.6-17.72,26.54-15,41.9a130,130,0,0,0,93.47,93.47c15.36,2.75,31.3-3,41.9-15l15.18-16.31A16.14,16.14,0,0,0,187.58,144.84Z" opacity="0.2"></path><path d="M128,24A104,104,0,0,0,36.82,166.5L25.66,211.15a16,16,0,0,0,19.19,19.19l44.65-11.16A104,104,0,1,0,128,24Zm0,192a87.87,87.87,0,0,1-44.06-11.81,8,8,0,0,0-6.14-.66l-43.43,10.86,10.86-43.43a8,8,0,0,0-.66-6.14A88,88,0,1,1,128,216Z"></path></svg>
+    </a>
+
+    <!-- Şifre Giriş Modali -->
+    <div id="settings-auth-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); backdrop-filter:blur(5px); z-index:99999; align-items:center; justify-content:center;">
+        <div class="auth-card" style="max-width:320px; width:90%; padding:25px; text-align:center; border-radius:24px; box-shadow:0 20px 50px rgba(0,0,0,0.3); margin:0;">
+            <h3 style="margin:0 0 10px; font-family:'Plus Jakarta Sans',sans-serif; color:var(--text-primary); font-size:1.1rem; font-weight:800;">🔒 Yetkili Girişi</h3>
+            <p style="font-size:12px; color:var(--text-secondary); margin-bottom:20px;">Sistem ayarlarına erişmek için yetkili şifresini girin.</p>
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <input type="password" id="auth-modal-password" class="setting-input" placeholder="Kurulum Şifresi (1908)" style="width:100%; text-align:center; font-size:13px; font-weight:800; margin:0;">
+                <button type="button" class="button2" id="btn-auth-modal-verify" style="width:100%; font-weight:800; font-size:13px; margin:0;">Giriş Yap</button>
+                <button type="button" class="button1" id="btn-auth-modal-cancel" style="width:100%; font-size:12px; margin:0;">İptal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Spin keyframe for disc -->
+    <style>
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+
+    <script src="toast.js"></script>
+    <script src="dashboard.js?v=20"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+    "id": "ORD-5260",
+    "branch": "Merkez Şube",
+    "username": "zafer",
+    "status": "pending",
+    "date": "15.07.2026 23:53:16",
+    "items": [
+        {
+            "name": "HM-FİLTRE KAHVE",
+            "qty": 1,
+            "unit": "Adet"
+        },
+        {
+            "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)",
+            "qty": 1,
+            "unit": "Koli"
+        }
+    ],
+    "type": "orders",
+    "timestamp": "2026-07-15T20:53:16.159Z"
+}

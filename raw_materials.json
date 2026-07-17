@@ -1,0 +1,926 @@
+[
+    {
+        "id": "suruplar",
+        "label": "ŞURUPLAR",
+        "items": [
+            {
+                "name": "HM-BAHÇE NANE AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-BERRY HIBISCUS AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-BÖĞÜRTLEN AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-COOKİE AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-COOL LIME AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ÇARKIFELEK (PASSION FRUIT) AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ÇİLEK AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-FINDIK AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KARAMEL AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KAVRULMUŞ BADEM AROMALI KOKTEYL ŞURUP",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MUZ AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-NAR AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ORANGE & MANGO AROMALI KOKTEYL ŞURUP",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-PECAN CEVİZİ AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ŞEKER AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-TOFFEE NUT AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-TURUNÇ AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-VANİLYA AROMALI KOKTEYL ŞURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-SAKURA BASE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MOJITO SURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ARONYA SURUBU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-PASSION GUAVA BASE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ROBIOS SEFTALI BASE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KUZU KULAGI BASE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-RASBERY ACAI BASE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "kahveler",
+        "label": "KAHVELER",
+        "items": [
+            {
+                "name": "HM-DAMLA SAKIZLI TÜRK KAHVESİ",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ESPRESSO ÇEKİRDEĞİ (ORTA KAVRULMUŞ)",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-FİLTRE KAHVE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-GRANÜL KAHVE (NESCAFE)",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MENENGİÇ KAHVESİ",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-OSMANLI DİBEK KAHVESİ",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-TÜRK KAHVESİ (ORTA KAVRULMUŞ)",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "bar_soslar",
+        "label": "BAR SOSLAR",
+        "items": [
+            {
+                "name": "HM-BEYAZ ÇİKOLATALI BAR SOS MONTE CRİSTO",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-BİTTER ÇİKOLATALI BAR SOS MONTE CRİSTO",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KARAMEL AROMALI BAR SOS MONTE CRİSTO",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ANTEP FISTIK SOS",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MADAGASKAR SOS",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "sicak_icecekler",
+        "label": "SICAK İÇECEKLER",
+        "items": [
+            {
+                "name": "HM-BAL BADEM SALEP",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-DAMLA SAKIZLI SALEP",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KLASİK SALEP",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-SICAK BEYAZ ÇİKOLATA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-SICAK ÇİKOLATA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "bitki_caylari",
+        "label": "BİTKİ ÇAYLARI",
+        "items": [
+            {
+                "name": "HM-IHLAMUR",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ADA ÇAYI",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-HİBİSCUS",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KIŞ ÇAYI",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KUŞBURNU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-NANE LİMON",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-YEŞİL ÇAY",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "milkshake",
+        "label": "MİLKŞHAKE",
+        "items": [
+            {
+                "name": "HM-ÇİKOLATA AROMALI MİLKSHAKE TOZU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ÇİLEK AROMALI MİLKSHAKE TOZU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KARAMEL AROMALI MİLKSHAKE TOZU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MUZ AROMALI MİLKSHAKE TOZU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-VANİLYA AROMALI MİLKSHAKE TOZU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "pureler",
+        "label": "PÜRELER",
+        "items": [
+            {
+                "name": "HM-BÖĞÜRTLEN MEYVELİ PÜRE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ÇİLEK PÜRE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MANGO PÜRE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ORMAN MEYVELİ PÜRE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-YABAN MERSİNLİ PÜRE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-YEŞİL ELMA PÜRE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "soft_urunler",
+        "label": "SOFT ÜRÜNLER",
+        "items": [
+            {
+                "name": "HM-SU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-FANTA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-COCA COLA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-COCA COLA ZERO",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-SPRİTE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-LİPTON ICE TEA ŞEFTALİ",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-LİPTON ICE TEA MANGO",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-LİPTON ICE TEA KARPUZ ÇİLEK",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MEYVE SUYU ŞEFTALİ",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MEYVE SUYU VİŞNE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MEYVE SUYU KARIŞIK",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MEYVELİ SODA LİMON",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MEYVELİ SODA ELMA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-MEYVELİ SODA KARPUZ ÇİLEK",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-SADE SODA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    },
+    {
+        "id": "diger_urunler",
+        "label": "DİĞER ÜRÜNLER",
+        "items": [
+            {
+                "name": "HM-ANANAS SUYU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ANTEP FISTIKLI LOKUM",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-CİCİ BEBE",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-DEMLİK POŞET ÇAY 30 GR 30'LU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-DONDURULARAK KURUTULMUŞ BÖĞÜRTLEN",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-DONDURULARAK KURUTULMUŞ LİME",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KATLA BALLA SÜZME ÇİÇEK BALI (STİCK)",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-KÜP ŞEKER",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-LİMONATA",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-LOTUS BİSCOFF SPREAD SÜRÜLEBİLİR BİSKÜVİ EZMESİ",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-SÜT",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            },
+            {
+                "name": "HM-ELMA SUYU",
+                "cal": "Hammadde",
+                "image": "menu.jpg",
+                "weight": 0.9,
+                "limit": 5,
+                "stock": 0,
+                "expiry": "Belirtilmedi",
+                "region_stocks": {}
+            }
+        ]
+    }
+]
