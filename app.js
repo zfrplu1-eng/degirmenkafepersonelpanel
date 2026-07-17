@@ -17,13 +17,15 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedTheme = localStorage.getItem("theme") || "dark";
     htmlElement.setAttribute("data-theme", savedTheme);
 
-    themeToggleBtn.addEventListener("click", () => {
-        const currentTheme = htmlElement.getAttribute("data-theme");
-        const newTheme = currentTheme === "dark" ? "light" : "dark";
-        
-        htmlElement.setAttribute("data-theme", newTheme);
-        localStorage.setItem("theme", newTheme);
-    });
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+            const currentTheme = htmlElement.getAttribute("data-theme");
+            const newTheme = currentTheme === "dark" ? "light" : "dark";
+            
+            htmlElement.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+        });
+    }
 
     // 2. Rol Seçici Yönetimi (Yönetici / Personel)
     roleTabs.forEach((tab, index) => {
@@ -135,7 +137,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // 4. Kayıt Ol İşlemi (Signup)
-    btnSignup.addEventListener("click", async () => {
+    if (btnSignup) {
+        btnSignup.addEventListener("click", async () => {
         const role = selectedRoleInput.value;
         const username = document.getElementById("username").value.trim();
         const password = document.getElementById("password").value;
@@ -200,5 +203,6 @@ document.addEventListener("DOMContentLoaded", () => {
         } finally {
             setBtnLoading(btnForgotPassword, false, "Şifremi Unuttum?");
         }
-    });
+        });
+    }
 });

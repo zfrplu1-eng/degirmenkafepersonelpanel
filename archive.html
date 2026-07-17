@@ -438,14 +438,48 @@
 
             function loadArchiveData() {
                 fetch("/api/archive/list?t=" + Date.now())
-                    .then(r => r.json())
+                    .then(res => {
+                        if (!res.ok) throw new Error("HTTP " + res.status);
+                        return res.json();
+                    })
                     .then(res => {
                         if (res.success) {
                             archiveFolders = res.folders || [];
                             renderFolders();
                         }
                     })
-                    .catch(err => console.error("Arşiv verisi çekilirken hata:", err));
+                    .catch(err => {
+                        console.warn("Sunucu arşivi bulunamadı, yerel sipariş geçmişi ve envanter günlükleri taranıyor...");
+                        // Yerel (offline) sipariş geçmişinden ve stok logs'dan arşiv klasörleri simüle et
+                        const localOrders = JSON.parse(localStorage.getItem("local_orders")) || [];
+                        const localLogs = JSON.parse(localStorage.getItem("raw_materials_local")) || [];
+                        
+                        archiveFolders = [
+                            {
+                                "username": "Siparişler Arşivi",
+                                "files": localOrders.map((o, idx) => ({
+                                    "name": `${o. شube || 'Merkez'}_Siparisi_${idx + 1}.txt`,
+                                    "type": "siparis",
+                                    "size": `${JSON.stringify(o).length} B`,
+                                    "date": o.date || "17.07.2026",
+                                    "content": `Sipariş Detayı:\nŞube: ${o.region || 'Tüm Bölgeler'}\nTutar: ${o.total || '0'} TL\nÖğeler: ${JSON.stringify(o.items || [])}`
+                                }))
+                            },
+                            {
+                                "username": "Envanter Raporları",
+                                "files": [
+                                    {
+                                        "name": "Aktif_Stok_Durumu_Raporu.txt",
+                                        "type": "envanter",
+                                        "size": `${JSON.stringify(localLogs).length} B`,
+                                        "date": "Bugün",
+                                        "content": `Güncel Stok Durumu:\n${JSON.stringify(localLogs, null, 2)}`
+                                    }
+                                ]
+                            }
+                        ];
+                        renderFolders();
+                    });
             }
 
             function renderFolders() {
